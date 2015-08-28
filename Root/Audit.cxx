@@ -212,6 +212,7 @@ EL::StatusCode Audit :: execute ()
   static SG::AuxElement::Decorator<float> I2_depth_decor            ("I2_depth");
   static SG::AuxElement::Decorator<float> V1_nelements_decor        ("V1_nelements");
   static SG::AuxElement::Decorator<float> V2_nelements_decor        ("V2_nelements");
+  //static SG::AuxElement::Decorator<bool> signalW                   ("Wlabel");
   // initialize to zero on event
   SS_mass_decor(*eventInfo)             = -99;
   SS_invgamma_decor(*eventInfo)         = -99;
@@ -227,6 +228,7 @@ EL::StatusCode Audit :: execute ()
   I2_depth_decor(*eventInfo)            = -99;
   V1_nelements_decor(*eventInfo)        = -99;
   V2_nelements_decor(*eventInfo)        = -99;
+  //isWlabel                              = false;
 
 
   // clear the event

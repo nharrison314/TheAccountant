@@ -14,6 +14,7 @@
 #include <TheAccountant/JetMETHists.h>
 #include <TheAccountant/METHists.h>
 #include <TheAccountant/JetTagHists.h>
+#include <TheAccountant/ROC.h>
 
 #include <TheAccountant/RazorVariableHists.h>
 class Report : public EL::Algorithm
@@ -34,7 +35,8 @@ public:
               m_inputElectrons  = "",
               m_inputMuons      = "",
               m_inputTauJets    = "",
-              m_inputPhotons    = "";
+              m_inputPhotons    = "",
+              m_truthParticles  = "";
   std::string m_decor_jetTags_b   = "", // isB,
               m_decor_jetTags_top = "", // isTop,
               m_decor_jetTags_w   = ""; // isW;
@@ -52,8 +54,8 @@ private:
   std::map< std::string, TheAccountant::JetMETHists* > m_jetMETPlots; //!
   std::map< std::string, TheAccountant::JetTagHists* > m_jetTagPlots; //!
   std::map< std::string, TheAccountant::METHists* > m_METPlots; //!
-  std::map< std::string, TheAccountant::RazorVariableHists* > m_RazorPlots; //!
-
+  //std::map< std::string, TheAccountant::RazorVariableHists* > m_RazorPlots; //!
+  std::map< std::string, TheAccountant::ROC* > m_ROCPlots; //!
   std::vector<std::string> m_topTagDecorationNames; //!
 
 public:

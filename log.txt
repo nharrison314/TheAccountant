@@ -1,0 +1,53 @@
+Making dependency for ROC.cxx
+Compiling ROC.o
+Compiling Audit.o
+Compiling Report.o
+/share/home/nmh/myRootCore/WTag/Root/ROC.cxx:79:12: error: prototype for ‘StatusCode WTag::ROC::execute(const EventInfo*, const JetContainer*, const JetContainer*, xAOD::MissingETContainer*, const TruthParticleContainer_v1*, float)’ does not match any in class ‘WTag::ROC’
+ StatusCode WTag::ROC::execute (const xAOD::EventInfo* eventInfo,const xAOD::JetContainer* in_jetsLargeR,const xAOD::JetContainer* in_jets, xAOD::MissingETContainer* in_missinget, const xAOD::TruthParticleContainer* truth_particles, float eventWeight)
+            ^
+In file included from /share/home/nmh/myRootCore/WTag/WTag/ROC.h:4:0,
+                 from /share/home/nmh/myRootCore/WTag/Root/ROC.cxx:4:
+/share/home/nmh/myRootCore/RootCoreBin/include/xAODAnaHelpers/HistogramManager.h:35:24: error: candidates are: virtual StatusCode HistogramManager::execute()
+     virtual StatusCode execute(){         return StatusCode::SUCCESS; };
+                        ^
+In file included from /share/home/nmh/myRootCore/WTag/Root/ROC.cxx:4:0:
+/share/home/nmh/myRootCore/WTag/WTag/ROC.h:24:16: error:                 StatusCode WTag::ROC::execute(const EventInfo*, const JetContainer*, const JetContainer*, const MissingETContainer*, const TruthParticleContainer_v1*, float)
+     StatusCode execute (const xAOD::EventInfo* eventInfo, const xAOD::JetContainer* in_jetslargeR, const xAOD::JetContainer* in_jets, const xAOD::MissingETContainer* in_missinget, const xAOD::TruthParticleContainer* truth_particles, const float eventWeight);
+                ^
+In file included from /share/home/nmh/myRootCore/WTag/Root/Report.cxx:24:0:
+/share/home/nmh/myRootCore/WTag/Root/Report.cxx: In member function ‘virtual EL::StatusCode Report::execute()’:
+/share/home/nmh/myRootCore/WTag/Root/Report.cxx:267:138: error: no matching function for call to ‘WTag::ROC::execute(const EventInfo*&, const JetContainer*&, const JetContainer*&, const MissingET*&, const TruthParticleContainer_v1*&, float&)’
+   RETURN_CHECK("Report::execite()", m_ROCPlots["all/roc"]->execute(eventInfo, in_jetsLargeR, in_jets, in_met, truth_particles,eventWeight),"");
+                                                                                                                                          ^
+/share/home/nmh/myRootCore/RootCoreBin/include/xAODAnaHelpers/tools/ReturnCheck.h:23:13: note: in definition of macro ‘RETURN_CHECK’
+       if( ! EXP.isSuccess() ) {                                            \
+             ^
+/share/home/nmh/myRootCore/WTag/Root/Report.cxx:267:138: note: candidates are:
+   RETURN_CHECK("Report::execite()", m_ROCPlots["all/roc"]->execute(eventInfo, in_jetsLargeR, in_jets, in_met, truth_particles,eventWeight),"");
+                                                                                                                                          ^
+/share/home/nmh/myRootCore/RootCoreBin/include/xAODAnaHelpers/tools/ReturnCheck.h:23:13: note: in definition of macro ‘RETURN_CHECK’
+       if( ! EXP.isSuccess() ) {                                            \
+             ^
+In file included from /share/home/nmh/myRootCore/WTag/WTag/Report.h:17:0,
+                 from /share/home/nmh/myRootCore/WTag/Root/Report.cxx:4:
+/share/home/nmh/myRootCore/WTag/WTag/ROC.h:24:16: note: StatusCode WTag::ROC::execute(const EventInfo*, const JetContainer*, const JetContainer*, const MissingETContainer*, const TruthParticleContainer_v1*, float)
+     StatusCode execute (const xAOD::EventInfo* eventInfo, const xAOD::JetContainer* in_jetslargeR, const xAOD::JetContainer* in_jets, const xAOD::MissingETContainer* in_missinget, const xAOD::TruthParticleContainer* truth_particles, const float eventWeight);
+                ^
+/share/home/nmh/myRootCore/WTag/WTag/ROC.h:24:16: note:   no known conversion for argument 4 from ‘const MissingET* {aka const xAOD::MissingET_v1*}’ to ‘const MissingETContainer* {aka const xAOD::MissingETContainer_v1*}’
+In file included from /share/home/nmh/myRootCore/WTag/WTag/IParticleKinematicHists.h:4:0,
+                 from /share/home/nmh/myRootCore/WTag/WTag/Report.h:12,
+                 from /share/home/nmh/myRootCore/WTag/Root/Report.cxx:4:
+/share/home/nmh/myRootCore/RootCoreBin/include/xAODAnaHelpers/HistogramManager.h:35:24: note: virtual StatusCode HistogramManager::execute()
+     virtual StatusCode execute(){         return StatusCode::SUCCESS; };
+                        ^
+/share/home/nmh/myRootCore/RootCoreBin/include/xAODAnaHelpers/HistogramManager.h:35:24: note:   candidate expects 0 arguments, 6 provided
+/share/home/nmh/myRootCore/WTag/Root/Audit.cxx: In member function ‘virtual EL::StatusCode Audit::execute()’:
+/share/home/nmh/myRootCore/WTag/Root/Audit.cxx:231:3: error: ‘isWlabel’ was not declared in this scope
+   isWlabel                              = false;
+   ^
+make: *** [/share/home/nmh/myRootCore/RootCoreBin/obj/x86_64-slc6-gcc48-opt/WTag/obj/ROC.o] Error 1
+make: *** Waiting for unfinished jobs....
+make: *** [/share/home/nmh/myRootCore/RootCoreBin/obj/x86_64-slc6-gcc48-opt/WTag/obj/Audit.o] Error 1
+make: *** [/share/home/nmh/myRootCore/RootCoreBin/obj/x86_64-slc6-gcc48-opt/WTag/obj/Report.o] Error 1
+compiling WTag
+RootCore: Error failed to compile package WTag

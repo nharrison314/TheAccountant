@@ -85,7 +85,6 @@ StatusCode TheAccountant::JetHists::execute( const xAOD::JetContainer* jets, flo
 }
 
 StatusCode TheAccountant::JetHists::execute( const xAOD::Jet* jet, float eventWeight ){
-
   m_massOverPt->Fill( jet->m()/jet->pt(), eventWeight );
   float jvt(-99.0);
   jet->getAttribute("Jvt", jvt);

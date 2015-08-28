@@ -158,7 +158,6 @@ EL::StatusCode Preselect :: execute ()
     pass_preSel_jetsLargeR(*eventInfo) = num_passJetsLargeR;
   }
 
-
   ConstDataVector<xAOD::JetContainer> * SelectedJets  =  new ConstDataVector<xAOD::JetContainer>(SG::VIEW_ELEMENTS);
   if(!m_inputJets.empty()){
     // get the working point
@@ -284,8 +283,6 @@ EL::StatusCode Preselect :: execute ()
   }
 
 
-
-
     // only select event if:
     //    m_jet_minNum <= num_passJets <= m_jet_maxNum
     if(!( (m_jet_minNum <= num_passJets)&&(num_passJets <= m_jet_maxNum) )){
@@ -363,7 +360,6 @@ EL::StatusCode Preselect :: execute ()
   }
 
   std::cout << "Event passed: " << eventInfo->eventNumber() << std::endl;
-
   return EL::StatusCode::SUCCESS;
 }
 
