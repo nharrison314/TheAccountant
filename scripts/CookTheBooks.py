@@ -160,6 +160,7 @@ if __name__ == "__main__":
   group_report.add_argument('--jetLargeR_minPtView', type=float, metavar='', help='Only plot large-R jets that pass a minimum pt.', default=0.0)
   group_report.add_argument('--jet_maxAbsEtaView', type=float, metavar='', help='Only plot jets with abs(eta) < cut.', default=2.5)
   group_report.add_argument('--jetLargeR_maxAbsEtaView', type=float, metavar='', help='Only plot large-R jets with abs(eta) < cut.', default=1.6)
+  group_report.add_argument('--truthParticles', type=str, metavar='', help='Truth Particle Container', default='FinalTruthParticles')
 
   driverUsageStr = 'CookTheBooks.py --files ... file [file ...] [options] {0:s} [{0:s} options]'
   # first is the driver
