@@ -1,9 +1,9 @@
 #include <EventLoop/Job.h>
 #include <EventLoop/StatusCode.h>
 #include <EventLoop/Worker.h>
-#include <WTag/ROC.h>
+#include <TheAccountant/ROC.h>
 
-// EDM includes                                                                                 
+// EDM includes
 #include "xAODEventInfo/EventInfo.h"
 #include "xAODJet/JetContainer.h"
 #include "xAODMuon/MuonContainer.h"
@@ -13,24 +13,24 @@
 #include "xAODTruth/TruthParticleContainer.h"
 #include "xAODMissingET/MissingETContainer.h"
 
-//#include "xAODBTaggingEfficiency/BTaggingEfficiencyTool.h"                                    
+//#include "xAODBTaggingEfficiency/BTaggingEfficiencyTool.h"
 #include "xAODBTagging/BTagging.h"
 #include "JetSubStructureUtils/BosonTag.h"
 
-// Infrastructure includes                                                                      
+// Infrastructure includes
 #include "xAODRootAccess/Init.h"
 
-// xAH includes                                                                                 
+// xAH includes
 #include "xAODAnaHelpers/HelperFunctions.h"
 #include "xAODAnaHelpers/tools/ReturnCheck.h"
-                 
+
 #include <set>
 using namespace std;
 
 namespace HF = HelperFunctions;
 //namespace VD = VariableDefinitions;
 
-WTag::ROC::ROC (std::string name) :
+TheAccountant::ROC::ROC (std::string name) :
   HistogramManager(name,"")
 {
 }
@@ -48,17 +48,17 @@ WTag::ROC::ROC (std::string name) :
 //EL::StatusCode ROC :: histInitialize () { return EL::StatusCode::SUCCESS; }
 //EL::StatusCode ROC :: fileExecute () { return EL::StatusCode::SUCCESS; }
 //EL::StatusCode ROC :: changeInput (bool /*firstFile*/) { return EL::StatusCode::SUCCESS; }
-//WTag::WTag::ROC (std::string name) :
+//TheAccountant::TheAccountant::ROC (std::string name) :
 // HistogramManager(name,"")//
 //{/
 //}
 
-WTag::ROC::~ROC () {}
+TheAccountant::ROC::~ROC () {}
 
-StatusCode WTag::ROC::initialize () {
+StatusCode TheAccountant::ROC::initialize () {
 
   std::cout << "Initializing ROC" << std::endl;
-  // assign m_event and m_store                                          
+  // assign m_event and m_store
   jetmass1 = book(m_name,"jetmass1","Leading Jet Mass (GeV)",650,0, 6500);
   jetmass2 = book(m_name,"jetmass2","Subleading Jet Mass (GeV)",650, 0 , 6500);
   jetmass3 = book(m_name,"jetmass3","Third Jet Mass (GeV)",650,0,6500);
@@ -74,7 +74,7 @@ StatusCode WTag::ROC::initialize () {
   return EL::StatusCode::SUCCESS;
 }
 
-StatusCode WTag::ROC::execute (const xAOD::EventInfo* eventInfo,const xAOD::JetContainer* in_ffjets,const xAOD::JetContainer* in_jets, const xAOD::TruthParticleContainer* truth_particles, float eventWeight)
+StatusCode TheAccountant::ROC::execute (const xAOD::EventInfo* eventInfo,const xAOD::JetContainer* in_ffjets,const xAOD::JetContainer* in_jets, const xAOD::TruthParticleContainer* truth_particles, float eventWeight)
 {
   std::cout <<"Executing ROC" << std::endl;
   //static SG::AuxElement::ConstAccessor<float> Wlabel("Wlabel");
@@ -88,45 +88,21 @@ StatusCode WTag::ROC::execute (const xAOD::EventInfo* eventInfo,const xAOD::JetC
   //const xAOD::MuonContainer*            in_muons      (nullptr);
   //const xAOD::TauJetContainer*          in_taus       (nullptr);
   //const xAOD::PhotonContainer*          in_photons    (nullptr);
-  //const xAOD::TruthParticleContainer*   truth_particles  (nullptr);      
+  //const xAOD::TruthParticleContainer*   truth_particles  (nullptr);
 
   std::cout <<"Before Boson Tagger" << std::endl;
-  static JetSubStructureUtils::BosonTag WTagger("medium", "smooth", "$ROOTCOREBIN/data/JetSubStructureUtils/config_13TeV_20150528_Wtagging.dat", true, true);   std::cout <<" After Boson Tager" << std::endl;  
-
-  //RETURN_CHECK("Audit::execute()", HF::retrieve(eventInfo,    m_eventInfo,        m_event, m_store, m_debug), "Could not get the EventInfo container.");
-  // if(!m_inputLargeRJets.empty())
-  //  RETURN_CHECK("Audit::execute()", HF::retrieve(in_jetsLargeR,      m_inputLargeRJets,        m_event, m_store, m_debug), "Could not get the inputLargeRJets container.");
-  //if(!m_inputJets.empty())
-  // RETURN_CHECK("Audit::execute()", HF::retrieve(in_jets,     m_inputJets,       m_event, m_store, m_debug), "Could not get the inputJets container.");
-  //if(!m_inputMET.empty())
-  // RETURN_CHECK("Audit::execute()", HF::retrieve(in_missinget, m_inputMET,         m_event, m_store, m_debug), "Could not get the inputMET container.");
-  //if(!m_inputElectrons.empty())
-  // RETURN_CHECK("Audit::execute()", HF::retrieve(in_electrons, m_inputElectrons,   m_event, m_store, m_debug), "Could not get the inputElectrons container.");
-  // if(!m_inputMuons.empty())
-  // RETURN_CHECK("Audit::execute()", HF::retrieve(in_muons,     m_inputMuons,       m_event, m_store, m_debug), "Could not get the inputMuons container.");
-  //if(!m_inputTauJets.empty())
-  //  RETURN_CHECK("Audit::execute()", HF::retrieve(in_taus,      m_inputTauJets,     m_event, m_store, m_debug), "Could not get the inputTauJets container.");
-  //if(!m_inputPhotons.empty())
-  // RETURN_CHECK("Audit::execute()", HF::retrieve(in_photons,   m_inputPhotons,     m_event, m_store, m_debug), "Could not get the inputPhotons container.");
-  //if(!m_truth.empty())
-  // RETURN_CHECK("ClassifyEvent::execute()", HF::retrieve(truth_particles, "TruthParticle", m_event, m_store, true), "");
-
-
-  //const xAOD::MissingET* in_met(nullptr);
-  //if(!m_inputMET.empty()){
-    // retrieve CalibMET_RefFinal for METContainer                                                 
-  //xAOD::MissingETContainer::const_iterator met_id = in_missinget->find(m_inputMETName);
+  static JetSubStructureUtils::BosonTag WTagger("medium", "smooth", "$ROOTCOREBIN/data/JetSubStructureUtils/config_13TeV_20150528_Wtagging.dat", true, true);   std::cout <<" After Boson Tager" << std::endl;
 
   //totalEvents = totalEvents + 1;
   //bool isWTagged = false;
-  //tags jets that are likely W boson.                                                             
-  //for(const auto jet: *in_jetsLargeR)                                                            
-  //  {                                                                                            
-  //    isWTagged = WTagger.result(*jet);                                                     
-  //  } 
+  //tags jets that are likely W boson.
+  //for(const auto jet: *in_jetsLargeR)
+  //  {
+  //    isWTagged = WTagger.result(*jet);
+  //  }
   //float jetmass_1 =0;
-  //float jetmass_2=0; 
-  //float jetmass_3=0; 
+  //float jetmass_2=0;
+  //float jetmass_3=0;
   //float jetmass_4=0;
   int i=0;
   //int j=0;
@@ -136,7 +112,7 @@ StatusCode WTag::ROC::execute (const xAOD::EventInfo* eventInfo,const xAOD::JetC
   //{
   //  numlargeRjets++;
   //}
-  
+
 
   //std::cout << "# fat jets: " << in_ffjets->size() << std::endl;
   std::cout << "HERE 1" << std::endl;
@@ -176,8 +152,8 @@ StatusCode WTag::ROC::execute (const xAOD::EventInfo* eventInfo,const xAOD::JetC
 	  if (jetmass_4 > 0)
 	    jetmass4->Fill(jetmass_4, eventWeight);
 	}
-      
-      
+
+
       //bool truePositive = false;
       //bool falsePositive = false;
       for (const auto truth_particle: *truth_particles){
@@ -186,9 +162,9 @@ StatusCode WTag::ROC::execute (const xAOD::EventInfo* eventInfo,const xAOD::JetC
 	  {
 	    signalW = true;
 	  }
-	
+
       }
-      
+
       if (i ==1 && signalW)
 	jetmass1_Wlabel->Fill(jetmass_1, eventWeight);
       else if (i == 2 && signalW)
@@ -203,8 +179,8 @@ StatusCode WTag::ROC::execute (const xAOD::EventInfo* eventInfo,const xAOD::JetC
       //if (!isTruthW && isWTagged)
       //	fake = fake + 1;
     }
-  
-  // dump information about the jets and met at least                          
+
+  // dump information about the jets and met at least
   std::cout << "Looped through all the jets, yay!" << std::endl;
 
   return StatusCode::SUCCESS;
