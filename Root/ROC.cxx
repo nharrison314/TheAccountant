@@ -1,7 +1,7 @@
 #include <EventLoop/Job.h>
 #include <EventLoop/StatusCode.h>
 #include <EventLoop/Worker.h>
-#include <WTag/ROC.h>
+#include <TheAccountant/ROC.h>
 
 // EDM includes                                                                                 
 #include "xAODEventInfo/EventInfo.h"
@@ -30,7 +30,7 @@ using namespace std;
 namespace HF = HelperFunctions;
 //namespace VD = VariableDefinitions;
 
-WTag::ROC::ROC (std::string name) :
+TheAccountant::ROC::ROC (std::string name) :
   HistogramManager(name,"")
 {
 }
@@ -53,9 +53,9 @@ WTag::ROC::ROC (std::string name) :
 //{/
 //}
 
-WTag::ROC::~ROC () {}
+TheAccountant::ROC::~ROC () {}
 
-StatusCode WTag::ROC::initialize () {
+StatusCode TheAccountant::ROC::initialize () {
 
   std::cout << "Initializing ROC" << std::endl;
   // assign m_event and m_store                                          
@@ -74,7 +74,7 @@ StatusCode WTag::ROC::initialize () {
   return EL::StatusCode::SUCCESS;
 }
 
-StatusCode WTag::ROC::execute (const xAOD::EventInfo* eventInfo,const xAOD::JetContainer* in_ffjets,const xAOD::JetContainer* in_jets, const xAOD::TruthParticleContainer* truth_particles, float eventWeight)
+StatusCode TheAccountant::ROC::execute (const xAOD::EventInfo* eventInfo,const xAOD::JetContainer* in_ffjets,const xAOD::JetContainer* in_jets, const xAOD::TruthParticleContainer* truth_particles, float eventWeight)
 {
   std::cout <<"Executing ROC" << std::endl;
   //static SG::AuxElement::ConstAccessor<float> Wlabel("Wlabel");

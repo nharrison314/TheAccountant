@@ -47,7 +47,7 @@ EL::StatusCode Report :: histInitialize () {
   
   //m_RazorPlots["all/razor"] = new WTag::RazorVariableHists("all/razor/");
 
-  m_ROCPlots["all/roc"] = new WTag::ROC("all/roc/");
+  m_ROCPlots["all/roc"] = new TheAccountant::ROC("all/roc/");
   
   //if(!m_inputJets.empty()){
   //  m_jetKinematicPlots["all/jets"] = new WTag::IParticleKinematicHists( "all/jets/" );
@@ -271,7 +271,7 @@ EL::StatusCode Report :: execute ()
 
 
   //RETURN_CHECK("Report::execute()", m_RazorPlots["all/razor"]->execute(eventInfo, in_met,in_jets, in_jetsLargeR, in_muons, in_electrons,eventWeight),"");
-  RETURN_CHECK("Report::execute()", m_ROCPlots["all/roc"]->execute(eventInfo, in_ffjets, in_jets, truth_particles,eventWeight),"");
+  RETURN_CHECK("Report::execute()", m_ROCPlots["all/roc"]->execute(eventInfo, in_jetsLargeR, in_jets, truth_particles,eventWeight),"");
 
 
   return EL::StatusCode::SUCCESS;
