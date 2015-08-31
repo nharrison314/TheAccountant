@@ -35,30 +35,11 @@ TheAccountant::ROC::ROC (std::string name) :
 {
 }
 
-//ClassImp(ROC)
-//ROC :: ROC () :{}
-
-//EL::StatusCode ROC :: setupJob (EL::Job& job)
-//{
-// job.useXAOD();
-// xAOD::Init("ROC").ignore();
-// return EL::StatusCode::SUCCESS;
-//}
-
-//EL::StatusCode ROC :: histInitialize () { return EL::StatusCode::SUCCESS; }
-//EL::StatusCode ROC :: fileExecute () { return EL::StatusCode::SUCCESS; }
-//EL::StatusCode ROC :: changeInput (bool /*firstFile*/) { return EL::StatusCode::SUCCESS; }
-//TheAccountant::TheAccountant::ROC (std::string name) :
-// HistogramManager(name,"")//
-//{/
-//}
-
 TheAccountant::ROC::~ROC () {}
 
 StatusCode TheAccountant::ROC::initialize () {
 
   std::cout << "Initializing ROC" << std::endl;
-  // assign m_event and m_store
   jetmass1 = book(m_name,"jetmass1","Leading Jet Mass (GeV)",650,0, 6500);
   jetmass2 = book(m_name,"jetmass2","Subleading Jet Mass (GeV)",650, 0 , 6500);
   jetmass3 = book(m_name,"jetmass3","Third Jet Mass (GeV)",650,0,6500);
@@ -78,17 +59,6 @@ StatusCode TheAccountant::ROC::execute (const xAOD::EventInfo* eventInfo,const x
 {
   std::cout <<"Executing ROC" << std::endl;
   //static SG::AuxElement::ConstAccessor<float> Wlabel("Wlabel");
-
-  //if(m_debug) Info("execute()", "Calling execute...");
-  //const xAOD::EventInfo*                eventInfo     (nullptr);
-  //const xAOD::JetContainer*             in_jetsLargeR (nullptr);
-  //const xAOD::JetContainer*             in_jets       (nullptr);
-  //c/onst xAOD::MissingETContainer*       in_missinget  (nullptr);
-  //const xAOD::ElectronContainer*        in_electrons  (nullptr);
-  //const xAOD::MuonContainer*            in_muons      (nullptr);
-  //const xAOD::TauJetContainer*          in_taus       (nullptr);
-  //const xAOD::PhotonContainer*          in_photons    (nullptr);
-  //const xAOD::TruthParticleContainer*   truth_particles  (nullptr);
 
   std::cout <<"Before Boson Tagger" << std::endl;
   static JetSubStructureUtils::BosonTag WTagger("medium", "smooth", "$ROOTCOREBIN/data/JetSubStructureUtils/config_13TeV_20150528_Wtagging.dat", true, true);   std::cout <<" After Boson Tager" << std::endl;
