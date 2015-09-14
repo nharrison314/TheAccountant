@@ -160,6 +160,7 @@ if __name__ == "__main__":
   group_report.add_argument('--jetLargeR_minPtView', type=float, metavar='', help='Only plot large-R jets that pass a minimum pt.', default=0.0)
   group_report.add_argument('--jet_maxAbsEtaView', type=float, metavar='', help='Only plot jets with abs(eta) < cut.', default=2.5)
   group_report.add_argument('--jetLargeR_maxAbsEtaView', type=float, metavar='', help='Only plot large-R jets with abs(eta) < cut.', default=1.6)
+  group_report.add_argument('--truthParticles', type=str, metavar='', help='Truth Particle Container', default='FinalTruthParticles')
 
   driverUsageStr = 'CookTheBooks.py --files ... file [file ...] [options] {0:s} [{0:s} options]'
   # first is the driver
@@ -265,6 +266,10 @@ if __name__ == "__main__":
     ROOT.gROOT.Macro("$ROOTCOREDIR/scripts/load_packages.C")
     # load the standard algorithm since pyroot delays quickly
     ROOT.EL.Algorithm()
+
+    #Set up the job for xAOD access:
+    ROOT.xAOD.Init("CookTheBooks").ignore();
+
     # check that we have appropriate drivers
     if args.driver == 'prun':
       if getattr(ROOT.EL, 'PrunDriver') is None:
@@ -400,11 +405,17 @@ if __name__ == "__main__":
       setattr(audit, 'm_{0}'.format(opt), getattr(args, opt))
       time.sleep(sleepTime)
 
-
     user_confirm(args, 1)
 
+    optimization_dump = None
+    if args.optimization_dump:
+      optimization_dump = ROOT.OptimizationDump()
+      cookBooks_logger.info("\tcreating optimization dump algorithm")
+      algorithmConfiguration_string.append("optimization dump algorithm")
+      # no other options for now...
+      time.sleep(sleepTime)
 
-    user_confirm(args, 2)
+      user_confirm(args, 2)
 
     report = ROOT.Report()
     cookBooks_logger.info("\tcreating report algorithm")

@@ -15,8 +15,6 @@
 #include "xAODTau/TauJetContainer.h"
 #include "xAODTruth/TruthParticleContainer.h"
 #include "xAODMissingET/MissingETContainer.h"
-//#include "xAODBTaggingEfficiency/BTaggingEfficiencyTool.h"
-#include "xAODBTagging/BTagging.h"
 
 // xAH includes
 #include "xAODAnaHelpers/HelperFunctions.h"
@@ -30,9 +28,7 @@ namespace VD = VariableDefinitions;
 // this is needed to distribute the algorithm to the workers
 ClassImp(Report)
 
-Report :: Report () :
-  m_topTagDecorationNames({"LooseTopTag", "TightTopTag", "LooseSmoothTopTag", "TightSmoothTopTag"})
-{}
+Report :: Report () : {}
 
 EL::StatusCode Report :: setupJob (EL::Job& job)
 {
@@ -44,8 +40,6 @@ EL::StatusCode Report :: setupJob (EL::Job& job)
 
 EL::StatusCode Report :: histInitialize () {
   // initialize all histograms here
-  
-  //m_RazorPlots["all/razor"] = new WTag::RazorVariableHists("all/razor/");
 
   m_ROCPlots["all/roc"] = new TheAccountant::ROC("all/roc/");
   
@@ -157,31 +151,6 @@ EL::StatusCode Report :: histInitialize () {
     rocPlot.second->record(wk());
   }
 
-  //for(auto jetKinematicPlot: m_jetKinematicPlots){
-// RETURN_CHECK("Report::initialize()", jetKinematicPlot.second->initialize(), "");
-//   jetKinematicPlot.second->record( wk() );
-// }
-
-//for(auto jetPlot: m_jetPlots){
-//  RETURN_CHECK("Report::initialize()", jetPlot.second->initialize(), "");
-//  jetPlot.second->record( wk() );
-//}
-
-//for(auto jetMETPlot: m_jetMETPlots){
-//  RETURN_CHECK("Report::initialize()", jetMETPlot.second->initialize(), "");
-//  jetMETPlot.second->record( wk() );
-//}
-//
-// for(auto METPlot: m_METPlots){
-//  RETURN_CHECK("Report::initialize()", METPlot.second->initialize(), "");
-//  METPlot.second->record( wk() );
-//}
-
-//for(auto jetTagPlot: m_jetTagPlots){
-//  RETURN_CHECK("Report::initialize()", jetTagPlot.second->initialize(), "");
-//  jetTagPlot.second->record( wk() );
-//}
-
   return EL::StatusCode::SUCCESS;
 }
 EL::StatusCode Report :: fileExecute () { return EL::StatusCode::SUCCESS; }
@@ -206,7 +175,7 @@ EL::StatusCode Report :: execute ()
   const xAOD::TauJetContainer*          in_taus       (nullptr);
   const xAOD::PhotonContainer*          in_photons    (nullptr);
   const xAOD::TruthParticleContainer*   truth_particles    (nullptr);
-  
+
   // start grabbing all the containers that we can
   RETURN_CHECK("Report::execute()", HF::retrieve(eventInfo,    m_eventInfo,        m_event, m_store, m_debug), "Could not get the EventInfo container.");
   if(!m_inputJets.empty())
@@ -223,12 +192,8 @@ EL::StatusCode Report :: execute ()
     RETURN_CHECK("Report::execute()", HF::retrieve(in_taus,      m_inputTauJets,     m_event, m_store, m_debug), "Could not get the inputTauJets container.");
   if(!m_inputPhotons.empty())
     RETURN_CHECK("Report::execute()", HF::retrieve(in_photons,   m_inputPhotons,     m_event, m_store, m_debug), "Could not get the inputPhotons container.");
-
   if(!m_truthParticles.empty())
-    {
-      std::cout << "!m_truthParticles.empty()" << std::endl;
-      RETURN_CHECK("Report::execute()", HF::retrieve(truth_particles, m_truthParticles, m_event, m_store, m_debug),"Could not get truth particle container.");
-    }
+    RETURN_CHECK("Report::execute()", HF::retrieve(truth_particles, m_truthParticles, m_event, m_store, m_debug),"Could not get truth particle container.");
 
   // prepare the jets by creating a view container to look at them
   ConstDataVector<xAOD::JetContainer> in_jetsCDV(SG::VIEW_ELEMENTS);
@@ -253,7 +218,6 @@ EL::StatusCode Report :: execute ()
     in_jetsLargeR = in_jetsLargeRCDV.asDataVector();
   }
 
-
   const xAOD::MissingET* in_met(nullptr);
   if(!m_inputMET.empty()){
     // retrieve CalibMET_RefFinal for METContainer
@@ -266,12 +230,15 @@ EL::StatusCode Report :: execute ()
     in_met = *met_id;
   }
 
-  
   float eventWeight = VD::eventWeight(eventInfo, wk()->metaData());
+<<<<<<< HEAD
 
 
   //RETURN_CHECK("Report::execute()", m_RazorPlots["all/razor"]->execute(eventInfo, in_met,in_jets, in_jetsLargeR, in_muons, in_electrons,eventWeight),"");
   RETURN_CHECK("Report::execute()", m_ROCPlots["all/roc"]->execute(eventInfo, in_jetsLargeR, in_jets, truth_particles,eventWeight),"");
+=======
+  RETURN_CHECK("Report::execute()", m_ROCPlots["all/roc"]->execute(eventInfo, in_jetsLargeR, in_jets, truth_particles, eventWeight),"");
+>>>>>>> eb82b9e52c8c9d6334aa90288c00939ef8e2e491
 
 
   return EL::StatusCode::SUCCESS;
