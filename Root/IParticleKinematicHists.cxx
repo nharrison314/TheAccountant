@@ -9,7 +9,6 @@ TheAccountant::IParticleKinematicHists::IParticleKinematicHists (std::string nam
 TheAccountant::IParticleKinematicHists::~IParticleKinematicHists () {}
 
 StatusCode TheAccountant::IParticleKinematicHists::initialize() {
-
   m_pt           = book(m_name, "pt",       m_particleType + " p_{T} [GeV]", 120, 0, 3000.);
   m_eta          = book(m_name, "eta",      m_particleType + " #eta",         80, -4, 4);
   m_phi          = book(m_name, "phi",      m_particleType + " #phi",120, -TMath::Pi(), TMath::Pi() );
@@ -23,7 +22,7 @@ StatusCode TheAccountant::IParticleKinematicHists::initialize() {
 }
 
 StatusCode TheAccountant::IParticleKinematicHists::execute( const xAOD::IParticleContainer* particles, float eventWeight ) {
-  for( const auto particle : *particles ) {
+  for( const auto &particle : *particles ) {
     if(!this->execute( particle, eventWeight ).isSuccess()) return StatusCode::FAILURE;
   }
 

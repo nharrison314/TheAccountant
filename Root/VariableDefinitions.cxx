@@ -60,11 +60,11 @@ float VD::Meff(const xAOD::MissingET* met, const xAOD::JetContainer* jets, int n
     meff += jets->at(i)->pt();
 
   if(muons)
-    for(auto muon: *muons)
+    for(const auto &muon: *muons)
       meff += muon->pt();
 
   if(els)
-    for(auto el: *els)
+    for(const auto &el: *els)
       meff += el->pt();
 
   meff += met->met();
@@ -75,6 +75,17 @@ float VD::Meff(const xAOD::MissingET* met, const xAOD::JetContainer* jets, int n
 float VD::HT(const xAOD::JetContainer* jets, const xAOD::MuonContainer* muons, const xAOD::ElectronContainer* els){
   float ht(0.0);
 
+<<<<<<< HEAD
+  for(const auto &jet: *jets)
+    ht += jet->pt();
+
+  if(muons)
+    for(const auto &muon: *muons)
+      ht += muon->pt();
+
+  if(els)
+    for(const auto &el: *els)
+=======
   for(auto jet: *jets)
     ht += jet->pt();
 
@@ -84,6 +95,7 @@ float VD::HT(const xAOD::JetContainer* jets, const xAOD::MuonContainer* muons, c
 
   if(els)
     for(auto el: *els)
+>>>>>>> created a class ROC that makes histograms of the jet mass for the first four jets. these plots will be used to calculate efficiency
       ht += el->pt();
 
   return ht;
@@ -230,7 +242,11 @@ int VD::topTag(const xAOD::EventInfo* eventInfo, const xAOD::JetContainer* jets,
 
   // loop over jets, tag, and count top tags
   int nTops(0);
+<<<<<<< HEAD
+  for(const auto &jet: *jets) nTops += static_cast<int>(VD::topTag(jet, wp));
+=======
   for(auto jet: *jets) nTops += static_cast<int>(VD::topTag(jet, wp));
+>>>>>>> created a class ROC that makes histograms of the jet mass for the first four jets. these plots will be used to calculate efficiency
 
   // tag the event itself with # of jets tagged
   nTops_wp(*eventInfo) = nTops;
@@ -286,7 +302,11 @@ int VD::bTag(const xAOD::EventInfo* eventInfo, const xAOD::JetContainer* jets, V
 
   // loop over jets, tag, and count top tags
   int nBJets(0);
+<<<<<<< HEAD
+  for(const auto &jet: *jets) nBJets += static_cast<int>(VD::bTag(jet, wp));
+=======
   for(auto jet: *jets) nBJets += static_cast<int>(VD::bTag(jet, wp));
+>>>>>>> created a class ROC that makes histograms of the jet mass for the first four jets. these plots will be used to calculate efficiency
 
   // tag the event itself with # of jets tagged
   nBJets_wp(*eventInfo) = nBJets;

@@ -25,7 +25,7 @@ import sys
 import datetime
 import time
 
-SCRIPT_START_TIME = datetime.datetime.now()
+
 
 # think about using argcomplete
 # https://argcomplete.readthedocs.org/en/latest/#activating-global-completion%20argcomplete
@@ -75,6 +75,10 @@ if __name__ == "__main__":
   parser = argparse.ArgumentParser(add_help=False, description='Become an accountant and cook the books!',
                                    usage='%(prog)s --files ... file [file ...] [options] {driver} [driver options]',
                                    formatter_class=lambda prog: CustomFormatter(prog, max_help_position=30))
+
+  # there are really no positional arguments in the automatic group
+  parser_requiredNamed = parser.add_argument_group('required named arguments')
+
   # add custom help
   parser.add_argument('-h', '--help', metavar='subsection', nargs='?', action=_HelpAction, help='show this help message and exit. You can also pass in the name of a subsection.')
 
@@ -83,7 +87,7 @@ if __name__ == "__main__":
   parser._optionals.title = "optional"
 
   # positional argument, require the first argument to be the input filename
-  parser.add_argument('--files', dest='input_filename', metavar='file', type=str, nargs='+', required=True, help='input file(s) to read')
+  parser_requiredNamed.add_argument('--files', dest='input_filename', metavar='file', type=str, nargs='+', required=True, help='input file(s) to read')
   parser.add_argument('--submitDir', dest='submit_dir', metavar='<directory>', type=str, required=False, help='Output directory to store the output.', default='submitDir')
   parser.add_argument('--nevents', dest='num_events', metavar='<n>', type=int, help='Number of events to process for all datasets.', default=0)
   parser.add_argument('--skip', dest='skip_events', metavar='<n>', type=int, help='Number of events to skip at start.', default=0)
@@ -153,6 +157,7 @@ if __name__ == "__main__":
 
   group_optimizationDump = parser.add_argument_group('optimization')
   group_optimizationDump.add_argument('--optimizationDump', dest='optimization_dump', action='store_true', help='Enable to dump optimization ttree of values to cut against')
+  group_optimizationDump.add_argument('--rcTrimFrac', type=float, metavar='', help='fraction to trim from rc jets',default=0.05)
 
   group_report = parser.add_argument_group('report')
   group_report.add_argument('--numLeadingJets', type=int, metavar='', help='Number of leading+subleading plots to make.', default=0)
@@ -160,16 +165,15 @@ if __name__ == "__main__":
   group_report.add_argument('--jetLargeR_minPtView', type=float, metavar='', help='Only plot large-R jets that pass a minimum pt.', default=0.0)
   group_report.add_argument('--jet_maxAbsEtaView', type=float, metavar='', help='Only plot jets with abs(eta) < cut.', default=2.5)
   group_report.add_argument('--jetLargeR_maxAbsEtaView', type=float, metavar='', help='Only plot large-R jets with abs(eta) < cut.', default=1.6)
-  group_report.add_argument('--truthParticles', type=str, metavar='', help='Truth Particle Container', default='FinalTruthParticles')
 
   driverUsageStr = 'CookTheBooks.py --files ... file [file ...] [options] {0:s} [{0:s} options]'
   # first is the driver
   drivers_parser = parser.add_subparsers(prog='CookTheBooks.py', title='drivers', dest='driver', description='specify where to run jobs')
-  direct = drivers_parser.add_parser('direct', help='Run your jobs locally.', usage=driverUsageStr.format('direct'))
-  prooflite = drivers_parser.add_parser('prooflite', help='Run your jobs using ProofLite', usage=driverUsageStr.format('prooflite'))
-  prun = drivers_parser.add_parser('prun', help='Run your jobs on the grid using prun. Use prun --help for descriptions of the options.', usage=driverUsageStr.format('prun'))
-  condor = drivers_parser.add_parser('condor', help='Flock your jobs to condor', usage=driverUsageStr.format('condor'))
-  lsf = drivers_parser.add_parser('lsf', help='Flock your jobs to lsf', usage=driverUsageStr.format('lsf'))
+  direct = drivers_parser.add_parser('direct', help='Run your jobs locally.', usage=driverUsageStr.format('direct'), formatter_class=lambda prog: CustomFormatter(prog, max_help_position=30))
+  prooflite = drivers_parser.add_parser('prooflite', help='Run your jobs using ProofLite', usage=driverUsageStr.format('prooflite'), formatter_class=lambda prog: CustomFormatter(prog, max_help_position=30))
+  prun = drivers_parser.add_parser('prun', help='Run your jobs on the grid using prun. Use prun --help for descriptions of the options.', usage=driverUsageStr.format('prun'), formatter_class=lambda prog: CustomFormatter(prog, max_help_position=30))
+  condor = drivers_parser.add_parser('condor', help='Flock your jobs to condor', usage=driverUsageStr.format('condor'), formatter_class=lambda prog: CustomFormatter(prog, max_help_position=30))
+  lsf = drivers_parser.add_parser('lsf', help='Flock your jobs to lsf', usage=driverUsageStr.format('lsf'), formatter_class=lambda prog: CustomFormatter(prog, max_help_position=30))
 
   # standard options for other drivers
   #.add_argument('--optCacheLearnEntries', type=str, required=False, default=None)
@@ -224,14 +228,13 @@ if __name__ == "__main__":
 
   # define arguments for lsf driver
   lsf.add_argument('--optLSFConf', metavar='', type=str, required=False, default='-q short')
-
   # parse the arguments, throw errors if missing any
   args = parser.parse_args()
 
   # set verbosity for python printing
   if args.verbose < 4:
     cookBooks_logger.setLevel(20 - args.verbose*5)
-  else:
+ else:
     cookBooks_logger.setLevel(logging.NOTSET + 1)
 
   try:
@@ -413,7 +416,12 @@ if __name__ == "__main__":
       cookBooks_logger.info("\tcreating optimization dump algorithm")
       algorithmConfiguration_string.append("optimization dump algorithm")
       # no other options for now...
-      time.sleep(sleepTime)
+      for opt in map(lambda x: x.dest, group_optimizationDump._group_actions):
+        cookBooks_logger.info("\t%s", printStr.format('OptimizationDump', opt, getattr(args, opt)))
+        algorithmConfiguration_string.append(printStr.format('OptimizationDump', opt, getattr(args, opt)))
+        setattr(optimization_dump, 'm_{0}'.format(opt), getattr(args, opt))
+        time.sleep(sleepTime)
+     # time.sleep(sleepTime)
 
       user_confirm(args, 2)
 

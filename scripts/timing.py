@@ -1,6 +1,7 @@
 from __future__ import print_function
 import atexit
-from time import clock
+from time import time
+
 import logging
 
 logger = logging.getLogger("timing")
@@ -15,22 +16,36 @@ def secondsToStr(t):
 line = "="*40
 def log(s, elapsed=None):
     print(line)
+<<<<<<< HEAD
+    print("{0}-{1}".format(secondsToStr(time()), s))
+=======
     print("{0}-{1}".format(secondsToStr(clock()), s))
+>>>>>>> created a class ROC that makes histograms of the jet mass for the first four jets. these plots will be used to calculate efficiency
     if elapsed:
         print("Elapsed time: {0}".format(elapsed))
     print(line)
     print("")
 
 def endlog():
+<<<<<<< HEAD
+    end = time()
+=======
     end = clock()
+>>>>>>> created a class ROC that makes histograms of the jet mass for the first four jets. these plots will be used to calculate efficiency
     elapsed = end-start
     print("")
     log("End Program", secondsToStr(elapsed))
 
 def now():
+<<<<<<< HEAD
+    return secondsToStr(time())
+
+start = time()
+=======
     return secondsToStr(clock())
 
 start = clock()
+>>>>>>> created a class ROC that makes histograms of the jet mass for the first four jets. these plots will be used to calculate efficiency
 atexit.register(endlog)
 log("Start Program")
 

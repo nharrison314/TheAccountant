@@ -56,16 +56,25 @@ OptimizationDump :: OptimizationDump () :
   m_met_mpy(-999.0),
   m_numJets(-99),
   m_numJetsLargeR(-99),
+  m_numJetsVarR_top(-99),
+  m_numJetsVarR_W(-99),
   m_n_topTag_SmoothLoose(0),
   m_n_topTag_SmoothTight(0),
   m_n_topTag_Loose(0),
   m_n_topTag_Tight(0),
   m_jetReclusteringTools{{nullptr, nullptr, nullptr}},
+  m_varRjetReclusteringTools{{nullptr, nullptr}},
   m_rc_pt{MULTI_ARRAY_INIT},
   m_rc_m{MULTI_ARRAY_INIT},
   m_rc_split12{MULTI_ARRAY_INIT},
   m_rc_split23{MULTI_ARRAY_INIT},
   m_rc_nsj{MULTI_ARRAY_INIT},
+  m_varR_top_m{ARRAY_INIT},
+  m_varR_top_pt{ARRAY_INIT},
+  m_varR_top_nsj{ARRAY_INIT},
+  m_varR_W_m{ARRAY_INIT},
+  m_varR_W_pt{ARRAY_INIT},
+  m_varR_W_nsj{ARRAY_INIT},
   m_largeR_pt{ARRAY_INIT},
   m_largeR_m{ARRAY_INIT},
   m_largeR_split12{ARRAY_INIT},
@@ -152,7 +161,48 @@ EL::StatusCode OptimizationDump :: initialize () {
       RETURN_CHECK("initialize()", m_jetReclusteringTools[i]->setProperty("InputJetContainer",  m_inputJets), "");
       RETURN_CHECK("initialize()", m_jetReclusteringTools[i]->setProperty("OutputJetContainer", outputContainer), "");
       RETURN_CHECK("initialize()", m_jetReclusteringTools[i]->setProperty("ReclusterRadius",    radius), "");
+      RETURN_CHECK("initialize()", m_jetReclusteringTools[i]->setProperty("RCJetPtFrac",    m_rcTrimFrac), "");
+      RETURN_CHECK("initialize()", m_jetReclusteringTools[i]->setProperty("InputJetPtMin",    20.0), "");
       RETURN_CHECK("initialize()", m_jetReclusteringTools[i]->initialize(), "");
+    }
+
+    m_tree->Branch ("multiplicity_jet_varR_top", &m_numJetsVarR_top, "multiplicity_jet_varR_top/I");
+    m_tree->Branch ("multiplicity_jet_varR_W", &m_numJetsVarR_W, "multiplicity_jet_varR_W/I");
+    for(int i=0; i<4; i++){
+      std::string topcommonDenominator = "variableR_top_jet_"+std::to_string(i);
+      std::string WcommonDenominator = "variableR_W_jet_"+std::to_string(i);
+      std::string branchName;
+
+      branchName = "m_"+topcommonDenominator;
+      m_tree->Branch(branchName.c_str(), &(m_varR_top_m[i]), (branchName+"/F").c_str());
+      branchName = "m_"+WcommonDenominator;
+      m_tree->Branch(branchName.c_str(), &(m_varR_W_m[i]), (branchName+"/F").c_str());
+
+      branchName = "pt_"+topcommonDenominator;
+      m_tree->Branch(branchName.c_str(), &(m_varR_top_pt[i]), (branchName+"/F").c_str());
+      branchName = "pt_"+WcommonDenominator;
+      m_tree->Branch(branchName.c_str(), &(m_varR_W_pt[i]), (branchName+"/F").c_str());
+
+      branchName = "nsj_"+topcommonDenominator;
+      m_tree->Branch(branchName.c_str(), &(m_varR_top_nsj[i]), (branchName+"/I").c_str());
+      branchName = "nsj_"+WcommonDenominator;
+      m_tree->Branch(branchName.c_str(), &(m_varR_W_nsj[i]), (branchName+"/I").c_str());
+    }
+
+    for(int i=0; i<2; i++){
+      char outputContainer[15];
+      if(i==0) sprintf(outputContainer,"VarR_top_Jets");
+      else sprintf(outputContainer,"VarR_W_Jets");
+      m_varRjetReclusteringTools[i] = new JetReclusteringTool(outputContainer+std::to_string(std::rand()));
+      RETURN_CHECK("initialize()", m_varRjetReclusteringTools[i]->setProperty("OutputJetContainer", outputContainer), "");
+      if(i==0) RETURN_CHECK("initialize()", m_varRjetReclusteringTools[i]->setProperty("VariableRMassScale",    2*173.34), "");
+      else RETURN_CHECK("initialize()", m_varRjetReclusteringTools[i]->setProperty("VariableRMassScale",    2*80.385), "");
+      RETURN_CHECK("initialize()", m_varRjetReclusteringTools[i]->setProperty("InputJetContainer",  m_inputJets), "");
+      RETURN_CHECK("initialize()", m_varRjetReclusteringTools[i]->setProperty("ReclusterRadius",    1.5), "");
+      RETURN_CHECK("initialize()", m_varRjetReclusteringTools[i]->setProperty("VariableRMinRadius",    0.4), "");
+      RETURN_CHECK("initialize()", m_varRjetReclusteringTools[i]->setProperty("RCJetPtFrac",    m_rcTrimFrac), "");
+      RETURN_CHECK("initialize()", m_varRjetReclusteringTools[i]->setProperty("InputJetPtMin",    20.0), "");
+      RETURN_CHECK("initialize()", m_varRjetReclusteringTools[i]->initialize(), "");
     }
   }
 
@@ -267,38 +317,43 @@ EL::StatusCode OptimizationDump :: execute ()
   static SG::AuxElement::ConstAccessor<float> V1_nelements_acc("V1_nelements");
   static SG::AuxElement::ConstAccessor<float> V2_nelements_acc("V2_nelements");
 
-  m_ss_mass           = SS_mass_acc(*eventInfo)/1000.;
-  m_ss_invgamma       = SS_invgamma_acc(*eventInfo);
-  m_ss_dphivis        = SS_dphivis_acc(*eventInfo);
-  m_ss_costheta       = SS_costheta_acc(*eventInfo);
-  m_ss_dphidecayangle = SS_dphidecayangle_acc(*eventInfo);
-  m_ss_mdeltaR        = SS_mdeltaR_acc(*eventInfo)/1000.;
-  m_s1_mass           = S1_mass_acc(*eventInfo)/1000.;
-  m_s1_costheta       = S1_costheta_acc(*eventInfo);
-  m_s2_mass           = S2_mass_acc(*eventInfo)/1000.;
-  m_s2_costheta       = S2_costheta_acc(*eventInfo);
-  m_i1_depth          = I1_depth_acc(*eventInfo);
-  m_i2_depth          = I2_depth_acc(*eventInfo);
-  m_v1_nelements      = V1_nelements_acc(*eventInfo);
-  m_v2_nelements      = V2_nelements_acc(*eventInfo);
-  m_ss_abs_costheta   = std::fabs(SS_costheta_acc(*eventInfo));
-  m_s1_abs_costheta   = std::fabs(S1_costheta_acc(*eventInfo));
-  m_s2_abs_costheta   = std::fabs(S2_costheta_acc(*eventInfo));
+  m_ss_mass           = (SS_mass_acc.isAvailable(*eventInfo))?SS_mass_acc(*eventInfo)/1000.:-99;
+  m_ss_invgamma       = (SS_invgamma_acc.isAvailable(*eventInfo))?SS_invgamma_acc(*eventInfo):-99;
+  m_ss_dphivis        = (SS_dphivis_acc.isAvailable(*eventInfo))?SS_dphivis_acc(*eventInfo):-99;
+  m_ss_costheta       = (SS_costheta_acc.isAvailable(*eventInfo))?SS_costheta_acc(*eventInfo):-99;
+  m_ss_dphidecayangle = (SS_dphidecayangle_acc.isAvailable(*eventInfo))?SS_dphidecayangle_acc(*eventInfo):-99;
+  m_ss_mdeltaR        = (SS_mdeltaR_acc.isAvailable(*eventInfo))?SS_mdeltaR_acc(*eventInfo)/1000.:-99;
+  m_s1_mass           = (S1_mass_acc.isAvailable(*eventInfo))?S1_mass_acc(*eventInfo)/1000.:-99;
+  m_s1_costheta       = (S1_costheta_acc.isAvailable(*eventInfo))?S1_costheta_acc(*eventInfo):-99;
+  m_s2_mass           = (S2_mass_acc.isAvailable(*eventInfo))?S2_mass_acc(*eventInfo)/1000.:-99;
+  m_s2_costheta       = (S2_costheta_acc.isAvailable(*eventInfo))?S2_costheta_acc(*eventInfo):-99;
+  m_i1_depth          = (I1_depth_acc.isAvailable(*eventInfo))?I1_depth_acc(*eventInfo):-99;
+  m_i2_depth          = (I2_depth_acc.isAvailable(*eventInfo))?I2_depth_acc(*eventInfo):-99;
+  m_v1_nelements      = (V1_nelements_acc.isAvailable(*eventInfo))?V1_nelements_acc(*eventInfo):-99;
+  m_v2_nelements      = (V2_nelements_acc.isAvailable(*eventInfo))?V2_nelements_acc(*eventInfo):-99;
+  m_ss_abs_costheta   = (SS_costheta_acc.isAvailable(*eventInfo))?std::fabs(SS_costheta_acc(*eventInfo)):-99;
+  m_s1_abs_costheta   = (S1_costheta_acc.isAvailable(*eventInfo))?std::fabs(S1_costheta_acc(*eventInfo)):-99;
+  m_s2_abs_costheta   = (S2_costheta_acc.isAvailable(*eventInfo))?std::fabs(S2_costheta_acc(*eventInfo)):-99;
 
   const xAOD::MissingET* in_met(nullptr);
   if(!m_inputMET.empty()){
-    // retrieve CalibMET_RefFinal for METContainer
-    xAOD::MissingETContainer::const_iterator met_id = in_missinget->find(m_inputMETName);
-    if (met_id == in_missinget->end()) {
+    in_met = (*in_missinget)[m_inputMETName.c_str()];
+    if (!in_met) {
       Error("execute()", "No %s inside MET container", m_inputMETName.c_str());
       return EL::StatusCode::FAILURE;
     }
-    // dereference the iterator since it's just a single object
-    in_met = *met_id;
+
     m_totalTransverseMass = VD::mT(in_met, in_muons, in_electrons);
     m_met     = in_met->met()/1000.;
     m_met_mpx = in_met->mpx()/1000.;
     m_met_mpy = in_met->mpy()/1000.;
+  }
+
+  // in_jets will always contain the signal jets
+  ConstDataVector<xAOD::JetContainer> signalJets;
+  if(!m_inputJets.empty()){
+    signalJets = VD::subset_using_decor(in_jets, VD::decor_signal, 1);
+    in_jets = signalJets.asDataVector();
   }
 
   if(!m_inputMET.empty() && !m_inputJets.empty()){
@@ -307,7 +362,7 @@ EL::StatusCode OptimizationDump :: execute ()
 
     static SG::AuxElement::Decorator< int > isB("isB");
     ConstDataVector<xAOD::JetContainer> bjets(SG::VIEW_ELEMENTS);
-    for(const auto jet: *in_jets){
+    for(const auto &jet: *in_jets){
       if(isB(*jet) != 1) continue;
       bjets.push_back(jet);
     }
@@ -326,7 +381,7 @@ EL::StatusCode OptimizationDump :: execute ()
     m_numBJets = (pass_preSel_bjets.isAvailable(*eventInfo))?pass_preSel_bjets(*eventInfo):-99;
 
     // build the reclustered, trimmed jets
-    for(auto tool: m_jetReclusteringTools)
+    for(const auto &tool: m_jetReclusteringTools)
       tool->execute();
 
     for(int r=0; r<3; r++){
@@ -341,7 +396,7 @@ EL::StatusCode OptimizationDump :: execute ()
         m_rc_split12[r][i] = -99.0;
         m_rc_split23[r][i] = -99.0;
         m_rc_nsj[r][i] = -99;
-        // if there are less than 4 jets, then...
+        // if there are fewer than 4 jets, then...
         if(i < rcJets->size()){
           auto rcJet = rcJets->at(i);
           m_rc_pt[r][i] = rcJet->pt()/1000.;
@@ -352,6 +407,47 @@ EL::StatusCode OptimizationDump :: execute ()
           rcJet->getAttribute("Split12", m_rc_split12[r][i]);
           rcJet->getAttribute("Split23", m_rc_split23[r][i]);
           if(rcJet->getAttribute("constituentLinks", constitLinks)) m_rc_nsj[r][i] = constitLinks.size();
+        }
+      }
+    }
+
+    for(const auto& tool: m_varRjetReclusteringTools)
+      tool->execute();
+
+    for(int i=0; i<2; i++){
+      char varRJetContainer[15];
+      if(i==0) sprintf(varRJetContainer,"VarR_top_Jets");
+      else sprintf(varRJetContainer,"VarR_W_Jets");
+      const xAOD::JetContainer* varRJets(nullptr);
+      RETURN_CHECK("OptimizationDump::execute()", HF::retrieve(varRJets, varRJetContainer, m_event, m_store, m_debug), ("Could not retrieve the variable R jet container "+std::string(varRJetContainer)).c_str());
+      if(i==0) m_numJetsVarR_top = varRJets->size();
+      else m_numJetsVarR_W = varRJets->size();
+      for(unsigned int j=0; j<4; j++){
+        if(i==0){
+          m_varR_top_m[j]  = -99.0;
+          m_varR_top_pt[j]  = -99.0;
+          m_varR_top_nsj[j]  = -99.0;
+        }
+        else{
+          m_varR_W_m[j]  = -99.0;
+          m_varR_W_pt[j]  = -99.0;
+          m_varR_W_nsj[j]  = -99.0;
+        }
+        // if there are fewer than 4 jets, then...
+        if(j < varRJets->size()){
+          auto varRJet = varRJets->at(j);
+          if(i==0){
+            m_varR_top_m[j] = varRJet->m()/1000.;
+            m_varR_top_pt[j] = varRJet->pt()/1000.;
+            std::vector< ElementLink< xAOD::IParticleContainer > > constitLinks;
+            if(varRJet->getAttribute("constituentLinks", constitLinks)) m_varR_top_nsj[j] = constitLinks.size();
+          }
+          else{
+            m_varR_W_m[j] = varRJet->m()/1000.;
+            m_varR_W_pt[j] = varRJet->pt()/1000.;
+            std::vector< ElementLink< xAOD::IParticleContainer > > constitLinks;
+            if(varRJet->getAttribute("constituentLinks", constitLinks)) m_varR_W_nsj[j] = constitLinks.size();
+          }
         }
       }
     }
@@ -378,7 +474,7 @@ EL::StatusCode OptimizationDump :: execute ()
     m_n_topTag_Tight = 0;
 
     int jetIndex = 0;
-    for(auto jet: *in_jetsLargeR){
+    for(const auto &jet: *in_jetsLargeR){
       int topTag_SmoothLoose(-1), topTag_SmoothTight(-1),
           topTag_Loose(-1), topTag_Tight(-1);
       // don't count it if it doesn't pass preselection
@@ -427,9 +523,12 @@ EL::StatusCode OptimizationDump :: execute ()
 EL::StatusCode OptimizationDump :: postExecute () { return EL::StatusCode::SUCCESS; }
 
 EL::StatusCode OptimizationDump :: finalize () {
-  if(!m_inputJets.empty())
-    for(auto tool: m_jetReclusteringTools)
+  if(!m_inputJets.empty()){
+    for(const auto &tool: m_jetReclusteringTools)
       if(tool) delete tool;
+    for(const auto& tool: m_varRjetReclusteringTools)
+      if(tool) delete tool;
+  }
   return EL::StatusCode::SUCCESS;
 }
 

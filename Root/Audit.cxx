@@ -187,14 +187,11 @@ EL::StatusCode Audit :: execute ()
 
   const xAOD::MissingET* in_met(nullptr);
   if(!m_inputMET.empty()){
-    // retrieve CalibMET_RefFinal for METContainer
-    xAOD::MissingETContainer::const_iterator met_id = in_missinget->find(m_inputMETName);
-    if (met_id == in_missinget->end()) {
+    in_met = (*in_missinget)[m_inputMETName.c_str()];
+    if (!in_met) {
       Error("execute()", "No %s inside MET container", m_inputMETName.c_str());
       return EL::StatusCode::FAILURE;
     }
-    // dereference the iterator since it's just a single object
-    in_met = *met_id;
   }
 
   // define razor decorations
@@ -212,7 +209,6 @@ EL::StatusCode Audit :: execute ()
   static SG::AuxElement::Decorator<float> I2_depth_decor            ("I2_depth");
   static SG::AuxElement::Decorator<float> V1_nelements_decor        ("V1_nelements");
   static SG::AuxElement::Decorator<float> V2_nelements_decor        ("V2_nelements");
-  //static SG::AuxElement::Decorator<bool> signalW                   ("Wlabel");
   // initialize to zero on event
   SS_mass_decor(*eventInfo)             = -99;
   SS_invgamma_decor(*eventInfo)         = -99;
@@ -228,28 +224,37 @@ EL::StatusCode Audit :: execute ()
   I2_depth_decor(*eventInfo)            = -99;
   V1_nelements_decor(*eventInfo)        = -99;
   V2_nelements_decor(*eventInfo)        = -99;
-  //isWlabel                              = false;
+
+  isWlabel                              = false;
 
 
   // clear the event
   LAB.ClearEvent();
-  
+
   // create a vector to hold the group element ids for when adding jets
   std::map<const RF::GroupElementID, const xAOD::Jet*> in_jets_IDs;
-  for(const auto jet: *in_jets)
-    in_jets_IDs[VIS.AddLabFrameFourVector( jet->p4() )] = jet;
+  if(!m_inputJets.empty()){
+    for(const auto &jet: *in_jets)
+      in_jets_IDs[VIS.AddLabFrameFourVector( jet->p4() )] = jet;
+  }
 
-
-  // no mpz, but why set it this way???
-  INV.SetLabFrameThreeVector(  TVector3( in_met->mpx(), in_met->mpy(), 0 ) );
+  if(!m_inputMET.empty()){
+    // no mpz, but why set it this way???
+    INV.SetLabFrameThreeVector(  TVector3( in_met->mpx(), in_met->mpy(), 0 ) );
+  }
 
   // dump information about the jets and met at least
   if(m_debug){
-    Info("execute()", "Details about input jets...");
-    for(const auto jet: *in_jets)
-        Info("execute()", "\tpT: %0.2f GeV\tm: %0.2f GeV\teta: %0.2f\tphi: %0.2f", jet->pt()/1000., jet->m()/1000., jet->eta(), jet->phi());
-    Info("execute()", "Details about MET...");
-    Info("execute()", "\tpx: %0.2f GeV\tpy: %0.2f GeV\tpz: %0.2f GeV", in_met->mpx()/1000., in_met->mpy()/1000., 0.0/1000.);
+    if(!m_inputJets.empty()){
+      Info("execute()", "Details about input jets...");
+      for(const auto &jet: *in_jets)
+          Info("execute()", "\tpT: %0.2f GeV\tm: %0.2f GeV\teta: %0.2f\tphi: %0.2f", jet->pt()/1000., jet->m()/1000., jet->eta(), jet->phi());
+    }
+
+    if(!m_inputMET.empty()){
+      Info("execute()", "Details about MET...");
+      Info("execute()", "\tpx: %0.2f GeV\tpy: %0.2f GeV\tpz: %0.2f GeV", in_met->mpx()/1000., in_met->mpy()/1000., 0.0/1000.);
+    }
   }
 
   // analyze the event

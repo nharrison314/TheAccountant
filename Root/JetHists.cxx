@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 #include <TheAccountant/JetHists.h>
+=======
+#include <WTag/JetHists.h>
+>>>>>>> created a class ROC that makes histograms of the jet mass for the first four jets. these plots will be used to calculate efficiency
 
 // jet definition
 #include <fastjet/JetDefinition.hh>
@@ -6,22 +10,36 @@
 // subjet finding
 #include "JetSubStructureUtils/SubjetFinder.h"
 
+<<<<<<< HEAD
 #include "TheAccountant/VariableDefinitions.h"
+=======
+#include "WTag/VariableDefinitions.h"
+>>>>>>> created a class ROC that makes histograms of the jet mass for the first four jets. these plots will be used to calculate efficiency
 
 #include <FourMomUtils/xAODP4Helpers.h>
 
 namespace VD = VariableDefinitions;
 
+<<<<<<< HEAD
 TheAccountant::JetHists::JetHists (std::string name) :
+=======
+WTag::JetHists::JetHists (std::string name) :
+>>>>>>> created a class ROC that makes histograms of the jet mass for the first four jets. these plots will be used to calculate efficiency
   HistogramManager(name, ""),
   m_doTopology(false),
   m_doSubstructure(false)
 {
 }
 
+<<<<<<< HEAD
 TheAccountant::JetHists::~JetHists () {}
 
 StatusCode TheAccountant::JetHists::initialize() {
+=======
+WTag::JetHists::~JetHists () {}
+
+StatusCode WTag::JetHists::initialize() {
+>>>>>>> created a class ROC that makes histograms of the jet mass for the first four jets. these plots will be used to calculate efficiency
   m_ht          = book(m_name, "HT", "#sum p_{T}^{jet} [GeV]", 100, 0, 3000.);
   m_massOverPt  = book(m_name, "MOverPt", "#frac{m^{jet}}{p_{T}}", 100, 0, 5);
   m_jvt         = book(m_name, "Jvt", "JVT", 110, -0.1, 1);
@@ -50,10 +68,17 @@ StatusCode TheAccountant::JetHists::initialize() {
   return StatusCode::SUCCESS;
 }
 
+<<<<<<< HEAD
 StatusCode TheAccountant::JetHists::execute( const xAOD::JetContainer* jets, float eventWeight ) {
 
   float totalMass(0);
+  for(const auto &jet: *jets){
+=======
+StatusCode WTag::JetHists::execute( const xAOD::JetContainer* jets, float eventWeight ) {
+
+  float totalMass(0);
   for(const auto jet: *jets){
+>>>>>>> created a class ROC that makes histograms of the jet mass for the first four jets. these plots will be used to calculate efficiency
     totalMass += jet->m();
     if(!this->execute(jet, eventWeight).isSuccess()) return StatusCode::FAILURE;
   }
@@ -84,7 +109,12 @@ StatusCode TheAccountant::JetHists::execute( const xAOD::JetContainer* jets, flo
   return StatusCode::SUCCESS;
 }
 
+<<<<<<< HEAD
 StatusCode TheAccountant::JetHists::execute( const xAOD::Jet* jet, float eventWeight ){
+=======
+StatusCode WTag::JetHists::execute( const xAOD::Jet* jet, float eventWeight ){
+>>>>>>> created a class ROC that makes histograms of the jet mass for the first four jets. these plots will be used to calculate efficiency
+
   m_massOverPt->Fill( jet->m()/jet->pt(), eventWeight );
   float jvt(-99.0);
   jet->getAttribute("Jvt", jvt);
@@ -132,7 +162,11 @@ StatusCode TheAccountant::JetHists::execute( const xAOD::Jet* jet, float eventWe
 
     JetSubStructureUtils::SubjetFinder subjetFinder(subjet_clustering, subjet_radius, 0.0);
     std::vector<fastjet::PseudoJet> subjets = subjetFinder.result(*jet);
+<<<<<<< HEAD
+    for(auto &subjet: subjets) m_subjet_ptFrac->Fill( subjet.pt()/jet->pt(), eventWeight);
+=======
     for(auto subjet: subjets) m_subjet_ptFrac->Fill( subjet.pt()/jet->pt(), eventWeight);
+>>>>>>> created a class ROC that makes histograms of the jet mass for the first four jets. these plots will be used to calculate efficiency
     m_subjet_multiplicity->Fill( subjets.size(), eventWeight);
     */
 
