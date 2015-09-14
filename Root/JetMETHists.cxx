@@ -20,7 +20,6 @@ StatusCode TheAccountant::JetMETHists::initialize() {
 }
 
 StatusCode TheAccountant::JetMETHists::execute( const xAOD::JetContainer* jets, const xAOD::MissingET* met, float eventWeight ) {
-StatusCode WTag::JetMETHists::execute( const xAOD::JetContainer* jets, const xAOD::MissingET* met, float eventWeight ) {
   // compute effective mass
   float meff( VD::Meff(met, jets, m_numLeadingJets, nullptr, nullptr));
   m_effectiveMass->Fill( meff/1.e3, eventWeight );
