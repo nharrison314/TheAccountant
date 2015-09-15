@@ -69,15 +69,15 @@ StatusCode TheAccountant::ROC::initialize () {
   jetmass3_Wlabel = book(m_name,"jetmass3_Wlabel","Third Jet Mass (GeV)",650,0,6500);
   jetmass4_Wlabel = book(m_name,"jetmass4_Wlabel","Fourth Jet Mass (GeV)",650,0,6500);
 
-  m_event = wk()->xaodEvent();
-  m_store = wk()->xaodStore();
+  //m_event = wk()->xaodEvent();
+  //m_store = wk()->xaodStore();
   //positive = 0.0;
   //f/ake = 0.0;
   //totalEvents = 0.0;
   return EL::StatusCode::SUCCESS;
 }
 
-StatusCode TheAccountant::ROC::execute (const xAOD::EventInfo* eventInfo,float eventWeight)
+StatusCode TheAccountant::ROC::execute (const xAOD::EventInfo* eventInfo, const xAOD::JetContainer* in_jetsLargeR, const xAOD::JetContainer* in_jets, const xAOD::TruthParticleContainer* truth_particles, float eventWeight)
 {
   //static SG::AuxElement::ConstAccessor<float> Wlabel("Wlabel");
 
