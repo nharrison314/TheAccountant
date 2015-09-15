@@ -33,7 +33,7 @@ using namespace std;
 
 namespace HF = HelperFunctions;
 
-WTag::WTag::ROC (std::string name) :
+TheAccountant::ROC::ROC (std::string name) :
   HistogramManager(name,"")
 {
 }
@@ -51,14 +51,14 @@ WTag::WTag::ROC (std::string name) :
 //EL::StatusCode ROC :: histInitialize () { return EL::StatusCode::SUCCESS; }
 //EL::StatusCode ROC :: fileExecute () { return EL::StatusCode::SUCCESS; }
 //EL::StatusCode ROC :: changeInput (bool /*firstFile*/) { return EL::StatusCode::SUCCESS; }
-//WTag::WTag::ROC (std::string name) :
+//TheAccountant::TheAccountant::ROC (std::string name) :
 // HistogramManager(name,"")//
 //{/
 //}
 
-WTag::WTag::~ROC () {}
+TheAccountant::ROC::~ROC () {}
 
-StatusCode ROC :: initialize () {
+StatusCode TheAccountant::ROC::initialize () {
   // assign m_event and m_store                                          
   jetmass1 = book(m_name,"jetmass1","Leading Jet Mass (GeV)",650,0, 6500);
   jetmass2 = book(m_name,"jetmass2","Subleading Jet Mass (GeV)",650, 0 , 6500);
@@ -77,7 +77,7 @@ StatusCode ROC :: initialize () {
   return EL::StatusCode::SUCCESS;
 }
 
-StatusCode ROC :: execute (const xAOD::EventInfo* eventInfo,float eventWeight)
+StatusCode TheAccountant::ROC::execute (const xAOD::EventInfo* eventInfo,float eventWeight)
 {
   //static SG::AuxElement::ConstAccessor<float> Wlabel("Wlabel");
 
@@ -92,7 +92,7 @@ StatusCode ROC :: execute (const xAOD::EventInfo* eventInfo,float eventWeight)
   const xAOD::PhotonContainer*          in_photons    (nullptr);
   const xAOD::TruthParticleContainer*   truth_particles  (nullptr);      
 
-  static JetSubStructureUtils::BosonTag WTagger("medium", "smooth", "$ROOTCOREBIN/data/JetSub\
+  static JetSubStructureUtils::BosonTag TheAccountantger("medium", "smooth", "$ROOTCOREBIN/data/JetSub\
 StructureUtils/config_13TeV_20150528_Wtagging.dat", true, true);     
 
   RETURN_CHECK("Audit::execute()", HF::retrieve(eventInfo,    m_eventInfo,        m_event, m_store, m_debug), "Could not get the EventInfo container.");
@@ -133,11 +133,11 @@ StructureUtils/config_13TeV_20150528_Wtagging.dat", true, true);
       in_jets_IDs[VIS.AddLabFrameFourVector( jet->p4() )] = jet;
     }
   //totalEvents = totalEvents + 1;
-  //bool isWTagged = false;
+  //bool isTheAccountantged = false;
   //tags jets that are likely W boson.                                                             
   //for(const auto jet: *in_jetsLargeR)                                                            
   //  {                                                                                            
-  //    isWTagged = WTagger.result(*jet);                                                     
+  //    isTheAccountantged = TheAccountantger.result(*jet);                                                     
   //  } 
   float jetmass_1 =0;
   float jetmass_2=0; 
