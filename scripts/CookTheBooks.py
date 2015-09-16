@@ -25,7 +25,7 @@ import sys
 import datetime
 import time
 
-
+SCRIPT_START_TIME = datetime.datetime.now()
 
 # think about using argcomplete
 # https://argcomplete.readthedocs.org/en/latest/#activating-global-completion%20argcomplete
@@ -104,11 +104,17 @@ if __name__ == "__main__":
   group_algorithms.add_argument('--debug', dest='debug', action='store_true', help='Enable verbose output of the algorithms.')
   group_algorithms.add_argument('--eventInfo', dest='eventInfo', metavar='', type=str, help='EventInfo container name.', default='EventInfo')
   group_algorithms.add_argument('--jetsLargeR', dest='inputLargeRJets', metavar='', type=str, help='Large-R jet container name.', default='FinalFatJets')
-  group_algorithms.add_argument('--jets', dest='inputJets', metavar='', type=str, help='small-R jet container name.', default='BaselineJets')
+#  group_algorithms.add_argument('--jets', dest='inputJets', metavar='', type=str, help='small-R jet container name.', default='BaselineJets')
+  group_algorithms.add_argument('--jets', dest='inputJets', metavar='', type=str, help='small-R jet container name.', default='BaseJets')
+##########################################################################
   group_algorithms.add_argument('--met', dest='inputMET', metavar='', type=str, help='Missing Et container name.', default='Mettst')
   group_algorithms.add_argument('--metid', dest='inputMETName', metavar='', type=str, help='Missing Et container element to access.', default='Final')
-  group_algorithms.add_argument('--electrons', dest='inputElectrons', metavar='', type=str, help='Electrons container name.', default='BaselineElectrons')
-  group_algorithms.add_argument('--muons', dest='inputMuons', metavar='', type=str, help='Muons container name.', default='BaselineMuons')
+#  group_algorithms.add_argument('--electrons', dest='inputElectrons', metavar='', type=str, help='Electrons container name.', default='BaselineElectrons')
+  group_algorithms.add_argument('--electrons', dest='inputElectrons', metavar='', type=str, help='Electrons container name.', default='BaseElectrons')
+###########################################################################
+#  group_algorithms.add_argument('--muons', dest='inputMuons', metavar='', type=str, help='Muons container name.', default='BaselineMuons')
+  group_algorithms.add_argument('--muons', dest='inputMuons', metavar='', type=str, help='Muons container name.', default='BaseMuons')
+###########################################################################
   group_algorithms.add_argument('--taujets', dest='inputTauJets', metavar='', type=str, help='TauJets container name.', default='')
   group_algorithms.add_argument('--photons', dest='inputPhotons', metavar='', type=str, help='Photons container name.', default='')
   group_algorithms.add_argument('--decorJetTagsB', dest='decor_jetTags_b', metavar='', type=str, help='Decoration name for b-tags.', default='')
@@ -228,13 +234,14 @@ if __name__ == "__main__":
 
   # define arguments for lsf driver
   lsf.add_argument('--optLSFConf', metavar='', type=str, required=False, default='-q short')
+
   # parse the arguments, throw errors if missing any
   args = parser.parse_args()
 
   # set verbosity for python printing
   if args.verbose < 4:
     cookBooks_logger.setLevel(20 - args.verbose*5)
- else:
+  else:
     cookBooks_logger.setLevel(logging.NOTSET + 1)
 
   try:

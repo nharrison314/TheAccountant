@@ -9,6 +9,8 @@
 #include "xAODMissingET/MissingETContainer.h"
 #include "xAODJet/JetContainer.h"
 #include "xAODTruth/TruthParticleContainer.h"
+#include "xAODMuon/MuonContainer.h"
+#include "xAODEgamma/ElectronContainer.h"
 #include <string>
 
 namespace TheAccountant
@@ -21,7 +23,7 @@ namespace TheAccountant
     virtual ~ROC() ;
     
     StatusCode initialize();
-    StatusCode execute (const xAOD::EventInfo* eventInfo, const xAOD::JetContainer* in_ffjets, const xAOD::JetContainer* in_jets, const xAOD::TruthParticleContainer* truth_particles, const float eventWeight);
+StatusCode execute (const xAOD::EventInfo* eventInfo, const xAOD::MissingET* in_met, const xAOD::JetContainer* in_jets, const xAOD::JetContainer* in_jetsLargeR, const xAOD::MuonContainer* in_muons, const xAOD::ElectronContainer* in_electrons, const xAOD::TruthParticleContainer* truth_particles, const float eventWeight);
     
     std::string m_decor_jetTags_b   = "", // isB,                          
       m_decor_jetTags_top = "", // isTop,                                               
