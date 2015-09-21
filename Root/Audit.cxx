@@ -216,39 +216,30 @@ EL::StatusCode Audit :: execute ()
 
   int i=0;
   std::cout <<"Audit: before loop through in_jetsLargeR"<< std::endl;
-  for(const auto jet: *in_jetsLargeR)
+  static SG::AuxElement::Decorator<bool> containsTruthW         ("containsTruthW");
+  for(const auto& jet: *in_jetsLargeR)
     {
      
-      static SG::AuxElement::Decorator<bool> containsTruthW         ("containsTruthW");
+
       std::cout <<"Audit: about to define containsTruthW"<<std::endl;
       containsTruthW(*eventInfo) = false;
 
       if (!m_truthParticles.empty())
 	{
-	  i++;
 	  std::cout << "Audit: inside loop for m_truthParticles existing"<<std::endl;
 	  if (!in_truth->size()==0)
 	    {
 	      std::cout << "Audit: in_truth->size() != 0 " << std::endl;
-	      for (const auto truth_particle: *in_truth){
-		int pdgId = abs(truth_particle->pdgId());
-		if (pdgId==24 || pdgId==-24)
-		  {
-		    containsTruthW(*eventInfo) = true;
-		    std::cout << "Audit: just defined containsTruthW as : " << containsTruthW(*eventInfo) <<std::endl;
-		    // if (i==1)
-		    //   Jet1_containW(*eventInfo) = true;
-		    // else if (i==2)
-		    //   Jet2_containW(*eventInfo) = true;
-		    // else if (i==3)
-		    //   Jet3_containW(*eventInfo) = true;
-		    // else
-		    //   Jet4_containW(*eventInfo) = true;
-		  }
+	      for (const auto& truth_particle: *in_truth)
+		{
+		  containsTruthW(*eventInfo) |= truth_particle->isW();
+		  std::cout << "Audit: just defined containsTruthW as : " << containsTruthW(*eventInfo) <<std::endl;
+
+		}
 		
-	      }
 	    }
 	}
+	
       else
 	{
 	  containsTruthW(*eventInfo) = false;
