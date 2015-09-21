@@ -122,7 +122,7 @@ if __name__ == "__main__":
   group_algorithms.add_argument('--decorJetTagsB', dest='decor_jetTags_b', metavar='', type=str, help='Decoration name for b-tags.', default='')
   group_algorithms.add_argument('--decorJetTagsTop', dest='decor_jetTags_top', metavar='', type=str, help='Decoration name for top-tags.', default='')
   group_algorithms.add_argument('--decorJetTagsW', dest='decor_jetTags_w', metavar='', type=str, help='Decoration name for w-tags.', default='')
-  group_algorithms.add_argument('--truth',dest='truthParticles',metavar='', type=str, help='truthParticles container name.',default='FinalTruthParticles')
+  group_algorithms.add_argument('--truth',dest='truthParticles',metavar='', type=str, help='truthParticles container name.',default='')
 
 
   group_preselect = parser.add_argument_group('preselect', description='all selections are inclusive: x >= min, x =< max')

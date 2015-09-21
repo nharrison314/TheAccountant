@@ -232,8 +232,10 @@ EL::StatusCode Report :: execute ()
     RETURN_CHECK("Report::execute()", HF::retrieve(in_taus,      m_inputTauJets,     m_event, m_store, m_debug), "Could not get the inputTauJets container.");
   if(!m_inputPhotons.empty())
     RETURN_CHECK("Report::execute()", HF::retrieve(in_photons,   m_inputPhotons,     m_event, m_store, m_debug), "Could not get the inputPhotons container.");
+  std::cout << "Report: before retrieving truth particles" << std::endl;
   if(!m_truthParticles.empty())
       RETURN_CHECK("Report::execute()", HF::retrieve(in_truth, m_truthParticles, m_event, m_store, m_debug), "Could not get the truthParticles container.");
+  std::cout << "Report: after retrieving truth particles" << std::endl;
 
 
   // prepare the jets by creating a view container to look at them
@@ -279,128 +281,142 @@ EL::StatusCode Report :: execute ()
   
   //  if(!m_inputMET.empty() && !m_truthParticles.empty() && !m_inputJets.empty() && !m_inputLargeRJets.empty())
   if(!m_inputMET.empty()  && !m_inputJets.empty() && !m_inputLargeRJets.empty())
-    RETURN_CHECK("Report::execute()", m_ROCPlots["all/roc"]->execute(eventInfo, in_met, in_jets, in_jetsLargeR, in_muons, in_electrons, in_truth, eventWeight),"");
+    {  
+      std::cout <<"Report: before execute to make roc plots" << std::endl;
+      RETURN_CHECK("Report::execute()", m_ROCPlots["all/roc"]->execute(eventInfo, in_met, in_jets, in_jetsLargeR, in_muons, in_electrons, in_truth, eventWeight),"");
+      std::cout <<"Report: after execute to make roc plots" << std::endl;
+    }
   ConstDataVector<xAOD::JetContainer> jetsTrueW;
+  std::cout << "Report: before loop through in_jetsLargeR"<< std::endl;
   for(const auto jet: *in_jetsLargeR)
     {
+      std::cout <<"Report: inside loop through in_jetsLargeR, before accessor" << std::endl;
       static SG::AuxElement::ConstAccessor<bool> containsTruthW_acc("containsTruthW");
+      std::cout <<"Report: After containsTruthW_acc accessor" << std::endl;
+      std::cout <<"Report: containsTruthW_acc: " << containsTruthW_acc(*eventInfo) << std::endl;
       if (containsTruthW_acc(*eventInfo))
-	jetsTrueW->push_back(jet);
-    }
+	{
+	  std::cout <<"Report: inside loop for if there is a truthW" << std::endl;
+	  jetsTrueW.push_back(jet);
+	  std::cout <<"After pushing jet back!" << std::endl;
+	 }
+     }
 
+  std::cout <<"Report: if(!jetsTrueW.empty())" <<std::endl; 
 
+   if(!jetsTrueW.empty())
+     {
+       std::cout <<"Report: beore RETURN_CHECK statement making kinematic plots" <<std::endl;
+       RETURN_CHECK("Report::execute()", m_jetKinematicPlots["all/jets/wtrue"]->execute(jetsTrueW.asDataVector(), eventWeight), "");
+       std::cout <<"Report: after RETURN_CHECK statement making kinematic plots" << std::endl;
+     }
 
-  if(!jetsTrueW.empty())
-    {
-      RETURN_CHECK("Report::execute()", m_jetKinematicPlots["all/jets/wtrue"]->execute(jetsTrueW, eventWeight), "");
-    }
-  
-  if(!m_inputJets.empty()){
-    RETURN_CHECK("Report::execute()", m_jetKinematicPlots["all/jets"]->execute(in_jets, eventWeight), "");
-    RETURN_CHECK("Report::execute()", m_jetPlots["all/jets"]->execute(in_jets, eventWeight), "");
-    if(!m_inputMET.empty())
-      RETURN_CHECK("Report::execute()", m_jetMETPlots["all/jets"]->execute(in_jets, in_met, eventWeight), "");
-  }
+   if(!m_inputJets.empty()){
+     RETURN_CHECK("Report::execute()", m_jetKinematicPlots["all/jets"]->execute(in_jets, eventWeight), "");
+     RETURN_CHECK("Report::execute()", m_jetPlots["all/jets"]->execute(in_jets, eventWeight), "");
+     if(!m_inputMET.empty())
+       RETURN_CHECK("Report::execute()", m_jetMETPlots["all/jets"]->execute(in_jets, in_met, eventWeight), "");
+   }
 
-  if(!m_inputLargeRJets.empty()){
-    RETURN_CHECK("Report::execute()", m_jetKinematicPlots["all/jetsLargeR"]->execute(in_jetsLargeR, eventWeight), "");
-    RETURN_CHECK("Report::execute()", m_jetPlots["all/jetsLargeR"]->execute(in_jetsLargeR, eventWeight), "");
-    if(!m_inputMET.empty())
-      RETURN_CHECK("Report::execute()", m_jetMETPlots["all/jetsLargeR"]->execute(in_jetsLargeR, in_met, eventWeight), "");
-    for(const auto &decorationName: m_topTagDecorationNames)
-      RETURN_CHECK("Report::execute()", m_jetTagPlots["all/jetsLargeR" + decorationName]->execute(in_jetsLargeR, in_met, eventWeight), "");
-  }
+   if(!m_inputLargeRJets.empty()){
+     RETURN_CHECK("Report::execute()", m_jetKinematicPlots["all/jetsLargeR"]->execute(in_jetsLargeR, eventWeight), "");
+     RETURN_CHECK("Report::execute()", m_jetPlots["all/jetsLargeR"]->execute(in_jetsLargeR, eventWeight), "");
+     if(!m_inputMET.empty())
+       RETURN_CHECK("Report::execute()", m_jetMETPlots["all/jetsLargeR"]->execute(in_jetsLargeR, in_met, eventWeight), "");
+     for(const auto &decorationName: m_topTagDecorationNames)
+       RETURN_CHECK("Report::execute()", m_jetTagPlots["all/jetsLargeR" + decorationName]->execute(in_jetsLargeR, in_met, eventWeight), "");
+   }
 
-  if(!m_inputMET.empty())
-    RETURN_CHECK("Report::execute()", m_METPlots["all/MET"]->execute(in_met, eventWeight), "");
+   if(!m_inputMET.empty())
+     RETURN_CHECK("Report::execute()", m_METPlots["all/MET"]->execute(in_met, eventWeight), "");
 
-  //build up the tagged containers
-  ConstDataVector<xAOD::JetContainer> jets_bTagged(SG::VIEW_ELEMENTS);
-  ConstDataVector<xAOD::JetContainer> jetsLargeR_topTagged(SG::VIEW_ELEMENTS);
-  ConstDataVector<xAOD::JetContainer> jetsLargeR_wTagged(SG::VIEW_ELEMENTS);
+   //build up the tagged containers
+   ConstDataVector<xAOD::JetContainer> jets_bTagged(SG::VIEW_ELEMENTS);
+   ConstDataVector<xAOD::JetContainer> jetsLargeR_topTagged(SG::VIEW_ELEMENTS);
+   ConstDataVector<xAOD::JetContainer> jetsLargeR_wTagged(SG::VIEW_ELEMENTS);
 
-  if(!m_decor_jetTags_b.empty() || !m_decor_jetTags_top.empty() || !m_decor_jetTags_w.empty()){
-    static SG::AuxElement::Accessor< int > decor_jetTags_b(m_decor_jetTags_b);
-    static SG::AuxElement::Accessor< int > decor_jetTags_top(m_decor_jetTags_top);
-    static SG::AuxElement::Accessor< int > decor_jetTags_w(m_decor_jetTags_w);
+   if(!m_decor_jetTags_b.empty() || !m_decor_jetTags_top.empty() || !m_decor_jetTags_w.empty()){
+     static SG::AuxElement::Accessor< int > decor_jetTags_b(m_decor_jetTags_b);
+     static SG::AuxElement::Accessor< int > decor_jetTags_top(m_decor_jetTags_top);
+     static SG::AuxElement::Accessor< int > decor_jetTags_w(m_decor_jetTags_w);
 
-    if(!m_inputJets.empty()){
-      for(const auto &jet: *in_jets){
-        if(!m_decor_jetTags_b.empty()){
-          if(decor_jetTags_b.isAvailable(*jet)){
-            if(decor_jetTags_b(*jet) == 1) jets_bTagged.push_back(jet);
-          } else {
-            Error("Report::execute()", "m_decor_jetTags_b is set but the decoration is missing on this jet.");
-            return EL::StatusCode::FAILURE;
-          }
-        }
-      }
-    }
+     if(!m_inputJets.empty()){
+       for(const auto &jet: *in_jets){
+	 if(!m_decor_jetTags_b.empty()){
+	   if(decor_jetTags_b.isAvailable(*jet)){
+	     if(decor_jetTags_b(*jet) == 1) jets_bTagged.push_back(jet);
+	   } else {
+	     Error("Report::execute()", "m_decor_jetTags_b is set but the decoration is missing on this jet.");
+	     return EL::StatusCode::FAILURE;
+	   }
+	 }
+       }
+     }
 
-    if(!m_inputLargeRJets.empty()){
-      for(const auto &jet: *in_jetsLargeR){
-        if(!m_decor_jetTags_top.empty()){
-          if(decor_jetTags_top.isAvailable(*jet)){
-            if(decor_jetTags_top(*jet) == 1) jetsLargeR_topTagged.push_back(jet);
-          } else {
-            Error("Report::execute()", "m_decor_jetTags_top is set but the decoration is missing on this jet.");
-            return EL::StatusCode::FAILURE;
-          }
-        }
+     if(!m_inputLargeRJets.empty()){
+       for(const auto &jet: *in_jetsLargeR){
+	 if(!m_decor_jetTags_top.empty()){
+	   if(decor_jetTags_top.isAvailable(*jet)){
+	     if(decor_jetTags_top(*jet) == 1) jetsLargeR_topTagged.push_back(jet);
+	   } else {
+	     Error("Report::execute()", "m_decor_jetTags_top is set but the decoration is missing on this jet.");
+	     return EL::StatusCode::FAILURE;
+	   }
+	 }
 
-        if(!m_decor_jetTags_w.empty()){
-          if(decor_jetTags_w.isAvailable(*jet)){
-            if(decor_jetTags_w(*jet) == 1) jetsLargeR_wTagged.push_back(jet);
-          } else {
-            Error("Report::execute()", "m_decor_jetTags_w is set but the decoration is missing on this jet.");
-            return EL::StatusCode::FAILURE;
-          }
-        }
-      }
-    }
+	 if(!m_decor_jetTags_w.empty()){
+	   if(decor_jetTags_w.isAvailable(*jet)){
+	     if(decor_jetTags_w(*jet) == 1) jetsLargeR_wTagged.push_back(jet);
+	   } else {
+	     Error("Report::execute()", "m_decor_jetTags_w is set but the decoration is missing on this jet.");
+	     return EL::StatusCode::FAILURE;
+	   }
+	 }
+       }
+     }
 
-    if(!m_inputJets.empty()){
-      //all/jets/bTag
-      if(!m_decor_jetTags_b.empty()){
-        RETURN_CHECK("Report::execute()", m_jetKinematicPlots["all/jets/bTag"]->execute(jets_bTagged.asDataVector(), eventWeight), "");
-        RETURN_CHECK("Report::execute()", m_jetPlots["all/jets/bTag"]->execute(jets_bTagged.asDataVector(), eventWeight), "");
-        if(!m_inputMET.empty())
-          RETURN_CHECK("Report::execute()", m_jetMETPlots["all/jets/bTag"]->execute(jets_bTagged.asDataVector(), in_met, eventWeight), "");
-      }
-    }
+     if(!m_inputJets.empty()){
+       //all/jets/bTag
+       if(!m_decor_jetTags_b.empty()){
+	 RETURN_CHECK("Report::execute()", m_jetKinematicPlots["all/jets/bTag"]->execute(jets_bTagged.asDataVector(), eventWeight), "");
+	 RETURN_CHECK("Report::execute()", m_jetPlots["all/jets/bTag"]->execute(jets_bTagged.asDataVector(), eventWeight), "");
+	 if(!m_inputMET.empty())
+	   RETURN_CHECK("Report::execute()", m_jetMETPlots["all/jets/bTag"]->execute(jets_bTagged.asDataVector(), in_met, eventWeight), "");
+       }
+     }
 
-    if(!m_inputLargeRJets.empty()){
-      //all/jetsLargeR/topTag
-      if(!m_decor_jetTags_top.empty()){
-        RETURN_CHECK("Report::execute()", m_jetKinematicPlots["all/jetsLargeR/topTag"]->execute(jetsLargeR_topTagged.asDataVector(), eventWeight), "");
-        RETURN_CHECK("Report::execute()", m_jetPlots["all/jetsLargeR/topTag"]->execute(jetsLargeR_topTagged.asDataVector(), eventWeight), "");
-        if(!m_inputMET.empty())
-          RETURN_CHECK("Report::execute()", m_jetMETPlots["all/jetsLargeR/topTag"]->execute(jetsLargeR_topTagged.asDataVector(), in_met, eventWeight), "");
-      }
+     if(!m_inputLargeRJets.empty()){
+       //all/jetsLargeR/topTag
+       if(!m_decor_jetTags_top.empty()){
+	 RETURN_CHECK("Report::execute()", m_jetKinematicPlots["all/jetsLargeR/topTag"]->execute(jetsLargeR_topTagged.asDataVector(), eventWeight), "");
+	 RETURN_CHECK("Report::execute()", m_jetPlots["all/jetsLargeR/topTag"]->execute(jetsLargeR_topTagged.asDataVector(), eventWeight), "");
+	 if(!m_inputMET.empty())
+	   RETURN_CHECK("Report::execute()", m_jetMETPlots["all/jetsLargeR/topTag"]->execute(jetsLargeR_topTagged.asDataVector(), in_met, eventWeight), "");
+       }
 
-      //all/jetsLargeR/wTag
-      if(!m_decor_jetTags_w.empty()){
-        RETURN_CHECK("Report::execute()", m_jetKinematicPlots["all/jetsLargeR/wTag"]->execute(jetsLargeR_wTagged.asDataVector(), eventWeight), "");
-        RETURN_CHECK("Report::execute()", m_jetPlots["all/jetsLargeR/wTag"]->execute(jetsLargeR_wTagged.asDataVector(), eventWeight), "");
-        if(!m_inputMET.empty())
-          RETURN_CHECK("Report::execute()", m_jetMETPlots["all/jetsLargeR/wTag"]->execute(jetsLargeR_wTagged.asDataVector(), in_met, eventWeight), "");
-      }
-    }
-  }
+       //all/jetsLargeR/wTag
+       if(!m_decor_jetTags_w.empty()){
+	 RETURN_CHECK("Report::execute()", m_jetKinematicPlots["all/jetsLargeR/wTag"]->execute(jetsLargeR_wTagged.asDataVector(), eventWeight), "");
+	 RETURN_CHECK("Report::execute()", m_jetPlots["all/jetsLargeR/wTag"]->execute(jetsLargeR_wTagged.asDataVector(), eventWeight), "");
+	 if(!m_inputMET.empty())
+	   RETURN_CHECK("Report::execute()", m_jetMETPlots["all/jetsLargeR/wTag"]->execute(jetsLargeR_wTagged.asDataVector(), in_met, eventWeight), "");
+       }
+     }
+   }
 
-  if(!m_inputJets.empty()){
-    //all/jetX
-    for(int i=1; i <= std::min<int>( m_numLeadingJets, in_jets->size() ); ++i ){
-      RETURN_CHECK("Report::execute()", m_jetKinematicPlots["all/jet"+std::to_string(i)]->execute(in_jets->at(i-1), eventWeight), "");
-    }
+   if(!m_inputJets.empty()){
+     //all/jetX
+     for(int i=1; i <= std::min<int>( m_numLeadingJets, in_jets->size() ); ++i ){
+       RETURN_CHECK("Report::execute()", m_jetKinematicPlots["all/jet"+std::to_string(i)]->execute(in_jets->at(i-1), eventWeight), "");
+     }
 
-    //all/jetX_bTag
-    if(!m_decor_jetTags_b.empty()){
-      for(int i=1; i <= std::min<int>( m_numLeadingJets, jets_bTagged.size() ); ++i){
-        RETURN_CHECK("Report::execute()", m_jetKinematicPlots["all/jet"+std::to_string(i)+"/bTag"]->execute(jets_bTagged.at(i-1), eventWeight), "");
-      }
-    }
-  }
+     //all/jetX_bTag
+     if(!m_decor_jetTags_b.empty()){
+       for(int i=1; i <= std::min<int>( m_numLeadingJets, jets_bTagged.size() ); ++i){
+	 RETURN_CHECK("Report::execute()", m_jetKinematicPlots["all/jet"+std::to_string(i)+"/bTag"]->execute(jets_bTagged.at(i-1), eventWeight), "");
+       }
+     }
+   }
 
   if(!m_inputLargeRJets.empty()){
     //all/jetLargeRX
@@ -424,7 +440,7 @@ EL::StatusCode Report :: execute ()
       }
     }
   }
-
+  std::cout<<"Report: at the end of execute" <<std::endl;
   return EL::StatusCode::SUCCESS;
 }
 

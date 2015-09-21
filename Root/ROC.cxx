@@ -74,9 +74,8 @@ StatusCode TheAccountant::ROC::initialize () {
 
 StatusCode TheAccountant::ROC::execute (const xAOD::EventInfo* eventInfo, const xAOD::MissingET* met, const xAOD::JetContainer* in_jets, const xAOD::JetContainer* in_jetsLargeR, const xAOD::MuonContainer* in_muons, const xAOD::ElectronContainer* in_electrons, const xAOD::TruthParticleContainer* truth_particles, float eventWeight)
 {
- 
-  static JetSubStructureUtils::BosonTag WTagger("medium", "smooth", "$ROOTCOREBIN/data/JetSub\
-StructureUtils/config_13TeV_20150528_Wtagging.dat", true, true);     
+  std::cout <<"ROC: execute" << std::endl;
+  // static JetSubStructureUtils::BosonTag WTagger("medium", "smooth", "$ROOTCOREBIN/data/JetSubStructureUtils/config_13TeV_20150528_Wtagging.dat", true, true);     
 
   // static SG::AuxElement::ConstAccessor<bool> Jet1_containW_acc("Jet1_containW");
   // static SG::AuxElement::ConstAccessor<bool> Jet2_containW_acc("Jet2_containW");
@@ -92,7 +91,9 @@ StructureUtils/config_13TeV_20150528_Wtagging.dat", true, true);
 
   for(const auto jet: *in_jetsLargeR)
     {
+      std::cout <<"ROC: inside in_jetsLargeR loop, before accessor" <<std::endl;
       static SG::AuxElement::Accessor<bool> containsTruthW_acc("containsTruthW");
+      std::cout <<"ROC: after accessor for truthW decorations" << std::endl;
       i++;
       if (i==1)
 	{
@@ -118,7 +119,7 @@ StructureUtils/config_13TeV_20150528_Wtagging.dat", true, true);
 	  if (jetmass_4 > 0)
 	    jetmass4->Fill(jetmass_4, eventWeight);
 	}
-
+      std::cout <<"ROC: after filling general jetmass histograms"<< std::endl;
       if (i==1 && containsTruthW_acc(*eventInfo))
 	jetmass1_Wlabel->Fill(jetmass_1, eventWeight);
       else if (i==2 && containsTruthW_acc(*eventInfo))
@@ -127,7 +128,7 @@ StructureUtils/config_13TeV_20150528_Wtagging.dat", true, true);
 	jetmass3_Wlabel->Fill(jetmass_3, eventWeight);
       else if (i==4 && containsTruthW_acc(*eventInfo))
 	jetmass4_Wlabel->Fill(jetmass_4, eventWeight);
-
+      std::cout <<"ROC: after filling truth W jetmass histograms" << std::endl;
     }
 
    return StatusCode::SUCCESS;

@@ -186,6 +186,7 @@ EL::StatusCode Audit :: execute ()
     RETURN_CHECK("Audit::execute()", HF::retrieve(in_photons,   m_inputPhotons,     m_event, m_store, m_debug), "Could not get the inputPhotons container.");
 
   /////////////////////////////////////////////////////////////////////////
+  std::cout << "m_truthParticles " << m_truthParticles << std::endl;
   if(!m_truthParticles.empty())
     RETURN_CHECK("Audit::execute()", HF::retrieve(in_truth, m_truthParticles, m_event, m_store, m_debug), "Could not get the truthParticles container.");
 
@@ -214,30 +215,45 @@ EL::StatusCode Audit :: execute ()
   // Jet4_containW(*eventInfo) = false;
 
   int i=0;
+  std::cout <<"Audit: before loop through in_jetsLargeR"<< std::endl;
   for(const auto jet: *in_jetsLargeR)
     {
+     
       static SG::AuxElement::Decorator<bool> containsTruthW         ("containsTruthW");
+      std::cout <<"Audit: about to define containsTruthW"<<std::endl;
       containsTruthW(*eventInfo) = false;
-      i++;
-      if (!in_truth->size()==0)
-  	{
-  	  for (const auto truth_particle: *in_truth){
-  	    int pdgId = abs(truth_particle->pdgId());
-  	    if (pdgId==24 || pdgId==-24)
-  	      {
-		containsTruthW(*eventInfo) = true;
-  		// if (i==1)
-  		//   Jet1_containW(*eventInfo) = true;
-  		// else if (i==2)
-  		//   Jet2_containW(*eventInfo) = true;
-  		// else if (i==3)
-  		//   Jet3_containW(*eventInfo) = true;
-  		// else
-  		//   Jet4_containW(*eventInfo) = true;
-  	      }
-	    
-  	  }
-  	}
+
+      if (!m_truthParticles.empty())
+	{
+	  i++;
+	  std::cout << "Audit: inside loop for m_truthParticles existing"<<std::endl;
+	  if (!in_truth->size()==0)
+	    {
+	      std::cout << "Audit: in_truth->size() != 0 " << std::endl;
+	      for (const auto truth_particle: *in_truth){
+		int pdgId = abs(truth_particle->pdgId());
+		if (pdgId==24 || pdgId==-24)
+		  {
+		    containsTruthW(*eventInfo) = true;
+		    std::cout << "Audit: just defined containsTruthW as : " << containsTruthW(*eventInfo) <<std::endl;
+		    // if (i==1)
+		    //   Jet1_containW(*eventInfo) = true;
+		    // else if (i==2)
+		    //   Jet2_containW(*eventInfo) = true;
+		    // else if (i==3)
+		    //   Jet3_containW(*eventInfo) = true;
+		    // else
+		    //   Jet4_containW(*eventInfo) = true;
+		  }
+		
+	      }
+	    }
+	}
+      else
+	{
+	  containsTruthW(*eventInfo) = false;
+	  std::cout << "Audit: just defined containsTruthW as : " << containsTruthW(*eventInfo) <<std::endl;
+	}
     }
 
 
@@ -352,6 +368,7 @@ EL::StatusCode Audit :: execute ()
   /* TODO
      QCD rejection stuff
   */
+  std::cout <<"Audit: execute() complete"<<std::endl;
   return EL::StatusCode::SUCCESS;
 }
 
