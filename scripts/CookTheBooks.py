@@ -104,22 +104,26 @@ if __name__ == "__main__":
   group_algorithms.add_argument('--debug', dest='debug', action='store_true', help='Enable verbose output of the algorithms.')
   group_algorithms.add_argument('--eventInfo', dest='eventInfo', metavar='', type=str, help='EventInfo container name.', default='EventInfo')
   group_algorithms.add_argument('--jetsLargeR', dest='inputLargeRJets', metavar='', type=str, help='Large-R jet container name.', default='FinalFatJets')
-#  group_algorithms.add_argument('--jets', dest='inputJets', metavar='', type=str, help='small-R jet container name.', default='BaselineJets')
-  group_algorithms.add_argument('--jets', dest='inputJets', metavar='', type=str, help='small-R jet container name.', default='BaseJets')
+############################################################################
+  group_algorithms.add_argument('--jets', dest='inputJets', metavar='', type=str, help='small-R jet container name.', default='BaselineJets')
+#  group_algorithms.add_argument('--jets', dest='inputJets', metavar='', type=str, help='small-R jet container name.', default='BaseJets')
 ##########################################################################
   group_algorithms.add_argument('--met', dest='inputMET', metavar='', type=str, help='Missing Et container name.', default='Mettst')
   group_algorithms.add_argument('--metid', dest='inputMETName', metavar='', type=str, help='Missing Et container element to access.', default='Final')
-#  group_algorithms.add_argument('--electrons', dest='inputElectrons', metavar='', type=str, help='Electrons container name.', default='BaselineElectrons')
-  group_algorithms.add_argument('--electrons', dest='inputElectrons', metavar='', type=str, help='Electrons container name.', default='BaseElectrons')
 ###########################################################################
-#  group_algorithms.add_argument('--muons', dest='inputMuons', metavar='', type=str, help='Muons container name.', default='BaselineMuons')
-  group_algorithms.add_argument('--muons', dest='inputMuons', metavar='', type=str, help='Muons container name.', default='BaseMuons')
+  group_algorithms.add_argument('--electrons', dest='inputElectrons', metavar='', type=str, help='Electrons container name.', default='BaselineElectrons')
+#  group_algorithms.add_argument('--electrons', dest='inputElectrons', metavar='', type=str, help='Electrons container name.', default='BaseElectrons')
+###########################################################################
+  group_algorithms.add_argument('--muons', dest='inputMuons', metavar='', type=str, help='Muons container name.', default='BaselineMuons')
+#  group_algorithms.add_argument('--muons', dest='inputMuons', metavar='', type=str, help='Muons container name.', default='BaseMuons')
 ###########################################################################
   group_algorithms.add_argument('--taujets', dest='inputTauJets', metavar='', type=str, help='TauJets container name.', default='')
   group_algorithms.add_argument('--photons', dest='inputPhotons', metavar='', type=str, help='Photons container name.', default='')
   group_algorithms.add_argument('--decorJetTagsB', dest='decor_jetTags_b', metavar='', type=str, help='Decoration name for b-tags.', default='')
   group_algorithms.add_argument('--decorJetTagsTop', dest='decor_jetTags_top', metavar='', type=str, help='Decoration name for top-tags.', default='')
   group_algorithms.add_argument('--decorJetTagsW', dest='decor_jetTags_w', metavar='', type=str, help='Decoration name for w-tags.', default='')
+  group_algorithms.add_argument('--truth',dest='truthParticles',metavar='', type=str, help='truthParticles container name.',default='FinalTruthParticles')
+
 
   group_preselect = parser.add_argument_group('preselect', description='all selections are inclusive: x >= min, x =< max')
   group_preselect.add_argument('--jetLargeR_minNum',   type=int, metavar='', help='min num of large-R jets passing cuts',  default=0)

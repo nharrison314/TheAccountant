@@ -166,7 +166,7 @@ EL::StatusCode Audit :: execute ()
   const xAOD::MuonContainer*            in_muons      (nullptr);
   const xAOD::TauJetContainer*          in_taus       (nullptr);
   const xAOD::PhotonContainer*          in_photons    (nullptr);
-  //const xAOD::TruthParticleContainer*   in_truth    (nullptr);
+  const xAOD::TruthParticleContainer*   in_truth    (nullptr);
 
   // start grabbing all the containers that we can
   RETURN_CHECK("Audit::execute()", HF::retrieve(eventInfo,    m_eventInfo,        m_event, m_store, m_debug), "Could not get the EventInfo container.");
@@ -185,6 +185,10 @@ EL::StatusCode Audit :: execute ()
   if(!m_inputPhotons.empty())
     RETURN_CHECK("Audit::execute()", HF::retrieve(in_photons,   m_inputPhotons,     m_event, m_store, m_debug), "Could not get the inputPhotons container.");
 
+  /////////////////////////////////////////////////////////////////////////
+  if(!m_truthParticles.empty())
+    RETURN_CHECK("Audit::execute()", HF::retrieve(in_truth, m_truthParticles, m_event, m_store, m_debug), "Could not get the truthParticles container.");
+
   const xAOD::MissingET* in_met(nullptr);
   if(!m_inputMET.empty()){
     in_met = (*in_missinget)[m_inputMETName.c_str()];
@@ -193,6 +197,49 @@ EL::StatusCode Audit :: execute ()
       return EL::StatusCode::FAILURE;
     }
   }
+
+
+
+  // //define W truth matching decorations
+  // static SG::AuxElement::Decorator<bool> Jet1_containW              ("Jet1_continW");
+  // static SG::AuxElement::Decorator<bool> Jet2_containW              ("Jet2_continW");
+  // static SG::AuxElement::Decorator<bool> Jet3_containW              ("Jet3_continW");
+  // static SG::AuxElement::Decorator<bool> Jet4_containW              ("Jet4_continW");  
+
+
+  // // truth W matching
+  // Jet1_containW(*eventInfo) = false;
+  // Jet2_containW(*eventInfo) = false;
+  // Jet3_containW(*eventInfo) = false;
+  // Jet4_containW(*eventInfo) = false;
+
+  int i=0;
+  for(const auto jet: *in_jetsLargeR)
+    {
+      static SG::AuxElement::Decorator<bool> containsTruthW         ("containsTruthW");
+      containsTruthW(*eventInfo) = false;
+      i++;
+      if (!in_truth->size()==0)
+  	{
+  	  for (const auto truth_particle: *in_truth){
+  	    int pdgId = abs(truth_particle->pdgId());
+  	    if (pdgId==24 || pdgId==-24)
+  	      {
+		containsTruthW(*eventInfo) = true;
+  		// if (i==1)
+  		//   Jet1_containW(*eventInfo) = true;
+  		// else if (i==2)
+  		//   Jet2_containW(*eventInfo) = true;
+  		// else if (i==3)
+  		//   Jet3_containW(*eventInfo) = true;
+  		// else
+  		//   Jet4_containW(*eventInfo) = true;
+  	      }
+	    
+  	  }
+  	}
+    }
+
 
   // define razor decorations
   static SG::AuxElement::Decorator<float> SS_mass_decor             ("SS_mass");

@@ -36,6 +36,7 @@ public:
               m_inputMuons      = "",
               m_inputTauJets    = "",
               m_inputPhotons    = "",
+    //        m_truthParticles  = "",    
               m_truthParticles  = "";
   std::string m_decor_jetTags_b   = "", // isB,
               m_decor_jetTags_top = "", // isTop,
