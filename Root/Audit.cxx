@@ -222,9 +222,9 @@ EL::StatusCode Audit :: execute ()
       std::vector<const xAOD::TruthParticle*> associated_truthParticles;
       containsTruthW(*eventInfo) = false;
       if (jet->getAssociatedObjects<xAOD::TruthParticle>("Truth",associated_truthParticles))
-	if (!associated_truthParticles.isValid())
-	      for (const auto& truth_particle: associated_truthParticles)
-		  containsTruthW(*eventInfo) |= truth_particle->isW();
+	//	if (!associated_truthParticles.isValid())
+	for (const auto& truth_particle: associated_truthParticles)
+	  containsTruthW(*eventInfo) |= truth_particle->isW();
     }
 
 
