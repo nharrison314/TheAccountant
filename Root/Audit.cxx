@@ -219,32 +219,12 @@ EL::StatusCode Audit :: execute ()
   static SG::AuxElement::Decorator<bool> containsTruthW         ("containsTruthW");
   for(const auto& jet: *in_jetsLargeR)
     {
-     
-
-      std::cout <<"Audit: about to define containsTruthW"<<std::endl;
+      std::vector<const xAOD::TruthParticle*> associated_truthParticles;
       containsTruthW(*eventInfo) = false;
-
-      if (!m_truthParticles.empty())
-	{
-	  std::cout << "Audit: inside loop for m_truthParticles existing"<<std::endl;
-	  if (!in_truth->size()==0)
-	    {
-	      std::cout << "Audit: in_truth->size() != 0 " << std::endl;
-	      for (const auto& truth_particle: *in_truth)
-		{
+      if (jet->getAssociatedObjects<xAOD::TruthParticle>("Truth",associated_truthParticles))
+	if (!associated_truthParticles.isValid())
+	      for (const auto& truth_particle: associated_truthParticles)
 		  containsTruthW(*eventInfo) |= truth_particle->isW();
-		  std::cout << "Audit: just defined containsTruthW as : " << containsTruthW(*eventInfo) <<std::endl;
-
-		}
-		
-	    }
-	}
-	
-      else
-	{
-	  containsTruthW(*eventInfo) = false;
-	  std::cout << "Audit: just defined containsTruthW as : " << containsTruthW(*eventInfo) <<std::endl;
-	}
     }
 
 

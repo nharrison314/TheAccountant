@@ -38,24 +38,6 @@ TheAccountant::ROC::ROC (std::string name) :
 {
 }
 
-//ClassImp(ROC)
-//ROC :: ROC () :{}
-
-//EL::StatusCode ROC :: setupJob (EL::Job& job)
-//{
-// job.useXAOD();
-// xAOD::Init("ROC").ignore();
-// return EL::StatusCode::SUCCESS;
-//}
-
-//EL::StatusCode ROC :: histInitialize () { return EL::StatusCode::SUCCESS; }
-//EL::StatusCode ROC :: fileExecute () { return EL::StatusCode::SUCCESS; }
-//EL::StatusCode ROC :: changeInput (bool /*firstFile*/) { return EL::StatusCode::SUCCESS; }
-//TheAccountant::TheAccountant::ROC (std::string name) :
-// HistogramManager(name,"")//
-//{/
-//}
-
 TheAccountant::ROC::~ROC () {}
 
 StatusCode TheAccountant::ROC::initialize () {
@@ -72,7 +54,7 @@ StatusCode TheAccountant::ROC::initialize () {
   return EL::StatusCode::SUCCESS;
 }
 
-StatusCode TheAccountant::ROC::execute (const xAOD::EventInfo* eventInfo, const xAOD::MissingET* met, const xAOD::JetContainer* in_jets, const xAOD::JetContainer* in_jetsLargeR, const xAOD::MuonContainer* in_muons, const xAOD::ElectronContainer* in_electrons, const xAOD::TruthParticleContainer* truth_particles, float eventWeight)
+StatusCode TheAccountant::ROC::execute (const xAOD::EventInfo* eventInfo, const xAOD::MissingET* met, const xAOD::JetContainer* in_jets, const xAOD::JetContainer* in_jetsLargeR, float eventWeight)
 {
   std::cout <<"ROC: execute" << std::endl;
   // static JetSubStructureUtils::BosonTag WTagger("medium", "smooth", "$ROOTCOREBIN/data/JetSubStructureUtils/config_13TeV_20150528_Wtagging.dat", true, true);     
@@ -89,11 +71,11 @@ StatusCode TheAccountant::ROC::execute (const xAOD::EventInfo* eventInfo, const 
   float jetmass_4=0;
   int i=0;
 
+  static SG::AuxElement::Accessor<bool> containsTruthW_acc("containsTruthW");
+  
   for(const auto jet: *in_jetsLargeR)
     {
-      std::cout <<"ROC: inside in_jetsLargeR loop, before accessor" <<std::endl;
-      static SG::AuxElement::Accessor<bool> containsTruthW_acc("containsTruthW");
-      std::cout <<"ROC: after accessor for truthW decorations" << std::endl;
+
       i++;
       if (i==1)
 	{

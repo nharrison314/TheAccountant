@@ -23,7 +23,7 @@ namespace TheAccountant
     virtual ~ROC() ;
     
     StatusCode initialize();
-StatusCode execute (const xAOD::EventInfo* eventInfo, const xAOD::MissingET* in_met, const xAOD::JetContainer* in_jets, const xAOD::JetContainer* in_jetsLargeR, const xAOD::MuonContainer* in_muons, const xAOD::ElectronContainer* in_electrons, const xAOD::TruthParticleContainer* truth_particles, const float eventWeight);
+StatusCode execute (const xAOD::EventInfo* eventInfo, const xAOD::MissingET* in_met, const xAOD::JetContainer* in_jets, const xAOD::JetContainer* in_jetsLargeR, const float eventWeight);
     
     std::string m_decor_jetTags_b   = "", // isB,                          
       m_decor_jetTags_top = "", // isTop,                                               
@@ -33,7 +33,6 @@ StatusCode execute (const xAOD::EventInfo* eventInfo, const xAOD::MissingET* in_
     using HistogramManager::execute;
   
   private:    
-    //float positive, fake, totalEvents, trueRate, fakeRate;
     TH1F* jetmass1;
     TH1F* jetmass2;
     TH1F* jetmass3;

@@ -283,32 +283,20 @@ EL::StatusCode Report :: execute ()
   if(!m_inputMET.empty()  && !m_inputJets.empty() && !m_inputLargeRJets.empty())
     {  
       std::cout <<"Report: before execute to make roc plots" << std::endl;
-      RETURN_CHECK("Report::execute()", m_ROCPlots["all/roc"]->execute(eventInfo, in_met, in_jets, in_jetsLargeR, in_muons, in_electrons, in_truth, eventWeight),"");
+      RETURN_CHECK("Report::execute()", m_ROCPlots["all/roc"]->execute(eventInfo, in_met, in_jets, in_jetsLargeR, eventWeight),"");
       std::cout <<"Report: after execute to make roc plots" << std::endl;
     }
-  ConstDataVector<xAOD::JetContainer> jetsTrueW;
-  std::cout << "Report: before loop through in_jetsLargeR"<< std::endl;
+  ConstDataVector<xAOD::JetContainer> jetsTrueW(SG::VIEW_ELEMENTS);
+  static SG::AuxElement::ConstAccessor<bool> containsTruthW_acc("containsTruthW");
   for(const auto jet: *in_jetsLargeR)
     {
-      std::cout <<"Report: inside loop through in_jetsLargeR, before accessor" << std::endl;
-      static SG::AuxElement::ConstAccessor<bool> containsTruthW_acc("containsTruthW");
-      std::cout <<"Report: After containsTruthW_acc accessor" << std::endl;
-      std::cout <<"Report: containsTruthW_acc: " << containsTruthW_acc(*eventInfo) << std::endl;
       if (containsTruthW_acc(*eventInfo))
-	{
-	  std::cout <<"Report: inside loop for if there is a truthW" << std::endl;
-	  jetsTrueW.push_back(jet);
-	  std::cout <<"After pushing jet back!" << std::endl;
-	 }
-     }
-
-  std::cout <<"Report: if(!jetsTrueW.empty())" <<std::endl; 
+	jetsTrueW.push_back(jet);
+    }
 
    if(!jetsTrueW.empty())
      {
-       std::cout <<"Report: beore RETURN_CHECK statement making kinematic plots" <<std::endl;
        RETURN_CHECK("Report::execute()", m_jetKinematicPlots["all/jets/wtrue"]->execute(jetsTrueW.asDataVector(), eventWeight), "");
-       std::cout <<"Report: after RETURN_CHECK statement making kinematic plots" << std::endl;
      }
 
    if(!m_inputJets.empty()){
