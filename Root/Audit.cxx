@@ -166,7 +166,7 @@ EL::StatusCode Audit :: execute ()
   const xAOD::MuonContainer*            in_muons      (nullptr);
   const xAOD::TauJetContainer*          in_taus       (nullptr);
   const xAOD::PhotonContainer*          in_photons    (nullptr);
-  const xAOD::TruthParticleContainer*   in_truth    (nullptr);
+  //const xAOD::TruthParticleContainer*   in_truth    (nullptr);
 
   // start grabbing all the containers that we can
   RETURN_CHECK("Audit::execute()", HF::retrieve(eventInfo,    m_eventInfo,        m_event, m_store, m_debug), "Could not get the EventInfo container.");
@@ -185,48 +185,17 @@ EL::StatusCode Audit :: execute ()
   if(!m_inputPhotons.empty())
     RETURN_CHECK("Audit::execute()", HF::retrieve(in_photons,   m_inputPhotons,     m_event, m_store, m_debug), "Could not get the inputPhotons container.");
 
-  /////////////////////////////////////////////////////////////////////////
-  std::cout << "m_truthParticles " << m_truthParticles << std::endl;
-  if(!m_truthParticles.empty())
-    RETURN_CHECK("Audit::execute()", HF::retrieve(in_truth, m_truthParticles, m_event, m_store, m_debug), "Could not get the truthParticles container.");
-
   const xAOD::MissingET* in_met(nullptr);
   if(!m_inputMET.empty()){
-    in_met = (*in_missinget)[m_inputMETName.c_str()];
-    if (!in_met) {
+    // retrieve CalibMET_RefFinal for METContainer
+    xAOD::MissingETContainer::const_iterator met_id = in_missinget->find(m_inputMETName);
+    if (met_id == in_missinget->end()) {
       Error("execute()", "No %s inside MET container", m_inputMETName.c_str());
       return EL::StatusCode::FAILURE;
     }
+    // dereference the iterator since it's just a single object
+    in_met = *met_id;
   }
-
-
-
-  // //define W truth matching decorations
-  // static SG::AuxElement::Decorator<bool> Jet1_containW              ("Jet1_continW");
-  // static SG::AuxElement::Decorator<bool> Jet2_containW              ("Jet2_continW");
-  // static SG::AuxElement::Decorator<bool> Jet3_containW              ("Jet3_continW");
-  // static SG::AuxElement::Decorator<bool> Jet4_containW              ("Jet4_continW");  
-
-
-  // // truth W matching
-  // Jet1_containW(*eventInfo) = false;
-  // Jet2_containW(*eventInfo) = false;
-  // Jet3_containW(*eventInfo) = false;
-  // Jet4_containW(*eventInfo) = false;
-
-  int i=0;
-  std::cout <<"Audit: before loop through in_jetsLargeR"<< std::endl;
-  static SG::AuxElement::Decorator<bool> containsTruthW         ("containsTruthW");
-  for(const auto& jet: *in_jetsLargeR)
-    {
-      std::vector<const xAOD::TruthParticle*> associated_truthParticles;
-      containsTruthW(*eventInfo) = false;
-      if (jet->getAssociatedObjects<xAOD::TruthParticle>("Truth",associated_truthParticles))
-	//	if (!associated_truthParticles.isValid())
-	for (const auto& truth_particle: associated_truthParticles)
-	  containsTruthW(*eventInfo) |= truth_particle->isW();
-    }
-
 
   // define razor decorations
   static SG::AuxElement::Decorator<float> SS_mass_decor             ("SS_mass");
@@ -243,6 +212,7 @@ EL::StatusCode Audit :: execute ()
   static SG::AuxElement::Decorator<float> I2_depth_decor            ("I2_depth");
   static SG::AuxElement::Decorator<float> V1_nelements_decor        ("V1_nelements");
   static SG::AuxElement::Decorator<float> V2_nelements_decor        ("V2_nelements");
+  //static SG::AuxElement::Decorator<bool> signalW                   ("Wlabel");
   // initialize to zero on event
   SS_mass_decor(*eventInfo)             = -99;
   SS_invgamma_decor(*eventInfo)         = -99;
@@ -258,37 +228,28 @@ EL::StatusCode Audit :: execute ()
   I2_depth_decor(*eventInfo)            = -99;
   V1_nelements_decor(*eventInfo)        = -99;
   V2_nelements_decor(*eventInfo)        = -99;
-
   //isWlabel                              = false;
 
 
   // clear the event
   LAB.ClearEvent();
-
+  
   // create a vector to hold the group element ids for when adding jets
   std::map<const RF::GroupElementID, const xAOD::Jet*> in_jets_IDs;
-  if(!m_inputJets.empty()){
-    for(const auto &jet: *in_jets)
-      in_jets_IDs[VIS.AddLabFrameFourVector( jet->p4() )] = jet;
-  }
+  for(const auto jet: *in_jets)
+    in_jets_IDs[VIS.AddLabFrameFourVector( jet->p4() )] = jet;
 
-  if(!m_inputMET.empty()){
-    // no mpz, but why set it this way???
-    INV.SetLabFrameThreeVector(  TVector3( in_met->mpx(), in_met->mpy(), 0 ) );
-  }
+
+  // no mpz, but why set it this way???
+  INV.SetLabFrameThreeVector(  TVector3( in_met->mpx(), in_met->mpy(), 0 ) );
 
   // dump information about the jets and met at least
   if(m_debug){
-    if(!m_inputJets.empty()){
-      Info("execute()", "Details about input jets...");
-      for(const auto &jet: *in_jets)
-          Info("execute()", "\tpT: %0.2f GeV\tm: %0.2f GeV\teta: %0.2f\tphi: %0.2f", jet->pt()/1000., jet->m()/1000., jet->eta(), jet->phi());
-    }
-
-    if(!m_inputMET.empty()){
-      Info("execute()", "Details about MET...");
-      Info("execute()", "\tpx: %0.2f GeV\tpy: %0.2f GeV\tpz: %0.2f GeV", in_met->mpx()/1000., in_met->mpy()/1000., 0.0/1000.);
-    }
+    Info("execute()", "Details about input jets...");
+    for(const auto jet: *in_jets)
+        Info("execute()", "\tpT: %0.2f GeV\tm: %0.2f GeV\teta: %0.2f\tphi: %0.2f", jet->pt()/1000., jet->m()/1000., jet->eta(), jet->phi());
+    Info("execute()", "Details about MET...");
+    Info("execute()", "\tpx: %0.2f GeV\tpy: %0.2f GeV\tpz: %0.2f GeV", in_met->mpx()/1000., in_met->mpy()/1000., 0.0/1000.);
   }
 
   // analyze the event
@@ -339,7 +300,6 @@ EL::StatusCode Audit :: execute ()
   /* TODO
      QCD rejection stuff
   */
-  std::cout <<"Audit: execute() complete"<<std::endl;
   return EL::StatusCode::SUCCESS;
 }
 

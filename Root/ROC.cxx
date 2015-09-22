@@ -3,7 +3,7 @@
 #include <EventLoop/Worker.h>
 #include <TheAccountant/ROC.h>
 
-// EDM includes                                                                                 
+// EDM includes
 #include "xAODEventInfo/EventInfo.h"
 #include "xAODJet/JetContainer.h"
 #include "xAODMuon/MuonContainer.h"
@@ -12,26 +12,23 @@
 #include "xAODTau/TauJetContainer.h"
 #include "xAODTruth/TruthParticleContainer.h"
 #include "xAODMissingET/MissingETContainer.h"
-//#include "xAODBTaggingEfficiency/BTaggingEfficiencyTool.h"                                    
+
+//#include "xAODBTaggingEfficiency/BTaggingEfficiencyTool.h"
 #include "xAODBTagging/BTagging.h"
 #include "JetSubStructureUtils/BosonTag.h"
 
-// Infrastructure includes                                                                      
+// Infrastructure includes
 #include "xAODRootAccess/Init.h"
 
-// xAH includes                                                                                 
+// xAH includes
 #include "xAODAnaHelpers/HelperFunctions.h"
 #include "xAODAnaHelpers/tools/ReturnCheck.h"
 
-// root includes                                                                                
-#include <TCanvas.h>
-#include <TVector3.h>
-#include <TH1F.h>
-// c++ includes                                                                                 
 #include <set>
 using namespace std;
 
 namespace HF = HelperFunctions;
+//namespace VD = VariableDefinitions;
 
 TheAccountant::ROC::ROC (std::string name) :
   HistogramManager(name,"")
@@ -40,8 +37,10 @@ TheAccountant::ROC::ROC (std::string name) :
 
 TheAccountant::ROC::~ROC () {}
 
+
 StatusCode TheAccountant::ROC::initialize () {
-  // assign m_event and m_store                                          
+
+  std::cout << "Initializing ROC" << std::endl;
   jetmass1 = book(m_name,"jetmass1","Leading Jet Mass (GeV)",650,0, 6500);
   jetmass2 = book(m_name,"jetmass2","Subleading Jet Mass (GeV)",650, 0 , 6500);
   jetmass3 = book(m_name,"jetmass3","Third Jet Mass (GeV)",650,0,6500);
@@ -51,35 +50,58 @@ StatusCode TheAccountant::ROC::initialize () {
   jetmass3_Wlabel = book(m_name,"jetmass3_Wlabel","Third Jet Mass (GeV)",650,0,6500);
   jetmass4_Wlabel = book(m_name,"jetmass4_Wlabel","Fourth Jet Mass (GeV)",650,0,6500);
 
+  //positive = 0.0;
+  //f/ake = 0.0;
+  //totalEvents = 0.0;
   return EL::StatusCode::SUCCESS;
 }
 
-StatusCode TheAccountant::ROC::execute (const xAOD::EventInfo* eventInfo, const xAOD::MissingET* met, const xAOD::JetContainer* in_jets, const xAOD::JetContainer* in_jetsLargeR, float eventWeight)
+StatusCode TheAccountant::ROC::execute (const xAOD::EventInfo* eventInfo,const xAOD::JetContainer* in_ffjets,const xAOD::JetContainer* in_jets, const xAOD::TruthParticleContainer* truth_particles, float eventWeight)
 {
-  std::cout <<"ROC: execute" << std::endl;
-  // static JetSubStructureUtils::BosonTag WTagger("medium", "smooth", "$ROOTCOREBIN/data/JetSubStructureUtils/config_13TeV_20150528_Wtagging.dat", true, true);     
+  std::cout <<"Executing ROC" << std::endl;
+  //static SG::AuxElement::ConstAccessor<float> Wlabel("Wlabel");
 
-  // static SG::AuxElement::ConstAccessor<bool> Jet1_containW_acc("Jet1_containW");
-  // static SG::AuxElement::ConstAccessor<bool> Jet2_containW_acc("Jet2_containW");
-  // static SG::AuxElement::ConstAccessor<bool> Jet3_containW_acc("Jet3_containW");
-  // static SG::AuxElement::ConstAccessor<bool> Jet4_containW_acc("Jet4_containW");
+  std::cout <<"Before Boson Tagger" << std::endl;
+  static JetSubStructureUtils::BosonTag WTagger("medium", "smooth", "$ROOTCOREBIN/data/JetSubStructureUtils/config_13TeV_20150528_Wtagging.dat", true, true);   std::cout <<" After Boson Tager" << std::endl;
 
-
-  float jetmass_1 =0;
-  float jetmass_2=0; 
-  float jetmass_3=0; 
-  float jetmass_4=0;
+  //totalEvents = totalEvents + 1;
+  //bool isWTagged = false;
+  //tags jets that are likely W boson.
+  //for(const auto jet: *in_jetsLargeR)
+  //  {
+  //    isWTagged = WTagger.result(*jet);
+  //  }
+  //float jetmass_1 =0;
+  //float jetmass_2=0;
+  //float jetmass_3=0;
+  //float jetmass_4=0;
   int i=0;
+  //int j=0;
+  //int numlargeRjets = 0;
+  //std::vector<int> WjetIndex;
+  //for (const auto jet: *in_jetsLargeR)
+  //{
+  //  numlargeRjets++;
+  //}
 
-  static SG::AuxElement::Accessor<bool> containsTruthW_acc("containsTruthW");
-  
-  for(const auto jet: *in_jetsLargeR)
+
+  //std::cout << "# fat jets: " << in_ffjets->size() << std::endl;
+  std::cout << "HERE 1" << std::endl;
+  for(const auto jet: *in_ffjets)
     {
-
+      std::cout << "within in_ffjets" <<std::endl;
+      float jetmass_1 =0;
+      float jetmass_2=0;
+      float jetmass_3=0;
+      float jetmass_4=0;
+      std::cout << "Inside FFjets container" << std::endl;
+      bool signalW = false;
       i++;
+      std::cout << "i: " << i << std::endl;
       if (i==1)
 	{
 	  jetmass_1= jet->m()/1.e3;
+	  std::cout << "Jetmass_1: " << jetmass_1 << " GeV" <<std::endl;
 	  if (jetmass_1 > 0)
 	    jetmass1->Fill(jetmass_1, eventWeight);
 	}
@@ -101,17 +123,36 @@ StatusCode TheAccountant::ROC::execute (const xAOD::EventInfo* eventInfo, const 
 	  if (jetmass_4 > 0)
 	    jetmass4->Fill(jetmass_4, eventWeight);
 	}
-      std::cout <<"ROC: after filling general jetmass histograms"<< std::endl;
-      if (i==1 && containsTruthW_acc(*eventInfo))
+
+
+      //bool truePositive = false;
+      //bool falsePositive = false;
+      for (const auto truth_particle: *truth_particles){
+	int pdgId = abs(truth_particle->pdgId());
+	if (pdgId==24 || pdgId==-24)
+	  {
+	    signalW = true;
+	  }
+
+      }
+
+      if (i ==1 && signalW)
 	jetmass1_Wlabel->Fill(jetmass_1, eventWeight);
-      else if (i==2 && containsTruthW_acc(*eventInfo))
+      else if (i == 2 && signalW)
 	jetmass2_Wlabel->Fill(jetmass_2, eventWeight);
-      else if (i==3 && containsTruthW_acc(*eventInfo))
+      else if (i == 3 && signalW)
 	jetmass3_Wlabel->Fill(jetmass_3, eventWeight);
-      else if (i==4 && containsTruthW_acc(*eventInfo))
+      else if (i == 4 && signalW)
 	jetmass4_Wlabel->Fill(jetmass_4, eventWeight);
-      std::cout <<"ROC: after filling truth W jetmass histograms" << std::endl;
+
+      // if (isTruthW && isWTagged)
+      //	positive = positive + 1;
+      //if (!isTruthW && isWTagged)
+      //	fake = fake + 1;
     }
 
-   return StatusCode::SUCCESS;
+  // dump information about the jets and met at least
+  std::cout << "Looped through all the jets, yay!" << std::endl;
+
+  return StatusCode::SUCCESS;
 }
