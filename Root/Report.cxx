@@ -49,8 +49,6 @@ EL::StatusCode Report :: histInitialize () {
 
   if(!m_inputMET.empty() && !m_inputJets.empty() && !m_inputLargeRJets.empty() && !m_inputMuons.empty() && !m_inputElectrons.empty())
     m_RazorPlots["all/razor"] = new TheAccountant::RazorVariableHists("all/razor/");
-  if(m_truthParticles.empty())
-  //  if(!m_inputMET.empty() && !m_truthParticles.empty() && !m_inputJets.empty() && !m_inputLargeRJets.empty())
   if(!m_inputMET.empty() && !m_inputJets.empty() && !m_inputLargeRJets.empty())
     m_ROCPlots["all/roc"] = new TheAccountant::ROC("all/roc/");
 
@@ -154,10 +152,6 @@ EL::StatusCode Report :: histInitialize () {
     }
   }
 
-  for(auto &rocPlot: m_ROCPlots){
-    RETURN_CHECK("Report::initialize()", rocPlot.second->initialize(),"");
-    rocPlot.second->record( wk() );
-  }
 
   for(auto &razorPlot: m_RazorPlots){
     RETURN_CHECK("Report::initialize()", razorPlot.second->initialize(),"");
@@ -235,8 +229,6 @@ EL::StatusCode Report :: execute ()
     RETURN_CHECK("Report::execute()", HF::retrieve(in_taus,      m_inputTauJets,     m_event, m_store, m_debug), "Could not get the inputTauJets container.");
   if(!m_inputPhotons.empty())
     RETURN_CHECK("Report::execute()", HF::retrieve(in_photons,   m_inputPhotons,     m_event, m_store, m_debug), "Could not get the inputPhotons container.");
-  if(!m_truthParticles.empty())
-      RETURN_CHECK("Report::execute()", HF::retrieve(in_truth, m_truthParticles, m_event, m_store, m_debug), "Could not get the truthParticles container.");
 
 
   // prepare the jets by creating a view container to look at them
@@ -283,14 +275,19 @@ EL::StatusCode Report :: execute ()
   //  if(!m_inputMET.empty() && !m_truthParticles.empty() && !m_inputJets.empty() && !m_inputLargeRJets.empty())
   if(!m_inputMET.empty()  && !m_inputJets.empty() && !m_inputLargeRJets.empty())
     {  
+      // std::cout <<"eventInfo: " << eventInfo << std::endl;
+      // std::cout <<"in_met: " << in_met << std::endl;
+      // std::cout <<"in_jets: " << in_jets << std::endl;
+      // std::cout <<"in_jetsLargeR: " << in_jetsLargeR << std::endl;
+      // std::cout <<"event weight: "<< eventWeight << std::endl;
       RETURN_CHECK("Report::execute()", m_ROCPlots["all/roc"]->execute(eventInfo, in_met, in_jets, in_jetsLargeR, eventWeight),"");
     }
   ConstDataVector<xAOD::JetContainer> jetsTrueW(SG::VIEW_ELEMENTS);
   static SG::AuxElement::ConstAccessor<bool> containsTruthW_acc("containsTruthW");
   for(const auto jet: *in_jetsLargeR)
     {
-      if (containsTruthW_acc(*eventInfo))
-	jetsTrueW.push_back(jet);
+      if (containsTruthW_acc(*jet))
+	jetsTrueW.push_back(*jet);
     }
 
    if(!jetsTrueW.empty())

@@ -222,8 +222,8 @@ EL::StatusCode Audit :: execute ()
 
  for(const auto& jet: *in_jetsLargeR)
    {
-     containsTruthW(*eventInfo) = false;
-     containsTruthTop(*eventInfo) = false;
+     containsTruthW(*jet) = false;
+     containsTruthTop(*jet) = false;
      if (!in_truth->size()==0)
        {
 	 for (const auto truth_particle: *in_truth){
@@ -233,13 +233,13 @@ EL::StatusCode Audit :: execute ()
   	      {
 		float deltaR = xAOD::P4Helpers::deltaR(jet, truth_particle);
 		if (deltaR < 1)
-		  containsTruthTop(*eventInfo) = true;
+		  containsTruthTop(*jet) = true;
 	      }
 	    else if (truth_particle->isW())
 	      {
 		float deltaR = xAOD::P4Helpers::deltaR(jet, truth_particle);
 		if (deltaR < 0.8)
-		  containsTruthW(*eventInfo) = true;
+		  containsTruthW(*jet) = true;
 	      }
 	 }
        }
