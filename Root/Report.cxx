@@ -154,6 +154,11 @@ EL::StatusCode Report :: histInitialize () {
     }
   }
 
+  for(auto &rocPlot: m_ROCPlots){
+    RETURN_CHECK("Report::initialize()", rocPlot.second->initialize(),"");
+    rocPlot.second->record( wk() );
+  }
+
   for(auto &razorPlot: m_RazorPlots){
     RETURN_CHECK("Report::initialize()", razorPlot.second->initialize(),"");
     razorPlot.second->record( wk() );
