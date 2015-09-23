@@ -242,7 +242,7 @@ EL::StatusCode Audit :: execute ()
 		  containsTruthW(*jet) = true;
 	      }
 
-	    std::cout <<"containsTruthTop(*jet) = " << std::endl;
+	    std::cout <<"containsTruthTop(*jet) = " << containsTruthTop(*jet) << std::endl;
 	 }
        }
 
