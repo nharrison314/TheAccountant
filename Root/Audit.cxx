@@ -220,33 +220,66 @@ EL::StatusCode Audit :: execute ()
  static SG::AuxElement::Decorator<bool> containsTruthW         ("containsTruthW");
  static SG::AuxElement::Decorator<bool> containsTruthTop       ("containsTruthTop");
 
- for(const auto& jet: *in_jetsLargeR)
+ for (const auto& jet: *in_jetsLargeR)
    {
      containsTruthW(*jet) = false;
      containsTruthTop(*jet) = false;
-     if (!in_truth->size()==0)
-       {
-	 for (const auto truth_particle: *in_truth){
-  	    int pdgId = abs(truth_particle->pdgId());
-	    // first ask if it is top, perform deltaR calculation, either call top or not
-  	    if(truth_particle->isTop())
-  	      {
-		float deltaR = xAOD::P4Helpers::deltaR(jet, truth_particle);
-		if (deltaR < 1)
-		  containsTruthTop(*jet) = true;
-	      }
-	    else if (truth_particle->isW())
-	      {
-		float deltaR = xAOD::P4Helpers::deltaR(jet, truth_particle);
-		if (deltaR < 0.8)
-		  containsTruthW(*jet) = true;
-	      }
-
-	    std::cout <<"containsTruthTop(*jet) = " << containsTruthTop(*jet) << std::endl;
-	 }
-       }
-
    }
+
+ if (!in_truth->size()==0)
+   {
+     for (const auto truth_particle: *in_truth)
+       {
+	 for(const auto& jet: *in_jetsLargeR)
+	   {
+	     if(containsTruthW(*jet) || containsTruthTop(*jet))
+	       continue;
+	     if(truth_particle->isTop())
+	       {
+	     	float deltaR = xAOD::P4Helpers::deltaR(jet, truth_particle);
+  		if (deltaR < 1)
+  		  containsTruthTop(*jet) = true;
+	       }
+	     if(truth_particle->isW())
+	       {
+	     	float deltaR = xAOD::P4Helpers::deltaR(jet, truth_particle);
+  		if (deltaR < 0.8)
+  		  containsTruthW(*jet) = true;
+	       }
+	   }
+       }
+   }
+
+
+ // for(const auto& jet: *in_jetsLargeR)
+ //   {
+ //     containsTruthW(*jet) = false;
+ //     containsTruthTop(*jet) = false;
+ //     if (!in_truth->size()==0)
+ //       {
+ // 	 for (const auto truth_particle: *in_truth){
+ //  	    int pdgId = abs(truth_particle->pdgId());
+ // 	    // first ask if it is top, perform deltaR calculation, either call top or not
+ //  	    if(truth_particle->isTop())
+ //  	      {
+ // 		float deltaR = xAOD::P4Helpers::deltaR(jet, truth_particle);
+ // 		if (deltaR < 1)
+ // 		  containsTruthTop(*jet) = true;
+ // 	      }
+ // 	    else if (truth_particle->isW())
+ // 	      {
+ // 		float deltaR = xAOD::P4Helpers::deltaR(jet, truth_particle);
+ // 		if (deltaR < 0.8)
+ // 		  containsTruthW(*jet) = true;
+ // 	      }
+
+ // 	    std::cout <<"containsTruthTop(*jet) = " << containsTruthTop(*jet) << std::endl;
+ // 	 }
+ //       }
+
+ //   }
+
+
   // for(const auto& jet: *in_jetsLargeR)
   //   {
   //     std::vector<const xAOD::TruthParticle*> associated_truthParticles;
