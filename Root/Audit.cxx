@@ -242,12 +242,20 @@ EL::StatusCode Audit :: execute ()
 	       }
 	     if(truth_particle->isW())
 	       {
+		 std::cout << "truth particle is W" << std::endl;
 	     	float deltaR = xAOD::P4Helpers::deltaR(jet, truth_particle);
+		std::cout << "deltaR = " << deltaR <<std::endl;
   		if (deltaR < 0.8)
   		  containsTruthW(*jet) = true;
 	       }
 	   }
        }
+   }
+
+ for(const auto& jet: *in_jetsLargeR)
+   {
+     std::cout <<"containsTruthTop(*jet) = " << containsTruthTop(*jet) << std::endl;
+     std::cout <<"containsTruthW(*jet) = " << containsTruthW(*jet) << std::endl;
    }
 
 
