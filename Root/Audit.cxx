@@ -241,6 +241,8 @@ EL::StatusCode Audit :: execute ()
 		if (deltaR < 0.8)
 		  containsTruthW(*jet) = true;
 	      }
+
+	    std::cout <<"containsTruthTop(*jet) = " << std::endl;
 	 }
        }
 

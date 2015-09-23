@@ -103,7 +103,7 @@ StatusCode TheAccountant::ROC::execute (const xAOD::EventInfo* eventInfo, const 
 	    jetmass4->Fill(jetmass_4, eventWeight);
 	}
       std::cout <<"ROC #4" <<std::endl;
-      std::cout <<"containsTruthW_acc = " << containsTruthW_acc(jet) << std::endl;
+      std::cout <<"containsTruthW_acc = " << containsTruthW_acc(*jet) << std::endl;
       std::cout <<"ROC #5" << std::endl;
      if (i==1 && containsTruthW_acc(*jet))
 	jetmass1_Wlabel->Fill(jetmass_1, eventWeight);

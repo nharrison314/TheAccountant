@@ -287,7 +287,7 @@ EL::StatusCode Report :: execute ()
   for(const auto jet: *in_jetsLargeR)
     {
       if (containsTruthW_acc(*jet))
-	jetsTrueW.push_back(*jet);
+	jetsTrueW.push_back(jet);
     }
 
    if(!jetsTrueW.empty())
