@@ -218,12 +218,13 @@ EL::StatusCode Audit :: execute ()
 
   int i=0;
  static SG::AuxElement::Decorator<bool> containsTruthW         ("containsTruthW");
- static SG::AuxElement::Decorator<bool> containsTruthTop       ("containsTruthTop");
+ static SG::AuxElement::Decorator<bool> notContainedB         ("notContainedB");
+
 
  for (const auto& jet: *in_jetsLargeR)
    {
      containsTruthW(*jet) = false;
-     containsTruthTop(*jet) = false;
+     notContainedB(*jet) = false;
    }
 
  if (!in_truth->size()==0)
@@ -232,32 +233,33 @@ EL::StatusCode Audit :: execute ()
        {
 	 for(const auto& jet: *in_jetsLargeR)
 	   {
-	     if(containsTruthW(*jet) || containsTruthTop(*jet))
-	       continue;
-	     if(truth_particle->isTop())
-	       {
-	     	float deltaR = xAOD::P4Helpers::deltaR(jet, truth_particle);
-  		if (deltaR < 1)
-  		  containsTruthTop(*jet) = true;
-	       }
+	     // std::cout <<"hasBottom() ? " << truth_particle->hasBottom() << std::endl;
+	     //std::cout <<"isBottomHadron() ? " << truth_particle->hasBottom() << std::endl;
+	     int pdgId = abs(truth_particle->pdgId());
+	     //std::cout <<"particle pdgId: " << pdgId << std::endl;
+	     if(pdgId ==5 || pdgId==-5)
+	     {
+	     	 float deltaR = xAOD::P4Helpers::deltaR(jet, truth_particle);
+		 // std::cout <<"deltaR = " << deltaR << std::endl;
+	     	 if (deltaR >= 1)
+	     	   notContainedB(*jet) = true;
+	     }
 	     if(truth_particle->isW())
 	       {
-		 std::cout << "truth particle is W" << std::endl;
-	     	float deltaR = xAOD::P4Helpers::deltaR(jet, truth_particle);
-		std::cout << "deltaR = " << deltaR <<std::endl;
-  		if (deltaR < 0.8)
-  		  containsTruthW(*jet) = true;
+		 float deltaR = xAOD::P4Helpers::deltaR(jet, truth_particle);
+		 if (deltaR <= 0.3)
+		   containsTruthW(*jet) = true;
 	       }
 	   }
        }
    }
 
- for(const auto& jet: *in_jetsLargeR)
-   {
-     std::cout <<"containsTruthTop(*jet) = " << containsTruthTop(*jet) << std::endl;
-     std::cout <<"containsTruthW(*jet) = " << containsTruthW(*jet) << std::endl;
-   }
 
+ // for(const auto& jet: *in_jetsLargeR)
+ //   {
+ //     std::cout << "notContainedB = " << notContainedB(*jet) << std::endl;
+ //     std::cout << "containsTruthW = " << containsTruthW(*jet) << std::endl;
+ //   }
 
  // for(const auto& jet: *in_jetsLargeR)
  //   {

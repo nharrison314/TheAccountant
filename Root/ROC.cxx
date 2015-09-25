@@ -50,13 +50,13 @@ StatusCode TheAccountant::ROC::initialize () {
   jetmass2_Wlabel = book(m_name,"jetmass2_Wlabel","Subleading JetMass (GeV",650,0,6500);
   jetmass3_Wlabel = book(m_name,"jetmass3_Wlabel","Third Jet Mass (GeV)",650,0,6500);
   jetmass4_Wlabel = book(m_name,"jetmass4_Wlabel","Fourth Jet Mass (GeV)",650,0,6500);
+  tops = book(m_name,"tops","tops",10,0,10);
 
   return EL::StatusCode::SUCCESS;
 }
 
 StatusCode TheAccountant::ROC::execute (const xAOD::EventInfo* eventInfo, const xAOD::MissingET* met, const xAOD::JetContainer* in_jets, const xAOD::JetContainer* in_jetsLargeR, float eventWeight)
 {
-  std::cout << "ROC #1" << std::endl;
   // static JetSubStructureUtils::BosonTag WTagger("medium", "smooth", "$ROOTCOREBIN/data/JetSubStructureUtils/config_13TeV_20150528_Wtagging.dat", true, true);     
 
   // static SG::AuxElement::ConstAccessor<bool> Jet1_containW_acc("Jet1_containW");
@@ -72,11 +72,13 @@ StatusCode TheAccountant::ROC::execute (const xAOD::EventInfo* eventInfo, const 
   int i=0;
 
   static SG::AuxElement::Accessor<bool> containsTruthW_acc("containsTruthW");
-  std::cout <<"ROC #2" << std::endl;
+  static SG::AuxElement::Accessor<bool> notContainedB_acc("notContainedB");
+
   for(const auto jet: *in_jetsLargeR)
     {
-      std::cout <<"ROC #3 inside large R Jets loop" << std::endl;
-      std::cout << "jetmass1: " << jetmass1 << std::endl;
+      if (jet->pt()<200 || jet->pt()>300)
+	continue;
+      //fill histograms for all largeR jets
       i++;
       if (i==1)
 	{
@@ -102,17 +104,16 @@ StatusCode TheAccountant::ROC::execute (const xAOD::EventInfo* eventInfo, const 
 	  if (jetmass_4 > 0)
 	    jetmass4->Fill(jetmass_4, eventWeight);
 	}
-      std::cout <<"ROC #4" <<std::endl;
-      std::cout <<"containsTruthW_acc = " << containsTruthW_acc(*jet) << std::endl;
-      std::cout <<"ROC #5" << std::endl;
-     if (i==1 && containsTruthW_acc(*jet))
+
+      if (i==1 && containsTruthW_acc(*jet) && notContainedB_acc(*jet))
 	jetmass1_Wlabel->Fill(jetmass_1, eventWeight);
-      else if (i==2 && containsTruthW_acc(*jet))
+      else if (i==2 && containsTruthW_acc(*jet) && notContainedB_acc(*jet))
 	jetmass2_Wlabel->Fill(jetmass_2, eventWeight);
-      else if (i==3 && containsTruthW_acc(*jet))
+      else if (i==3 && containsTruthW_acc(*jet) && notContainedB_acc(*jet))
 	jetmass3_Wlabel->Fill(jetmass_3, eventWeight);
-      else if (i==4 && containsTruthW_acc(*jet))
+      else if (i==4 && containsTruthW_acc(*jet) && notContainedB_acc(*jet))
 	jetmass4_Wlabel->Fill(jetmass_4, eventWeight);
+     
    }
 
    return StatusCode::SUCCESS;

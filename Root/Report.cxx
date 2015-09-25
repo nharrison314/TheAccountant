@@ -53,7 +53,10 @@ EL::StatusCode Report :: histInitialize () {
     m_ROCPlots["all/roc"] = new TheAccountant::ROC("all/roc/");
 
   if(!m_inputMET.empty() && !m_inputJets.empty() && !m_inputLargeRJets.empty())
-    m_jetKinematicPlots["all/jets/wtrue"] = new TheAccountant::IParticleKinematicHists("all/jets/wtrue");
+    m_jetKinematicPlots["all/jets/semiBoosted"] = new TheAccountant::IParticleKinematicHists("all/jets/semiBoosted");
+
+
+
 
   if(!m_inputJets.empty()){
     m_jetKinematicPlots["all/jets"] = new TheAccountant::IParticleKinematicHists( "all/jets/" );
@@ -273,26 +276,36 @@ EL::StatusCode Report :: execute ()
     RETURN_CHECK("Report::execute()", m_RazorPlots["all/razor"]->execute(eventInfo, in_met,in_jets, in_jetsLargeR, in_muons, in_electrons,eventWeight),"");
   
   //  if(!m_inputMET.empty() && !m_truthParticles.empty() && !m_inputJets.empty() && !m_inputLargeRJets.empty())
-  if(!m_inputMET.empty()  && !m_inputJets.empty() && !m_inputLargeRJets.empty())
-    {  
-      // std::cout <<"eventInfo: " << eventInfo << std::endl;
-      // std::cout <<"in_met: " << in_met << std::endl;
-      // std::cout <<"in_jets: " << in_jets << std::endl;
-      // std::cout <<"in_jetsLargeR: " << in_jetsLargeR << std::endl;
-      // std::cout <<"event weight: "<< eventWeight << std::endl;
-      RETURN_CHECK("Report::execute()", m_ROCPlots["all/roc"]->execute(eventInfo, in_met, in_jets, in_jetsLargeR, eventWeight),"");
-    }
-  ConstDataVector<xAOD::JetContainer> jetsTrueW(SG::VIEW_ELEMENTS);
+
+
+
+  ConstDataVector<xAOD::JetContainer> jetsSemiboosted(SG::VIEW_ELEMENTS);
+
   static SG::AuxElement::ConstAccessor<bool> containsTruthW_acc("containsTruthW");
+  static SG::AuxElement::ConstAccessor<bool> notContainedB_acc("notContainedB");
+  
+
   for(const auto jet: *in_jetsLargeR)
     {
-      if (containsTruthW_acc(*jet))
-	jetsTrueW.push_back(jet);
+      if (containsTruthW_acc(*jet) && notContainedB_acc(*jet) && jet->pt()/1000.>=200 && jet->pt()/1000.<=300)
+      	jetsSemiboosted.push_back(jet);
+      
     }
 
-   if(!jetsTrueW.empty())
+
+  //  if(!jetsSemiboosted.empty())
+    // {  
+    //   // std::cout <<"eventInfo: " << eventInfo << std::endl;
+    //   // std::cout <<"in_met: " << in_met << std::endl;
+    //   // std::cout <<"in_jets: " << in_jets << std::endl;
+    //   // std::cout <<"in_jetsLargeR: " << in_jetsLargeR << std::endl;
+    //   // std::cout <<"event weight: "<< eventWeight << std::endl;
+    //   RETURN_CHECK("Report::execute()", m_ROCPlots["all/roc"]->execute(eventInfo, in_met, in_jets, in_jetsLargeR, eventWeight),"");
+    // }
+
+   if(!jetsSemiboosted.empty())
      {
-       RETURN_CHECK("Report::execute()", m_jetKinematicPlots["all/jets/wtrue"]->execute(jetsTrueW.asDataVector(), eventWeight), "");
+       RETURN_CHECK("Report::execute()", m_jetKinematicPlots["all/jets/semiBoosted"]->execute(jetsSemiboosted.asDataVector(), eventWeight), "");
      }
 
    if(!m_inputJets.empty()){

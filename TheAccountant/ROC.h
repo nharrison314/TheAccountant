@@ -41,6 +41,7 @@ StatusCode execute (const xAOD::EventInfo* eventInfo, const xAOD::MissingET* in_
     TH1F* jetmass2_Wlabel;
     TH1F* jetmass3_Wlabel;
     TH1F* jetmass4_Wlabel;
+    TH1F* tops;
     
     
   };
