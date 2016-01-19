@@ -42,8 +42,40 @@ StatusCode execute (const xAOD::EventInfo* eventInfo, const xAOD::MissingET* in_
     TH1F* jetmass3_Wlabel;
     TH1F* jetmass4_Wlabel;
     TH1F* tops;
-    
-    
+
+    TH1F* deltaR_W_b_jet1;
+    TH1F* deltaR_W_jet_jet1;
+    TH1F* deltaR_W_b_jet2;
+    TH1F* deltaR_W_jet_jet2;
+    TH1F* deltaR_W_b_jet3;
+    TH1F* deltaR_W_jet_jet3;
+    TH1F* deltaR_W_b_jet4;
+    TH1F* deltaR_W_jet_jet4;
+
+
+    TH1F* deltaR_W_jet_semiboosted_jet1;
+    TH1F* deltaR_W_b_semiboosted_jet1;
+    TH1F* deltaR_W_jet_semiboosted_jet2;
+    TH1F* deltaR_W_b_semiboosted_jet2;
+    TH1F* deltaR_W_jet_semiboosted_jet3;
+    TH1F* deltaR_W_b_semiboosted_jet3;
+    TH1F* deltaR_W_jet_semiboosted_jet4;
+    TH1F* deltaR_W_b_semiboosted_jet4;
+
+    TH1F* deltaR_W_top_semiboosted_jet1;
+    TH1F* deltaR_W_top_semiboosted_jet2;
+    TH1F* deltaR_W_top_semiboosted_jet3;
+    TH1F* deltaR_W_top_semiboosted_jet4;
+
+    TH1F* deltaR_W_top_jet1;
+    TH1F* deltaR_W_top_jet2;
+    TH1F* deltaR_W_top_jet3;
+    TH1F* deltaR_W_top_jet4;
+
+    TH2F* deltaR_W_jet1_fn_top_pt;
+    TH2F* deltaR_W_jet2_fn_top_pt;
+    TH2F* deltaR_W_jet3_fn_top_pt;
+    TH2F* deltaR_W_jet4_fn_top_pt;
   };
 }
 #endif
