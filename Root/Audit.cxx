@@ -193,13 +193,11 @@ EL::StatusCode Audit :: initialize () {
     decayTree_plot->Draw();
     TCanvas* plotCanvas = decayTree_plot->GetNewCanvas("decayTree", "decayTree");
     wk()->addOutput(plotCanvas);
-
     RF::TreePlot* visGroup_plot = new RF::TreePlot("VIStree", "Visible Group");
     visGroup_plot->SetGroupTree(VIS);
     visGroup_plot->Draw();
     TCanvas* visPlotCanvas = visGroup_plot->GetNewCanvas("visTree", "visTree");
     wk()->addOutput(visPlotCanvas);
-
     RF::TreePlot* invGroup_plot = new RF::TreePlot("INVtree", "Invisible Group");
     invGroup_plot->SetGroupTree(INV);
     invGroup_plot->Draw();
@@ -222,7 +220,7 @@ EL::StatusCode Audit :: execute ()
   const xAOD::MuonContainer*            in_muons      (nullptr);
   const xAOD::TauJetContainer*          in_taus       (nullptr);
   const xAOD::PhotonContainer*          in_photons    (nullptr);
-  //const xAOD::TruthParticleContainer*   in_truth    (nullptr);
+  const xAOD::TruthParticleContainer*   in_truth    (nullptr);
 
   // start grabbing all the containers that we can
   RETURN_CHECK("Audit::execute()", HF::retrieve(eventInfo,    m_eventInfo,        m_event, m_store, m_debug), "Could not get the EventInfo container.");
@@ -240,6 +238,8 @@ EL::StatusCode Audit :: execute ()
     RETURN_CHECK("Audit::execute()", HF::retrieve(in_taus,      m_inputTauJets,     m_event, m_store, m_debug), "Could not get the inputTauJets container.");
   if(!m_inputPhotons.empty())
     RETURN_CHECK("Audit::execute()", HF::retrieve(in_photons,   m_inputPhotons,     m_event, m_store, m_debug), "Could not get the inputPhotons container.");
+  if(!m_truthParticles.empty())
+    RETURN_CHECK("Audit::execute()", HF::retrieve(in_truth, m_truthParticles, m_event, m_store, m_debug), "Could not get the truthParticles container.");
 
   const xAOD::MissingET* in_met(nullptr);
   if(!m_inputMET.empty()){

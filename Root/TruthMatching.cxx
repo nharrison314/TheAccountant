@@ -6,7 +6,13 @@
 // EDM includes
 #include "xAODEventInfo/EventInfo.h"
 #include "xAODJet/JetContainer.h"
+#include "xAODMuon/MuonContainer.h"
+#include "xAODEgamma/ElectronContainer.h"
+#include "xAODEgamma/PhotonContainer.h"
+#include "xAODTau/TauJetContainer.h"
 #include "xAODTruth/TruthParticleContainer.h"
+
+#include "xAODBTagging/BTagging.h"
 
 //P4Helper includes
 #include "FourMomUtils/xAODP4Helpers.h"
@@ -17,7 +23,7 @@
 // xAH includes
 #include "xAODAnaHelpers/HelperFunctions.h"
 #include "xAODAnaHelpers/tools/ReturnCheck.h"
-
+#include <TheAccountant/VariableDefinitions.h>
 // root includes
 #include <TCanvas.h>
 #include <TVector3.h>
@@ -57,12 +63,69 @@ EL::StatusCode TruthMatching :: execute ()
   const xAOD::EventInfo*                eventInfo     (nullptr);
   const xAOD::JetContainer*             in_jetsLargeR (nullptr);
   const xAOD::JetContainer*             in_jets       (nullptr);
+  const xAOD::MissingETContainer*       in_missinget  (nullptr);
+  const xAOD::ElectronContainer*        in_electrons  (nullptr);
+  const xAOD::MuonContainer*            in_muons      (nullptr);
+  const xAOD::TauJetContainer*          in_taus       (nullptr);
+  const xAOD::PhotonContainer*          in_photons    (nullptr);
   const xAOD::TruthParticleContainer*   in_truth    (nullptr);
 
   event_num++;
 
+  RETURN_CHECK("Audit::execute()", HF::retrieve(eventInfo,    m_eventInfo,        m_event, m_store, m_debug), "Could not get the EventInfo container.");
+  if(!m_inputLargeRJets.empty())
+    RETURN_CHECK("Audit::execute()", HF::retrieve(in_jetsLargeR,      m_inputLargeRJets,        m_event, m_store, m_debug), "Could not get the inputLargeRJets container.");
+  if(!m_inputJets.empty())
+    RETURN_CHECK("Audit::execute()", HF::retrieve(in_jets,     m_inputJets,       m_event, m_store, m_debug), "Could not get the inputJets container.");
+  if(!m_inputMET.empty())
+    RETURN_CHECK("Audit::execute()", HF::retrieve(in_missinget, m_inputMET,         m_event, m_store, m_debug), "Could not get the inputMET container.");
+  if(!m_inputElectrons.empty())
+    RETURN_CHECK("Audit::execute()", HF::retrieve(in_electrons, m_inputElectrons,   m_event, m_store, m_debug), "Could not get the inputElectrons container.");
+  if(!m_inputMuons.empty())
+    RETURN_CHECK("Audit::execute()", HF::retrieve(in_muons,     m_inputMuons,       m_event, m_store, m_debug), "Could not get the inputMuons container.");
+  if(!m_inputTauJets.empty())
+    RETURN_CHECK("Audit::execute()", HF::retrieve(in_taus,      m_inputTauJets,     m_event, m_store, m_debug), "Could not get the inputTauJets container.");
+  if(!m_inputPhotons.empty())
+    RETURN_CHECK("Audit::execute()", HF::retrieve(in_photons,   m_inputPhotons,     m_event, m_store, m_debug), "Could not get the inputPhotons container.");
+
   if(!m_truthParticles.empty())
     RETURN_CHECK("Audit::execute()", HF::retrieve(in_truth, m_truthParticles, m_event, m_store, m_debug), "Could not get the truthParticles container.");
+
+
+  const xAOD::MissingET* in_met(nullptr);
+  if(!m_inputMET.empty()){
+    in_met = (*in_missinget)[m_inputMETName.c_str()];
+    if (!in_met) {
+      Error("execute()", "No %s inside MET container", m_inputMETName.c_str());
+      return EL::StatusCode::FAILURE;
+    }
+  }
+  
+  // create a vector to hold the group element ids for when adding jets
+  std::map<const int, const xAOD::Jet*> in_jets_IDs;
+  if(!m_inputJets.empty()){
+    for(const auto &jet: *in_jets)
+      in_jets_IDs[VIS.AddLabFrameFourVector( jet->p4() ).GetKey()] = jet;
+  }
+
+  if(!m_inputMET.empty()){
+    // no mpz, but why set it this way???
+    INV.SetLabFrameThreeVector(  TVector3( in_met->mpx(), in_met->mpy(), 0 ) );
+  }
+
+  // dump information about the jets and met at least
+  if(m_debug){
+    if(!m_inputJets.empty()){
+      Info("execute()", "Details about input jets...");
+      for(const auto &jet: *in_jets)
+          Info("execute()", "\tpT: %0.2f GeV\tm: %0.2f GeV\teta: %0.2f\tphi: %0.2f", jet->pt()/1000., jet->m()/1000., jet->eta(), jet->phi());
+    }
+
+    if(!m_inputMET.empty()){
+      Info("execute()", "Details about MET...");
+      Info("execute()", "\tpx: %0.2f GeV\tpy: %0.2f GeV\tpz: %0.2f GeV", in_met->mpx()/1000., in_met->mpy()/1000., 0.0/1000.);
+    }
+  }
 
   static SG::AuxElement::Decorator<bool> containsTruthW         ("containsTruthW");
   static SG::AuxElement::Decorator<bool> notContainedB         ("notContainedB");

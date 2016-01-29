@@ -439,6 +439,8 @@ EL::StatusCode OptimizationDump :: execute ()
   RETURN_CHECK("Report::execute()", HF::retrieve(in_inclVar, "RJigsawInclusiveVariables", nullptr, m_store, m_debug), "Could not get the RJRVars");
   // fill in the original map with the values
   for(const auto& item: *in_inclVar) m_inclVar[item.first] = item.second;
+  if(!m_truthParticles.empty())
+    RETURN_CHECK("OptimizationDump::execute()", HF::retrieve(in_truth, m_truthParticles, m_event, m_store, m_debug), "Could not get the truthParticles container.");
 
   // compute variables for optimization
   m_eventWeight = VD::eventWeight(eventInfo, wk()->metaData());

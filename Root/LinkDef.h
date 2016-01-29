@@ -15,6 +15,5 @@
 #pragma link C++ class Audit+;
 #pragma link C++ class OptimizationDump+;
 #pragma link C++ class Report+;
-#pragma link C++ class ROC+;
 #pragma link C++ class TruthMatching+;
 #endif
