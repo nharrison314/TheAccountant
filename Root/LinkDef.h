@@ -3,6 +3,7 @@
 #include <TheAccountant/Audit.h>
 #include <TheAccountant/OptimizationDump.h>
 #include <TheAccountant/Report.h>
+#include <TheAccountant/TruthMatching.h>
 
 #ifdef __CINT__
 #pragma link off all globals;
