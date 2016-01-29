@@ -3,6 +3,8 @@
 #include <EventLoop/Worker.h>
 #include <TheAccountant/TruthMatching.h>
 
+#include "EventLoop/OutputStream.h"
+
 // EDM includes
 #include "xAODEventInfo/EventInfo.h"
 #include "xAODJet/JetContainer.h"

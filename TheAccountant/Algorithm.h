@@ -32,7 +32,7 @@ namespace TA {
                     m_inputMuons,
                     m_inputTauJets,
 	            m_inputPhotons,
-	            m_inputTruth;
+	            m_truthParticles;
         std::string m_decor_jetTags_b,
                     m_decor_jetTags_top,
                     m_decor_jetTags_w;

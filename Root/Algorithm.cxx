@@ -30,6 +30,7 @@ TA::Algorithm::Algorithm() :
   m_inputMuons(""),
   m_inputTauJets(""),
   m_inputPhotons(""),
+  m_truthParticles(""),
   m_decor_jetTags_b(""),
   m_decor_jetTags_top(""),
   m_decor_jetTags_w(""),
