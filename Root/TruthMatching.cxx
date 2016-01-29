@@ -29,7 +29,7 @@ namespace HF = HelperFunctions;
 
 // this is needed to distribute the algorithm to the workers
 ClassImp(TruthMatching)
-TruthMatching :: TruthMatching () : {} 
+TruthMatching :: TruthMatching () {} 
 
 EL::StatusCode TruthMatching :: setupJob (EL::Job& job)
 {
@@ -131,7 +131,7 @@ EL::StatusCode TruthMatching :: execute ()
 		      break;
 		    }
 		    std::cout <<"inside loop 2" << std::endl;
-		       
+		    
 		    if(daughter_pdgId==1 ||daughter_pdgId==2 || daughter_pdgId==3 || daughter_pdgId==4)
 		      {  
 			daughter_W_particles_cand.push_back(truth_particle);
@@ -150,7 +150,7 @@ EL::StatusCode TruthMatching :: execute ()
 	  for (const auto truth_particle: *in_truth)
 	    {	   
 	      int num_jet =0;
-
+	      
 
 
 	      for(const auto& jet: *in_jetsLargeR)
@@ -158,9 +158,9 @@ EL::StatusCode TruthMatching :: execute ()
 		  std::cout <<"#5" <<std::endl;
 		  num_jet++;
 		  int num_W_in_event=0;
-		 
+		  
 		  float Min_deltaR_jet_top = 1000.;
-		  list<const xAOD::TruthParticle*>::iterator k;
+		  std::list<const xAOD::TruthParticle*>::iterator k;
 		  int num_top=0;
 		  for(k=tops_in_event.begin(); k != tops_in_event.end(); ++k)
 		    {
@@ -185,7 +185,7 @@ EL::StatusCode TruthMatching :: execute ()
 		  tops_in_event.remove(top_particle(*jet));
 
 		  float Min_deltaR_for_this_jet = 1000.;
-		  list<const xAOD::TruthParticle*>::iterator i;
+		  std::list<const xAOD::TruthParticle*>::iterator i;
 		  for(i=W_particles_in_event.begin(); i != W_particles_in_event.end(); ++i)
 		    {  
 		      num_W_in_event++;
@@ -210,7 +210,7 @@ EL::StatusCode TruthMatching :: execute ()
 		  W_particles_in_event.remove(W_particle(*jet));
 		 
 
-		  list<const xAOD::TruthParticle*>::iterator j;
+		  std::list<const xAOD::TruthParticle*>::iterator j;
 		  float deltaR_W_b_min = 1000.;
 		  for(j=b_particles_in_event.begin(); j != b_particles_in_event.end(); ++j)
 		    {
@@ -236,12 +236,12 @@ EL::StatusCode TruthMatching :: execute ()
 		  else
 		    deltaR_W_b(*jet) = 1000;
 		  b_particles_in_event.remove(b_particle(*jet));
-		 
+		  
 		  std::cout <<"#10"<<std::endl;
 		  if (W_particle(*jet)!=NULL)
 		    {
-		      list<const xAOD::TruthParticle*>::iterator l;
-		      list<const xAOD::TruthParticle*>::iterator m;
+		      std::list<const xAOD::TruthParticle*>::iterator l;
+		      std::list<const xAOD::TruthParticle*>::iterator m;
 		      float min_quark_pt = 13000;
 		      for(l=daughter_W_particles_cand.begin(); l != daughter_W_particles_cand.end(); ++l)
 			{
@@ -262,13 +262,13 @@ EL::StatusCode TruthMatching :: execute ()
 			    }
 			}
 		     
-		     
+		      
 		    }		 
 		  std::cout << "#11"<<std::endl;
-		     
+		  
 		}
 	    }
-	 
+	  
 	 
 	  for(const auto& jet: *in_jetsLargeR)
 	    {
@@ -303,7 +303,7 @@ EL::StatusCode TruthMatching :: execute ()
 	    }
 	}
     }
-
+  
   return EL::StatusCode::SUCCESS;
 }
 
