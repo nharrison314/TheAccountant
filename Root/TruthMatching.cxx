@@ -100,18 +100,7 @@ EL::StatusCode TruthMatching :: execute ()
       return EL::StatusCode::FAILURE;
     }
   }
-  
-  // create a vector to hold the group element ids for when adding jets
-  std::map<const int, const xAOD::Jet*> in_jets_IDs;
-  if(!m_inputJets.empty()){
-    for(const auto &jet: *in_jets)
-      in_jets_IDs[VIS.AddLabFrameFourVector( jet->p4() ).GetKey()] = jet;
-  }
 
-  if(!m_inputMET.empty()){
-    // no mpz, but why set it this way???
-    INV.SetLabFrameThreeVector(  TVector3( in_met->mpx(), in_met->mpy(), 0 ) );
-  }
 
   // dump information about the jets and met at least
   if(m_debug){

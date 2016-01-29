@@ -417,7 +417,7 @@ EL::StatusCode OptimizationDump :: execute ()
   const xAOD::MuonContainer*            in_muons      (nullptr);
   const xAOD::TauJetContainer*          in_taus       (nullptr);
   const xAOD::PhotonContainer*          in_photons    (nullptr);
-  const xAOD::TruthContainer*           in_truth      (nullptr);
+  const xAOD::TruthParticleContainer*   in_truth      (nullptr);
 
   // start grabbing all the containers that we can
   RETURN_CHECK("OptimizationDump::execute()", HF::retrieve(eventInfo,    m_eventInfo,        m_event, m_store, m_debug), "Could not get the EventInfo container.");
