@@ -36,6 +36,7 @@ private:
   std::map< std::string, TheAccountant::JetTagHists* > m_jetTagPlots; //!
   std::map< std::string, TheAccountant::METHists* > m_METPlots; //!
   std::map< std::string, TheAccountant::RazorVariableHists* > m_razorPlots; //!
+  std::map< std::string, TheAccountant::ROC* > m_rocPlots; //!
 
   std::vector<std::string> m_topTagDecorationNames; //!
 

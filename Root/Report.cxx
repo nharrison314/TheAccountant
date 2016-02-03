@@ -48,6 +48,8 @@ EL::StatusCode Report :: histInitialize () {
 
   if(!m_inputMET.empty() && !m_inputJets.empty() && !m_inputLargeRJets.empty() && !m_inputMuons.empty() && !m_inputElectrons.empty())
     m_razorPlots["all/razor"] = new TheAccountant::RazorVariableHists("all/razor/");
+  if(!m_inputMET.empty() && !m_inputJets.empty() && !m_inputLargeRJets.empty() && !m_inputMuons.empty() && !m_inputElectrons.empty())
+    m_rocPlots["all/roc"] = new TheAccountant::ROC("all/roc/");
 
 
   if(!m_inputJets.empty()){
@@ -147,9 +149,15 @@ EL::StatusCode Report :: histInitialize () {
     }
   }
 
+
   for(auto &razorPlot: m_razorPlots){
     RETURN_CHECK("Report::initializse()", razorPlot.second->initialize(),"");
     razorPlot.second->record( wk() );
+  }
+
+  for(auto &rocPlot: m_rocPlots){
+    RETURN_CHECK("Report::initialize()", rocPlot.second->initialize(),"");
+    rocPlot.second->record( wk() );
   }
 
   for(auto &jetKinematicPlot: m_jetKinematicPlots){
@@ -267,6 +275,10 @@ EL::StatusCode Report :: execute ()
 
   if(!m_inputMET.empty() && !m_inputJets.empty() && !m_inputLargeRJets.empty() && !m_inputMuons.empty() && !m_inputElectrons.empty())
     RETURN_CHECK("Report::execute()", m_razorPlots["all/razor"]->execute(*inclVar_ptr, *vP_ptr, in_met,in_jets, in_jetsLargeR, in_muons, in_electrons,eventWeight),"");
+
+  if(!m_inputMET.empty() && !m_inputJets.empty() && !m_inputLargeRJets.empty() && !m_inputMuons.empty() && !m_inputElectrons.empty())
+    RETURN_CHECK("Report::execute()", m_rocPlots["all/roc"]->execute(eventInfo, in_met,in_jets, in_jetsLargeR,eventWeight),"");
+
 
   if(!m_inputJets.empty()){
     RETURN_CHECK("Report::execute()", m_jetKinematicPlots["all/jets"]->execute(in_jets, eventWeight), "");
