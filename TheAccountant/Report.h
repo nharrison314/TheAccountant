@@ -16,6 +16,7 @@
 #include <TheAccountant/JetTagHists.h>
 
 #include <TheAccountant/RazorVariableHists.h>
+#include <TheAccountant/ROC.h>
 class Report : public TA::Algorithm
 {
   // put your configuration variables here as public variables.
