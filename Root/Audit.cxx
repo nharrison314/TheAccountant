@@ -14,6 +14,7 @@
 #include "xAODMissingET/MissingETContainer.h"
 //#include "xAODBTaggingEfficiency/BTaggingEfficiencyTool.h"
 #include "xAODBTagging/BTagging.h"
+#include "JetSubStructureUtils/BosonTag.h"
 
 // Infrastructure includes
 #include "xAODRootAccess/Init.h"
