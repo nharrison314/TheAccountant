@@ -48,7 +48,7 @@ EL::StatusCode Report :: histInitialize () {
 
   if(!m_inputMET.empty() && !m_inputJets.empty() && !m_inputLargeRJets.empty() && !m_inputMuons.empty() && !m_inputElectrons.empty())
     m_razorPlots["all/razor"] = new TheAccountant::RazorVariableHists("all/razor/");
-  if(!m_inputMET.empty() && !m_inputJets.empty() && !m_inputLargeRJets.empty() && !m_inputMuons.empty() && !m_inputElectrons.empty())
+  if(!m_inputJets.empty() && !m_inputLargeRJets.empty())
     m_rocPlots["all/roc"] = new TheAccountant::ROC("all/roc/");
 
 

@@ -61,6 +61,7 @@ EL::StatusCode TruthMatching :: initialize () {
 
 EL::StatusCode TruthMatching :: execute ()
 {
+  std::cout <<"TruthMatching" << std::endl;
   if(m_debug) Info("execute()", "Calling execute...");
   const xAOD::EventInfo*                eventInfo     (nullptr);
   const xAOD::JetContainer*             in_jetsLargeR (nullptr);
@@ -103,7 +104,7 @@ EL::StatusCode TruthMatching :: execute ()
     }
   }
 
-
+  std::cout <<"TM 1" << std::endl;
   // dump information about the jets and met at least
   if(m_debug){
     if(!m_inputJets.empty()){
@@ -159,48 +160,56 @@ EL::StatusCode TruthMatching :: execute ()
  
   if (!m_truthParticles.empty())
     { 
+      std::cout <<"TM 2"<<std::endl;
       if (!in_truth->size()==0)
 	{
       
 	  for (const auto truth_particle: *in_truth)
 	    {
-	      std::cout <<"#1" << std::endl;
+	      
+
+		  std::cout <<"nChildren() " << truth_particle->nChildren() << std::endl;
+		  std::cout <<"truth_particle->child(0)" << truth_particle->child(0) << std::endl;
+	      //std::cout <<"#1" << std::endl;
 	      int pdgId = abs(truth_particle->pdgId());
 	      if(pdgId ==5)
 		{
 		  b_particles_in_event.push_back(truth_particle);
 		}
-	      std::cout <<"#2" << std::endl;
+	      //std::cout <<"#2" << std::endl;
 	      if(truth_particle->isW())
 		{
 		  W_particles_in_event.push_back(truth_particle);
 		  bool hasSelfChild = false;
 		  std::cout <<"is W" << std::endl;
+		  std::cout <<"W->nChildren() " << truth_particle->nChildren() << std::endl;
 		  for(unsigned int it = 0; it < truth_particle->nChildren(); ++it){
 		    std::cout<<"inside loop"<<std::endl;
 		    int daughter_pdgId = truth_particle->child(it)->pdgId();
+		    std::cout <<"daughter id: " << daughter_pdgId <<std::endl;
 		    if( daughter_pdgId == truth_particle->pdgId() ){
 		      //Info("execute()", "\t\tIt contains itself. Skipping it.");
 		      hasSelfChild = true;
 		      break;
 		    }
-		    std::cout <<"inside loop 2" << std::endl;
+		    // std::cout <<"inside loop 2" << std::endl;
 		    
 		    if(daughter_pdgId==1 ||daughter_pdgId==2 || daughter_pdgId==3 || daughter_pdgId==4)
 		      {  
 			daughter_W_particles_cand.push_back(truth_particle);
+			std::cout << "we have a daughter" << std::endl;
 		      }
-		    std::cout <<"inside loop 3" << std::endl;
+		    //std::cout <<"inside loop 3" << std::endl;
 		  }
 		  
 		}
-	      std::cout << "#3" <<std::endl;
+	      //std::cout << "#3" <<std::endl;
 	      if(truth_particle->isTop())
 		{
 		  tops_in_event.push_back(truth_particle);
 		}
 	    }
-	  std::cout <<"#4" <<std::endl;
+	  //std::cout <<"#4" <<std::endl;
 	  for (const auto truth_particle: *in_truth)
 	    {	   
 	      int num_jet =0;
@@ -209,7 +218,7 @@ EL::StatusCode TruthMatching :: execute ()
 
 	      for(const auto& jet: *in_jetsLargeR)
 		{
-		  std::cout <<"#5" <<std::endl;
+		  //std::cout <<"#5" <<std::endl;
 		  num_jet++;
 		  int num_W_in_event=0;
 		  
@@ -227,15 +236,15 @@ EL::StatusCode TruthMatching :: execute ()
 			    {
 			      containsTruthTop(*jet) = true;
 			      top_particle(*jet) = *k;
-			      if (event_num<10)
-				{
-				  std::cout <<"Event #" << event_num << "\tJet in event #" << num_jet << "\tphi: "<<jet->phi() <<"\trapidity: " << jet->rapidity() << std::endl;
-				  std::cout <<"\tTop # " << num_top << "\trapidity: " << (*k)->rapidity() << "\tphi: " << (*k)->phi() <<std::endl;
-				}
+			      //      if (event_num<10)
+			      //{
+				  //std::cout <<"Event #" << event_num << "\tJet in event #" << num_jet << "\tphi: "<<jet->phi() <<"\trapidity: " << jet->rapidity() << std::endl;
+				  //std::cout <<"\tTop # " << num_top << "\trapidity: " << (*k)->rapidity() << "\tphi: " << (*k)->phi() <<std::endl;
+			      //}
 			    }
 			}
 		    }
-		  std::cout <<"#6" <<std::endl;
+		  //std::cout <<"#6" <<std::endl;
 		  tops_in_event.remove(top_particle(*jet));
 
 		  float Min_deltaR_for_this_jet = 1000.;
@@ -244,11 +253,11 @@ EL::StatusCode TruthMatching :: execute ()
 		    {  
 		      num_W_in_event++;
 		      float deltaR = xAOD::P4Helpers::deltaR(jet, *i);
-		      if (event_num < 10)
-			{
-			  std::cout <<"\tW#" << num_W_in_event<< "\tphi: " << (*i)->phi() << "\trapidity: " << (*i)->rapidity() << std::endl;  
-			  std::cout <<"\tdeltaR between jet #" << num_jet << " and W #" << num_W_in_event << " = " << deltaR << std::endl;
-			} 
+		      //if (event_num < 10)
+			//{
+			  //std::cout <<"\tW#" << num_W_in_event<< "\tphi: " << (*i)->phi() << "\trapidity: " << (*i)->rapidity() << std::endl;  
+			  //std::cout <<"\tdeltaR between jet #" << num_jet << " and W #" << num_W_in_event << " = " << deltaR << std::endl;
+			  //} 
 		      if (deltaR < Min_deltaR_for_this_jet)
 			{
 			  Min_deltaR_for_this_jet = deltaR;
@@ -256,7 +265,7 @@ EL::StatusCode TruthMatching :: execute ()
 			  hasW(*jet) = true;
 			}
 		    }
-		  std::cout <<"#7" <<std::endl;
+		  //std::cout <<"#7" <<std::endl;
 		  if (W_particle(*jet)!=NULL)
 		    deltaR_W_jet(*jet) = xAOD::P4Helpers::deltaR(jet,W_particle(*jet));
 		  else
@@ -270,11 +279,11 @@ EL::StatusCode TruthMatching :: execute ()
 		    {
 		      float deltaR = xAOD::P4Helpers::deltaR(jet, *j);
 
-		      if (event_num < 10)
-			{
-			  std::cout << "\tB in event: " << "\tphi: " << (*j)->phi() << "\trapidity: " << (*j)->rapidity() << std::endl;
-			  std::cout << "\tdeltaR_W_b = " << xAOD::P4Helpers::deltaR(W_particle(*jet),*j) << std::endl;
-			}
+		      //      if (event_num < 10)
+		      //{
+			  //std::cout << "\tB in event: " << "\tphi: " << (*j)->phi() << "\trapidity: " << (*j)->rapidity() << std::endl;
+			  //std::cout << "\tdeltaR_W_b = " << xAOD::P4Helpers::deltaR(W_particle(*jet),*j) << std::endl;
+		      //}
 		      if (deltaR < deltaR_W_b_min)
 			{
 			  deltaR_W_b_min = deltaR;
@@ -284,24 +293,26 @@ EL::StatusCode TruthMatching :: execute ()
 		      //	   }
 		      // }	
 		    }
-		  std::cout <<"#8" <<std::endl;
+		  //std::cout <<"#8" <<std::endl;
 		  if (b_particle(*jet)!=NULL)
 		    deltaR_W_b(*jet) = xAOD::P4Helpers::deltaR(jet,b_particle(*jet));
 		  else
 		    deltaR_W_b(*jet) = 1000;
 		  b_particles_in_event.remove(b_particle(*jet));
 		  
-		  std::cout <<"#10"<<std::endl;
+		  //std::cout <<"#10"<<std::endl;
 		  if (W_particle(*jet)!=NULL)
 		    {
 		      std::list<const xAOD::TruthParticle*>::iterator l;
 		      std::list<const xAOD::TruthParticle*>::iterator m;
 		      float min_quark_pt = 13000;
+		      //std::cout <<"BEFORE " << std::endl;
 		      for(l=daughter_W_particles_cand.begin(); l != daughter_W_particles_cand.end(); ++l)
 			{
-			  if ((*l)->pt() < min_quark_pt)
+			  //std::cout <<"(*l)->pt()/1000. = " << (*l)->pt()/1000. << std::endl;
+			  if ((*l)->pt()/1000. < min_quark_pt)
 			    {
-			      min_quark_pt = (*l)->pt();
+			      min_quark_pt = (*l)->pt()/1000.;
 			      W_quark1(*jet) = *l;
 			    }
 			}
@@ -309,16 +320,16 @@ EL::StatusCode TruthMatching :: execute ()
 		      daughter_W_particles_cand.remove(W_quark1(*jet));
 		      for(m=daughter_W_particles_cand.begin(); m != daughter_W_particles_cand.end(); ++m)
 			{
-			  if ((*m)->pt() < min_quark_pt)
+			  if ((*m)->pt()/1000. < min_quark_pt)
 			    {
-			      min_quark_pt = (*m)->pt();
+			      min_quark_pt = (*m)->pt()/1000.;
 			      W_quark2(*jet) = *m;
 			    }
 			}
 		     
 		      
 		    }		 
-		  std::cout << "#11"<<std::endl;
+		  //std::cout << "#11"<<std::endl;
 		  
 		}
 	    }
@@ -326,34 +337,34 @@ EL::StatusCode TruthMatching :: execute ()
 	 
 	  for(const auto& jet: *in_jetsLargeR)
 	    {
-	      if (event_num<10)
-		std::cout <<"deltaR_W_jet = " << deltaR_W_jet(*jet) << std::endl;
-	      std::cout <<"a" << std::endl;
+	      //if (event_num<10)
+		//std::cout <<"deltaR_W_jet = " << deltaR_W_jet(*jet) << std::endl;
+		//std::cout <<"a" << std::endl;
 	      if (deltaR_W_jet(*jet) <= 0.3 && hasW(*jet))
 		{
 		 
-		  std::cout <<"ContainsWjet" << std::endl;
+		  //std::cout <<"ContainsWjet" << std::endl;
 		  containsTruthW(*jet) = true;
 		}
-	      std::cout <<"b" << std::endl;
+	      //std::cout <<"b" << std::endl;
 	      if(hasB(*jet))
 		{
 		  float deltaR = xAOD::P4Helpers::deltaR(jet, b_particle(*jet));
 		  if (deltaR >= 1.0)
 		    notContainedB(*jet) = true;
 		}
-	      std::cout << "c" <<std::endl;
+	      //std::cout << "c" <<std::endl;
 	      if (containsTruthW(*jet) && containsTruthTop(*jet))
 		{
 		  deltaR_W_top(*jet) = xAOD::P4Helpers::deltaR(W_particle(*jet),top_particle(*jet));
 		}
-	      std::cout<< "d" <<std::endl;
+	      //std::cout<< "d" <<std::endl;
 	     
 	      if (containsTruthW(*jet) && notContainedB(*jet) && containsTruthTop(*jet))
 		{
 		  deltaR_W_top_semiboosted(*jet) = xAOD::P4Helpers::deltaR(W_particle(*jet),top_particle(*jet));
 		}
-	      std::cout <<"e" <<std::endl;
+	      //std::cout <<"e" <<std::endl;
 	    }
 	}
     }
