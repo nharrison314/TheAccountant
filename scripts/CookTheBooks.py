@@ -451,7 +451,7 @@ if __name__ == "__main__":
         algorithmConfiguration_string.append(printStr.format('TruthMatching', opt, getattr(args, opt)))
         setattr(truthmatching, 'm_{0}'.format(opt), getattr(args, opt))
         time.sleep(sleepTime)
-    user_confirm(args, 1)
+    user_confirm(args, 2)
 
 
     optimization_dump = None
@@ -467,7 +467,7 @@ if __name__ == "__main__":
         time.sleep(sleepTime)
      # time.sleep(sleepTime)
 
-      user_confirm(args, 2)
+      user_confirm(args, 3)
 
     report = ROOT.Report()
     cookBooks_logger.info("\tcreating report algorithm")
@@ -478,7 +478,7 @@ if __name__ == "__main__":
       setattr(report, 'm_{0}'.format(opt), getattr(args, opt))
       time.sleep(sleepTime)
 
-    user_confirm(args, 2+args.optimization_dump)
+    user_confirm(args, 3+args.optimization_dump)
 
     cookBooks_logger.info("\tsetting global algorithm variables")
     algorithmConfiguration_string.append("global algorithm options")
@@ -490,15 +490,15 @@ if __name__ == "__main__":
         setattr(alg, 'm_{0}'.format(opt), getattr(args, opt))
         time.sleep(sleepTime)
 
-    user_confirm(args, 3+args.optimization_dump)
+    user_confirm(args, 4+args.optimization_dump)
 
     cookBooks_logger.info("adding algorithms")
-    job.algsAdd(preselect)
+    #job.algsAdd(preselect)
     job.algsAdd(audit)
     job.algsAdd(truthmatching)
     if args.optimization_dump:
       job.algsAdd(optimization_dump)
-    job.algsAdd(report)
+    #job.algsAdd(report)
 
     # make the driver we want to use:
     # this one works by running the algorithm directly

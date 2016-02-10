@@ -121,6 +121,7 @@ EL::StatusCode TruthMatching :: execute ()
 
   static SG::AuxElement::Decorator<bool> containsTruthW         ("containsTruthW");
   static SG::AuxElement::Decorator<bool> notContainedB         ("notContainedB");
+  static SG::AuxElement::Decorator<bool> WTAG ("WTAG");
   static SG::AuxElement::Decorator<bool> containsTruthTop ("containsTruthTop");
   static SG::AuxElement::Decorator<bool> hasB ("hasB");
   static SG::AuxElement::Decorator<bool> hasW("hasW");
@@ -146,6 +147,7 @@ EL::StatusCode TruthMatching :: execute ()
   for (const auto& jet: *in_jetsLargeR)
     {
       containsTruthW(*jet) = false;
+      WTAG(*jet) = false;
       containsTruthTop(*jet) = false;
       notContainedB(*jet) = false;
       b_particle(*jet) = NULL;
@@ -366,6 +368,13 @@ EL::StatusCode TruthMatching :: execute ()
 		}
 	      //std::cout <<"e" <<std::endl;
 	    }
+
+          for(const auto& jet: *in_jetsLargeR)
+            {
+	      if (containsTruthW(*jet) && notContainedB(*jet))
+		WTAG(*jet) = true;
+	    }
+	  
 	}
     }
   
