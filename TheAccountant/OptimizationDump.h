@@ -27,10 +27,8 @@ private:
   float m_eventWeight; //!
   //  int m_num_VLoose65;
   //int m_num_VLoose70;
-  //nt m_num_VLoose75;
-    //t m_num_BosonTagL1;
-  //int m_num_BosonTagL2;
-  //int m_num_BosonTagL3;
+ 
+  int m_num_WTags;
   float m_SF_pu; //!
   float m_SF_btag; //!
   int	m_ttbarHF; //!
@@ -39,14 +37,9 @@ private:
   float m_effectiveMass; //!
   float m_totalTransverseMomentum; //!
   float m_totalTransverseMass; //!
-
-  int m_num_VLoose65;
-  int m_num_VLoose70;
-  int m_num_VLoose75;
-  int m_num_BosonTagL1;
-  int m_num_BosonTagL2;
-  int m_num_BosonTagL3;
-
+  int m_num_W_inc;
+  int m_num_W_exc;
+  int m_num_top_inc;
 
   float m_dPhiMETMin; //!
   float m_mTb; //!

@@ -49,7 +49,6 @@ OptimizationDump :: OptimizationDump () :
   m_num_W_inc(-1),
   m_num_W_exc(-1),
   m_num_top_inc(-1),
-
   m_SF_pu(0.0),
   m_SF_btag(0.0),
   m_ttbarHF(0),
