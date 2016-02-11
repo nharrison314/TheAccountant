@@ -49,6 +49,7 @@ OptimizationDump :: OptimizationDump () :
   m_num_W_inc(-1),
   m_num_W_exc(-1),
   m_num_top_inc(-1),
+
   m_SF_pu(0.0),
   m_SF_btag(0.0),
   m_ttbarHF(0),
@@ -484,47 +485,6 @@ EL::StatusCode OptimizationDump :: execute ()
 
   // event number
   m_eventNumber = eventInfo->eventNumber();
-
-  static SG::AuxElement::Accessor<bool> VLoose65("VLoose65");
-  static SG::AuxElement::Accessor<bool> VLoose70("VLoose70");
-
-  static SG::AuxElement::Accessor<bool> VLoose75("VLoose75");
-
-  static SG::AuxElement::Accessor<bool> BosonTagL1("BosonTagL1");
-  static SG::AuxElement::Accessor<bool> BosonTagL2("BosonTagL2");
-  static SG::AuxElement::Accessor<bool> BosonTagL3("BosonTagL3");
-
-  int n_VLoose65 = 0;
-  int n_VLoose70 = 0;
-  int n_VLoose75 = 0;
-
-  int n_BosonTagL1 = 0;
-  int n_BosonTagL2 = 0;
-  int n_BosonTagL3 = 0;
-  for(const auto jet: *in_jetsLargeR)
-    {
-      if (VLoose65(*jet))
-	n_VLoose65++;
-      if (VLoose70(*jet))
-        n_VLoose70++;
-      if (VLoose75(*jet))
-        n_VLoose75++;
-
-      if (BosonTagL1(*jet))
-	n_BosonTagL1++;
-      if (BosonTagL2(*jet))
-        n_BosonTagL2++;
-      if (BosonTagL3(*jet))
-        n_BosonTagL3++;
-
-    }
-
-  m_num_VLoose65 = n_VLoose65;
-  m_num_VLoose70 = n_VLoose70;
-  m_num_VLoose75 = n_VLoose75;
-  m_num_BosonTagL1 = n_BosonTagL1;
-  m_num_BosonTagL2 = n_BosonTagL2;
-  m_num_BosonTagL3 = n_BosonTagL3;
 
 
   // build signal electrons

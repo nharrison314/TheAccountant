@@ -25,10 +25,6 @@ private:
 
   // everything below here is filled in the ttree
   float m_eventWeight; //!
-  //  int m_num_VLoose65;
-  //int m_num_VLoose70;
- 
-  int m_num_WTags;
   float m_SF_pu; //!
   float m_SF_btag; //!
   int	m_ttbarHF; //!
