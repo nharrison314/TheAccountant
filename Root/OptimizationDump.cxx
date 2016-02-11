@@ -46,8 +46,10 @@ OptimizationDump :: OptimizationDump () :
   m_tree(new TTree("oTree", "optimization tree")),
   m_eventWeight(0.0),
 
-  m_num_WTags(-1),
-
+  m_num_Nat_WTags(-1),
+  m_num_Tagger_WTags_level1(-1),
+  m_num_Tagger_WTags_level2(-1),
+  m_num_Tagger_WTags_level3(-1),
   m_SF_pu(0.0),
   m_SF_btag(0.0),
   m_ttbarHF(0),
