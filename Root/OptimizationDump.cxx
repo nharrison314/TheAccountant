@@ -45,7 +45,6 @@ ClassImp(OptimizationDump)
 OptimizationDump :: OptimizationDump () :
   m_tree(new TTree("oTree", "optimization tree")),
   m_eventWeight(0.0),
-
   m_num_W_inc(-1),
   m_num_W_exc(-1),
   m_num_top_inc(-1),
