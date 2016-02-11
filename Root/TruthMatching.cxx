@@ -170,8 +170,8 @@ EL::StatusCode TruthMatching :: execute ()
 	    {
 	      
 
-		  std::cout <<"nChildren() " << truth_particle->nChildren() << std::endl;
-		  std::cout <<"truth_particle->child(0)" << truth_particle->child(0) << std::endl;
+	      //std::cout <<"nChildren() " << truth_particle->nChildren() << std::endl;
+	      //  std::cout <<"truth_particle->child(0)" << truth_particle->child(0) << std::endl;
 	      //std::cout <<"#1" << std::endl;
 	      int pdgId = abs(truth_particle->pdgId());
 	      if(pdgId ==5)
