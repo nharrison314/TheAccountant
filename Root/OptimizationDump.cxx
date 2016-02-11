@@ -45,8 +45,9 @@ ClassImp(OptimizationDump)
 OptimizationDump :: OptimizationDump () :
   m_tree(new TTree("oTree", "optimization tree")),
   m_eventWeight(0.0),
-
-  m_num_Nat_WTags(-1),
+  m_num_Nat_WTags_65(-1),
+  m_num_Nat_WTags_70(-1),
+  m_num_Nat_WTags_75(-1),
   m_num_Tagger_WTags_level1(-1),
   m_num_Tagger_WTags_level2(-1),
   m_num_Tagger_WTags_level3(-1),

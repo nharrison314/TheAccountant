@@ -25,7 +25,9 @@ private:
 
   // everything below here is filled in the ttree
   float m_eventWeight; //!
-  int m_num_Nat_WTags;
+  int m_num_Nat_WTags_65;
+  int m_num_Nat_WTags_70;
+  int m_num_Nat_WTags_75;
   int m_num_Tagger_WTags_level1;
   int m_num_Tagger_WTags_level2;
   int m_num_Tagger_WTags_level3;
