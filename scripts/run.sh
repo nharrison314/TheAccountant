@@ -10,9 +10,11 @@ gttFiles="${ROOTCOREBIN}/data/TheAccountant/Gtt.list"
 #ZsherpaFiles="${ROOTCOREBIN}/data/TheAccountant/Zsherpa.list"
 ttbarIncFiles="${ROOTCOREBIN}/data/TheAccountant/ttbarInc.list"
 ttbarExcFiles="${ROOTCOREBIN}/data/TheAccountant/ttbarExc.list"
-#ttbarIncFiles="${ROOTCOREBIN}/data/TheAccountant/ttbarInc.list"
 
-globalOpts=(-v -f -yyyyyy --optimizationDump --inputGrid --inputList --badJetVeto --rc_enable)
+#globalOpts=(-v -f -yyyyyy --optimizationDump --inputGrid --inputList --badJetVeto --rc_enable)
+
+globalOpts=(-v -f -yyyyyy --optimizationDump --inputGrid --inputList --badJetV\
+eto)       
 
 #globalOpts=(-v -f -yyyyyy --optimizationDump --inputGrid --inputList --badJetVeto)       
 
@@ -23,13 +25,7 @@ mkdir -p "${outputDir}"
 
 #0L
 #CookTheBooks.py --files="${dataFiles}" "${globalOpts[@]}" "${run0L[@]}" --submitDir="${outputDir}/data_0L" condor > "${outputDir}/data_0L.log" 2>&1 &
-
-
-
 CookTheBooks.py --files="${gttFiles}" "${globalOpts[@]}" "${run0L[@]}" --truth="" --submitDir="${outputDir}/Gtt_0L" condor > "${outputDir}/Gtt_0L.log" 2>&1 &
-
-
-
 #CookTheBooks.py --files="${dijetFiles}" "${globalOpts[@]}" "${run0L[@]}" --submitDir="${outputDir}/dijet_0L" condor > "${outputDir}/dijet_0L.log" 2>&1 &
 #CookTheBooks.py --files="${topEWFiles}" "${globalOpts[@]}" "${run0L[@]}" --submitDir="${outputDir}/topEW_0L" condor > "${outputDir}/topEW_0L.log" 2>&1 &
 #CookTheBooks.py --files="${dibosonFiles}" "${globalOpts[@]}" "${run0L[@]}" --submitDir="${outputDir}/diboson_0L" condor > "${outputDir}/diboson_0L.log" 2>&1 &
@@ -51,4 +47,4 @@ CookTheBooks.py --files="${ttbarExcFiles}" "${globalOpts[@]}" "${run0L[@]}" --tr
 #CookTheBooks.py --files="${ttbarIncFiles}" "${globalOpts[@]}" "${run1L[@]}" --truthMETFilter=" <200" --submitDir="${outputDir}/ttbarInc_1L" condor > "${outputDir}/ttbarInc_1L.log" 2>&1 &
 #CookTheBooks.py --files="${ttbarExcFiles}" "${globalOpts[@]}" "${run1L[@]}" --truthMETFilter=" >200" --submitDir="${outputDir}/ttbarExc_1L" condor > "${outputDir}/ttbarExc_1L.log" 2>&1 &
 
-#GetWeights.py "${gttFiles}" "${dijetFiles}" "${topEWFiles}" "${dibosonFiles}" "${singletopFiles}" "${WsherpaFiles}" "${ZsherpaFiles}" "${ttbarIncFiles}" "${ttbarExcFiles}" --inputGrid -o "${outputDir}/weights.json" > "${outputDir}/weights.log" 2>&1 &
+#GetWeights.py "${gttFiles}" "${dijetFiles}" "${topEWFiles}" "${dibosonFiles}" "${singletopFiles}" "${WsherpaFiles}" "${ZsherpaFiles}" "${ttbarIncFiles}" "${ttbarExcFiles}" --inputGrid -o "${outputDir}/weights.json" > "${outputDir}/weights.log" 1>&1 &
