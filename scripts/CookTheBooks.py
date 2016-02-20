@@ -493,7 +493,7 @@ if __name__ == "__main__":
     user_confirm(args, 4+args.optimization_dump)
 
     cookBooks_logger.info("adding algorithms")
-    #job.algsAdd(preselect)
+    job.algsAdd(preselect)
     job.algsAdd(audit)
     #job.algsAdd(truthmatching)
     if args.optimization_dump:

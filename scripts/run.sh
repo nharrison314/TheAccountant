@@ -9,12 +9,11 @@ gttFiles="${ROOTCOREBIN}/data/TheAccountant/Gtt.list"
 #WsherpaFiles="${ROOTCOREBIN}/data/TheAccountant/Wsherpa.list"
 #ZsherpaFiles="${ROOTCOREBIN}/data/TheAccountant/Zsherpa.list"
 #ttbarIncFiles="${ROOTCOREBIN}/data/TheAccountant/ttbarInc.list"
-#ttbarExcFiles="${ROOTCOREBIN}/data/TheAccountant/ttbarExc.list"
+ttbarExcFiles="${ROOTCOREBIN}/data/TheAccountant/ttbarExc.list"
 
-#globalOpts=(-v -f -yyyyyy --optimizationDump --inputGrid --inputList --badJetVeto --rc_enable)
+globalOpts=(-v -f -yyyyyy --optimizationDump --inputGrid --inputList --badJetVeto --rc_enable)
 
-globalOpts=(-v -f -yyyyyy --optimizationDump --inputGrid --inputList --badJetV\
-eto)       
+#globalOpts=(-v -f -yyyyyy --optimizationDump --inputGrid --inputList --badJetVeto)       
 
 run0L=(--signalLeptonSelection="==0" --numLeadingJets=4 --jetLargeR_minPtView=300 --minMET=200 --dPhiMin=0.0)
 run1L=(--signalLeptonSelection="==1" --numLeadingJets=4 --jetLargeR_minPtView=300 --minMET=200 --dPhiMin=0.0)
@@ -32,7 +31,7 @@ CookTheBooks.py --files="${gttFiles}" "${globalOpts[@]}" "${run0L[@]}" --truth="
 #CookTheBooks.py --files="${WsherpaFiles}" "${globalOpts[@]}" "${run0L[@]}" --submitDir="${outputDir}/Wsherpa_0L" condor > "${outputDir}/Wsherpa_0L.log" 2>&1 &
 #CookTheBooks.py --files="${ZsherpaFiles}" "${globalOpts[@]}" "${run0L[@]}" --submitDir="${outputDir}/Zsherpa_0L" condor > "${outputDir}/Zsherpa_0L.log" 2>&1 &
 #CookTheBooks.py --files="${ttbarIncFiles}" "${globalOpts[@]}" "${run0L[@]}" --truthMETFilter=" <200" --submitDir="${outputDir}/ttbarInc_0L" condor > "${outputDir}/ttbarInc_0L.log" 2>&1 &
-#CookTheBooks.py --files="${ttbarExcFiles}" "${globalOpts[@]}" "${run0L[@]}" --truthMETFilter=" >200" --submitDir="${outputDir}/ttbarExc_0L" condor > "${outputDir}/ttbarExc_0L.log" 2>&1 &
+CookTheBooks.py --files="${ttbarExcFiles}" "${globalOpts[@]}" "${run0L[@]}" --truth="" --submitDir="${outputDir}/ttbarExc_0L" condor > "${outputDir}/ttbarExc_0L.log" 2>&1 &
 
 #1L
 #CookTheBooks.py --files="${dataFiles}" "${globalOpts[@]}" "${run1L[@]}" --submitDir="${outputDir}/data_1L" condor > "${outputDir}/data_1L.log" 2>&1 &
