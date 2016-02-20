@@ -495,7 +495,7 @@ if __name__ == "__main__":
     cookBooks_logger.info("adding algorithms")
     #job.algsAdd(preselect)
     job.algsAdd(audit)
-    job.algsAdd(truthmatching)
+    #job.algsAdd(truthmatching)
     if args.optimization_dump:
       job.algsAdd(optimization_dump)
     #job.algsAdd(report)

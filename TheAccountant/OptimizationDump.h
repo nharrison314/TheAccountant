@@ -25,12 +25,12 @@ private:
 
   // everything below here is filled in the ttree
   float m_eventWeight; //!
-  int m_num_Nat_WTags_65;
-  int m_num_Nat_WTags_70;
-  int m_num_Nat_WTags_75;
-  int m_num_Tagger_WTags_level1;
-  int m_num_Tagger_WTags_level2;
-  int m_num_Tagger_WTags_level3;
+  int m_num_VLoose65;
+  int m_num_VLoose70;
+  int m_num_VLoose75;
+  int m_num_BosonTagL1;
+  int m_num_BosonTagL2;
+  int m_num_BosonTagL3;
   float m_SF_pu; //!
   float m_SF_btag; //!
   int	m_ttbarHF; //!
