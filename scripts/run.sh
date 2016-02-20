@@ -8,13 +8,16 @@ gttFiles="${ROOTCOREBIN}/data/TheAccountant/Gtt.list"
 #singletopFiles="${ROOTCOREBIN}/data/TheAccountant/singletop.list"
 #WsherpaFiles="${ROOTCOREBIN}/data/TheAccountant/Wsherpa.list"
 #ZsherpaFiles="${ROOTCOREBIN}/data/TheAccountant/Zsherpa.list"
+<<<<<<< HEAD
 ttbarIncFiles="${ROOTCOREBIN}/data/TheAccountant/ttbarInc.list"
+=======
+#ttbarIncFiles="${ROOTCOREBIN}/data/TheAccountant/ttbarInc.list"
+>>>>>>> Overide which jet is being used for the WTagger in Audit. Edited CookTheBooks to run the preselect. Added ttbar to run on condor in run.sh
 ttbarExcFiles="${ROOTCOREBIN}/data/TheAccountant/ttbarExc.list"
 
-#globalOpts=(-v -f -yyyyyy --optimizationDump --inputGrid --inputList --badJetVeto --rc_enable)
+globalOpts=(-v -f -yyyyyy --optimizationDump --inputGrid --inputList --badJetVeto --rc_enable)
 
-globalOpts=(-v -f -yyyyyy --optimizationDump --inputGrid --inputList --badJetV\
-eto)       
+#globalOpts=(-v -f -yyyyyy --optimizationDump --inputGrid --inputList --badJetVeto)       
 
 #globalOpts=(-v -f -yyyyyy --optimizationDump --inputGrid --inputList --badJetVeto)       
 
