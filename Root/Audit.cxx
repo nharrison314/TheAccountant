@@ -212,6 +212,7 @@ EL::StatusCode Audit :: initialize () {
 
 EL::StatusCode Audit :: execute ()
 {
+  std::cout <<"In Audit 0 "<<std::endl;
   if(m_debug) Info("execute()", "Calling execute...");
   const xAOD::EventInfo*                eventInfo     (nullptr);
   const xAOD::JetContainer*             in_jetsLargeR (nullptr);
