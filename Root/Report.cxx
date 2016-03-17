@@ -213,6 +213,10 @@ EL::StatusCode Report :: execute ()
   const std::map<std::string, TLorentzVector>* vP_ptr (nullptr);
   const xAOD::TruthParticleContainer*   in_truth    (nullptr);
 
+  const xAOD::TruthParticleContainer*   in_truth    (nullptr);
+  //const xAOD::TruthParticleContainer*   in_truth    (nullptr);
+  const std::map<std::string, double>* inclVar_ptr    (nullptr);
+  const std::map<std::string, TLorentzVector>* vP_ptr (nullptr);
   // start grabbing all the containers that we can
   RETURN_CHECK("Report::execute()", HF::retrieve(eventInfo,    m_eventInfo,        m_event, m_store, m_debug), "Could not get the EventInfo container.");
   if(!m_inputJets.empty())
@@ -234,6 +238,10 @@ EL::StatusCode Report :: execute ()
 
   if(!m_truthParticles.empty())
     RETURN_CHECK("Report::execute()", HF::retrieve(in_truth, m_truthParticles, m_event, m_store, m_debug), "Could not get the truthParticles container.");
+
+  RETURN_CHECK("Report::execute()", HF::retrieve(inclVar_ptr, "RJigsawInclusiveVariables", nullptr, m_store, m_debug), "Could not get the RJRVars");
+  RETURN_CHECK("Report::execute()", HF::retrieve(vP_ptr, "RJigsawFourVectors", nullptr, m_store, m_debug), "Could not get the RJR 4-Vectors");
+
 
   // prepare the jets by creating a view container to look at them
   ConstDataVector<xAOD::JetContainer> in_jetsCDV(SG::VIEW_ELEMENTS);
