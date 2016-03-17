@@ -407,6 +407,18 @@ EL::StatusCode Preselect :: execute ()
       VD::decor_tag_top(*jet) = 1;
       VD::dec_pass_preSel_top(*jet) = 1;
       num_passTopTags++;
+
+      VD::decor_tag_W_inc(*jet) = 0;
+      VD::decor_tag_W_exc(*jet) = 0;
+      VD::decor_tag_top_inc(*jet) = 0;
+
+      if(jet->m()/1000.0 > 70)
+	VD::decor_tag_W_inc(*jet) = 1;
+      if(jet->m()/1000.0 > 100)
+	VD::decor_tag_top_inc(*jet) = 1;
+      if(jet->m()/1000.0 > 70 && jet->m()/1000.0 < 100)
+	VD::decor_tag_W_exc(*jet) = 1;
+
     }
 
     // only select event if:
@@ -580,6 +592,7 @@ EL::StatusCode Preselect :: execute ()
     m_cutflow["geq3Bjets"].first += 1;
     m_cutflow["geq3Bjets"].second += eventWeight;
   }
+
 
   return EL::StatusCode::SUCCESS;
 }

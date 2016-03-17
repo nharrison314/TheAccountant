@@ -518,6 +518,7 @@ EL::StatusCode OptimizationDump :: initialize () {
 
   ConstDataVector<xAOD::JetContainer> presel_jetsLargeR;
   ConstDataVector<xAOD::JetContainer> presel_topTags;
+  
   if(!m_inputLargeRJets.empty()){
     presel_jetsLargeR = VD::subset_using_decor(in_jetsLargeR, VD::acc_pass_preSel, 1);
     presel_topTags = VD::subset_using_decor(in_jetsLargeR, VD::acc_pass_preSel_top, 1);

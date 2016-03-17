@@ -38,6 +38,15 @@ namespace VariableDefinitions {
   static accessor_t<char> acc_tag_w("isW");
   static accessor_t<char> acc_tag_top("isTop");
 
+  // loose tagging
+  static decor_t<char> decor_tag_w_inc("isWinc");
+  static decor_t<char> decor_tag_w_exc("isWexc");
+  static decor_t<char> decor_tag_top_inc("isTopInc");
+  static accessor_t< int > acc_tag_w_inc("isWinc");
+  static accessor_t< int > acc_tag_w_exc("isWexc");
+  static accessor_t< int > acc_tag_top_inc("isTopInc");
+
+
   // for preselections to make it consistent and uniform
   static decor_t< int > dec_pass_preSel("pass_preSel");
   static decor_t< int > dec_pass_preSel_b("pass_preSel_b");
