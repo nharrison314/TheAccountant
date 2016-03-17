@@ -45,12 +45,10 @@ ClassImp(OptimizationDump)
 OptimizationDump :: OptimizationDump () :
   m_tree(new TTree("oTree", "optimization tree")),
   m_eventWeight(0.0),
-  m_num_VLoose65(-1),
-  m_num_VLoose70(-1),
-  m_num_VLoose75(-1),
-  m_num_BosonTagL1(-1),
-  m_num_BosonTagL2(-1),
-  m_num_BosonTagL3(-1),
+
+  m_num_W_inc(-1),
+  m_num_W_exc(-1),
+  m_num_top_inc(-1),
   m_SF_pu(0.0),
   m_SF_btag(0.0),
   m_ttbarHF(0),
@@ -134,6 +132,12 @@ EL::StatusCode OptimizationDump :: initialize () {
     m_tree->Branch ("m_effective",               &m_effectiveMass, "m_effective/F");
     m_tree->Branch ("dPhiMETMin",                &m_dPhiMETMin, "dPhiMETMin/F");
     m_tree->Branch ("mTb",                       &m_mTb, "mTb/F");
+  }
+
+  if(!m_inputLargeRJets.empty()){
+    m_tree->Branch("m_Num_W_Inc", &m_num_W_inc, "m_Num_W_Inc/I");
+    m_tree->Branch("m_Num_W_Exc", &m_num_W_exc,"m_Num_W_Exc/I");
+    m_tree->Branch("m_Num_top_Inc", &m_num_top_inc,"m_Num_top_Inc/I"); 
   }
   if(!m_inputJets.empty()){
     m_tree->Branch ("pt_total",                  &m_totalTransverseMomentum, "pt_total/F");
@@ -446,8 +450,13 @@ EL::StatusCode OptimizationDump :: initialize () {
   RETURN_CHECK("Report::execute()", HF::retrieve(in_inclVar, "RJigsawInclusiveVariables", nullptr, m_store, m_debug), "Could not get the RJRVars");
   // fill in the original map with the values
   for(const auto& item: *in_inclVar) m_inclVar[item.first] = item.second;
+
   if(!m_truthParticles.empty())
   RETURN_CHECK("OptimizationDump::execute()", HF::retrieve(in_truth, m_truthParticles, m_event, m_store, m_debug), "Could not get the truthParticles container.");
+
+  // do all of the razor variables
+  RETURN_CHECK("Report::execute()", HF::retrieve(m_inclVar, "RJigsawInclusiveVariables", nullptr, m_store, m_debug), "Could not get the RJRVars");
+  RETURN_CHECK("Report::execute()", HF::retrieve(m_vP, "RJigsawFourVectors", nullptr, m_store, m_debug), "Could not get the RJR 4-Vectors");
 
   // compute variables for optimization
   m_eventWeight = VD::eventWeight(eventInfo, wk()->metaData());
@@ -507,6 +516,24 @@ EL::StatusCode OptimizationDump :: initialize () {
 
     m_mTb = VD::mTb(in_met, presel_bjets.asDataVector())/1000.;
   }
+
+  ConstDataVector<xAOD::JetContainer> w_inc_jets;
+  ConstDataVector<xAOD::JetContainer> w_exc_jets;
+  ConstDataVector<xAOD::JetContainer> top_inc_jets;
+
+  if(!m_inputLargeRJets.empty()){
+    w_inc_jets = VD::subset_using_decor(in_jets_largeR, VD::acc_tag_W_inc, 1);
+    w_exc_jets = VD::subset_using_decor(in_jets_largeR, VD::acc_tag_W_exc, 1);
+    top_inc_jets = VD::subset_using_decor(in_jets_largeR, VD::acc_tag_top_inc, 1);
+  }
+
+
+  if(!m_inputLargeRJets.empty()){
+    m_num_W_inc = w_inc_jets.size();
+    m_num_W_exc = w_exc_jets.size();
+    m_num_top_inc = top_inc_jets.size();
+  }
+
 
   if(!m_inputJets.empty()){
     m_totalTransverseMomentum = VD::HT(presel_jets.asDataVector(), in_muons, in_electrons)/1000.;
