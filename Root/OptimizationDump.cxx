@@ -189,259 +189,259 @@ EL::StatusCode OptimizationDump :: initialize () {
       m_tree->Branch(branchName.c_str(), &(m_largeR_topTag_smoothTight[i]), (branchName+"/I").c_str());
     }
   }
-
-	  if(!m_inputJets.empty() && !m_inputMET.empty()){
-	    // empty initialization to get the branch working
-	    m_inclVar["GG_mass"] = -99.0;
-	    m_inclVar["Ga_mass"] = -99.0;
-	    m_inclVar["Gb_mass"] = -99.0;
-	    m_inclVar["Ca1_mass"] = -99.0;
-	    m_inclVar["Cb1_mass"] = -99.0;
-	    m_inclVar["Va1_mass"] = -99.0;
-	    m_inclVar["Vb1_mass"] = -99.0;
-	    m_inclVar["Va2_mass"] = -99.0;
-	    m_inclVar["Vb2_mass"] = -99.0;
-	    /*
-	    m_inclVar["pT_GG_Ga"] = -99.0;
-	    m_inclVar["pT_Va1_GG"] = -99.0;
-	    m_inclVar["pT_Va2_GG"] = -99.0;
-	    m_inclVar["pT_GG_Gb"] = -99.0;
-	    m_inclVar["pT_Vb1_GG"] = -99.0;
-	    m_inclVar["pT_Vb2_GG"] = -99.0;
-	    m_inclVar["pT_Ia1_GG"] = -99.0;
-	    m_inclVar["pT_Ib1_GG"] = -99.0;
-	    m_inclVar["p_Ga_GG"] = -99.0;
-	    m_inclVar["p_Va1_GG"] = -99.0;
-	    m_inclVar["p_Va2_GG"] = -99.0;
-	    m_inclVar["p_Gb_GG"] = -99.0;
-	    m_inclVar["p_Vb1_GG"] = -99.0;
-	    m_inclVar["p_Vb2_GG"] = -99.0;
-	    m_inclVar["p_Ia1_GG"] = -99.0;
-	    m_inclVar["p_Ib1_GG"] = -99.0;
-	    m_inclVar["GG_invGamma"] = -99.0;
+  
+  if(!m_inputJets.empty() && !m_inputMET.empty()){
+    // empty initialization to get the branch working
+    m_inclVar["GG_mass"] = -99.0;
+    m_inclVar["Ga_mass"] = -99.0;
+    m_inclVar["Gb_mass"] = -99.0;
+    m_inclVar["Ca1_mass"] = -99.0;
+    m_inclVar["Cb1_mass"] = -99.0;
+    m_inclVar["Va1_mass"] = -99.0;
+    m_inclVar["Vb1_mass"] = -99.0;
+    m_inclVar["Va2_mass"] = -99.0;
+    m_inclVar["Vb2_mass"] = -99.0;
+    /*
+      m_inclVar["pT_GG_Ga"] = -99.0;
+      m_inclVar["pT_Va1_GG"] = -99.0;
+      m_inclVar["pT_Va2_GG"] = -99.0;
+      m_inclVar["pT_GG_Gb"] = -99.0;
+      m_inclVar["pT_Vb1_GG"] = -99.0;
+      m_inclVar["pT_Vb2_GG"] = -99.0;
+      m_inclVar["pT_Ia1_GG"] = -99.0;
+      m_inclVar["pT_Ib1_GG"] = -99.0;
+      m_inclVar["p_Ga_GG"] = -99.0;
+      m_inclVar["p_Va1_GG"] = -99.0;
+      m_inclVar["p_Va2_GG"] = -99.0;
+      m_inclVar["p_Gb_GG"] = -99.0;
+      m_inclVar["p_Vb1_GG"] = -99.0;
+      m_inclVar["p_Vb2_GG"] = -99.0;
+      m_inclVar["p_Ia1_GG"] = -99.0;
+      m_inclVar["p_Ib1_GG"] = -99.0;
+      m_inclVar["GG_invGamma"] = -99.0;
+    */
+    m_inclVar["GG_invGamma"] = -99.0;
+    m_inclVar["GG_visShape"] = -99.0;
+    m_inclVar["GG_mDeltaR"] = -99.0;
+    m_inclVar["Va1_n"] = -99.0;
+    m_inclVar["Vb1_n"] = -99.0;
+    m_inclVar["Ga_n"] = -99.0;
+    m_inclVar["Va2_n"] = -99.0;
+    m_inclVar["Vb2_n"] = -99.0;
+    m_inclVar["Gb_n"] = -99.0;
+    /*
+      m_inclVar["Ia1_depth"] = -99.0;
+      m_inclVar["Ib1_depth"] = -99.0;
+    */
+    m_inclVar["GG_cosTheta"] = -99.0;
+    m_inclVar["Ga_cosIa1"] = -99.0;
+    m_inclVar["Gb_cosIb1"] = -99.0;
+    m_inclVar["Va1_cosTheta"] = -99.0;
+    m_inclVar["Vb1_cosTheta"] = -99.0;
+    m_inclVar["Va2_cosTheta"] = -99.0;
+    m_inclVar["Vb2_cosTheta"] = -99.0;
+    m_inclVar["GG_dPhiVis"] = -99.0;
+    m_inclVar["GG_dPhiBetaR"] = -99.0;
+    m_inclVar["GG_dPhiDecay"] = -99.0;
+    m_inclVar["dPhi_Ga_Va1"] = -99.0;
+    m_inclVar["dPhi_Ga_Ca1"] = -99.0;
+    m_inclVar["dPhi_Gb_Vb1"] = -99.0;
+    m_inclVar["dPhi_Gb_Cb1"] = -99.0;
+    m_inclVar["dPhi_Ca1_Va2"] = -99.0;
+    m_inclVar["dPhi_Cb1_Vb2"] = -99.0;
+    m_inclVar["pT_GG"] = -99.0;
+    m_inclVar["pZ_GG"] = -99.0;
+    m_inclVar["H11GG"] = -99.0;
+    m_inclVar["H21GG"] = -99.0;
+    m_inclVar["H22GG"] = -99.0;
+    m_inclVar["H41GG"] = -99.0;
+    m_inclVar["H42GG"] = -99.0;
+    m_inclVar["H11Ga"] = -99.0;
+    m_inclVar["H11Gb"] = -99.0;
+    m_inclVar["H21Ga"] = -99.0;
+    m_inclVar["H21Gb"] = -99.0;
+    m_inclVar["H11Ca1"] = -99.0;
+    m_inclVar["H11Cb1"] = -99.0;
+    m_inclVar["HT21GG"] = -99.0;
+    m_inclVar["HT22GG"] = -99.0;
+    m_inclVar["HT41GG"] = -99.0;
+    m_inclVar["HT42GG"] = -99.0;
+    m_inclVar["d_dPhiG"] = -99.0;
+    m_inclVar["s_dPhiG"] = -99.0;
+    m_inclVar["s_angle"] = -99.0;
+    m_inclVar["d_angle"] = -99.0;
+    m_inclVar["ratio_pZGG_HT21GG"] = -99.0;
+    m_inclVar["ratio_pZGG_HT41GG"] = -99.0;
+    m_inclVar["ratio_pTGG_HT21GG"] = -99.0;
+    m_inclVar["ratio_pTGG_HT41GG"] = -99.0;
+    m_inclVar["ratio_H11GG_H21GG"] = -99.0;
+    m_inclVar["ratio_HT41GG_H41GG"] = -99.0;
+    m_inclVar["ratio_H11GG_H41GG"] = -99.0;
+    m_inclVar["maxRatio_H10PP_H11PP"] = -99.0;
+    
+    //QCD Vars
+    m_inclVar["Rsib"] = -99.0;
+    m_inclVar["cosQCD"] = -99.0;
+    m_inclVar["deltaQCD"] = -99.0;
+    m_inclVar["temp_Rsib"] = -99.0;
+    m_inclVar["Pmet_pT"] = -99.0;
+    m_inclVar["Psib_phi"] = -99.0;
+    m_inclVar["Pmet_phi"] = -99.0;
+    
+    m_tree->Branch("razor_GG_mass",     &(m_inclVar.at("GG_mass")));
+    m_tree->Branch("razor_Ga_mass",     &(m_inclVar.at("Ga_mass")));
+    m_tree->Branch("razor_Gb_mass",     &(m_inclVar.at("Gb_mass")));
+    m_tree->Branch("razor_Ca1_mass",    &(m_inclVar.at("Ca1_mass")));
+    m_tree->Branch("razor_Cb1_mass",    &(m_inclVar.at("Cb1_mass")));
+    m_tree->Branch("razor_Va1_mass",    &(m_inclVar.at("Va1_mass")));
+    m_tree->Branch("razor_Vb1_mass",    &(m_inclVar.at("Vb1_mass")));
+    m_tree->Branch("razor_Va2_mass",    &(m_inclVar.at("Va2_mass")));
+    m_tree->Branch("razor_Vb2_mass",    &(m_inclVar.at("Vb2_mass")));
+    
+    /*
+      m_tree->Branch("razor_pT_GG_Ga",    &(m_inclVar.at("pT_GG_Ga")));
+      m_tree->Branch("razor_pT_Va1_GG",   &(m_inclVar.at("pT_Va1_GG")));
+      m_tree->Branch("razor_pT_Va2_GG",   &(m_inclVar.at("pT_Va2_GG")));
+      m_tree->Branch("razor_pT_GG_Gb",    &(m_inclVar.at("pT_GG_Gb")));
+      m_tree->Branch("razor_pT_Vb1_GG",   &(m_inclVar.at("pT_Vb1_GG")));
+      m_tree->Branch("razor_pT_Vb2_GG",   &(m_inclVar.at("pT_Vb2_GG")));
+      m_tree->Branch("razor_pT_Ia1_GG",   &(m_inclVar.at("pT_Ia1_GG")));
+      m_tree->Branch("razor_pT_Ib1_GG",   &(m_inclVar.at("pT_Ib1_GG")));
+    */
+    
+    /*
+      m_tree->Branch("razor_p_Ga_GG",     &(m_inclVar.at("p_Ga_GG")));
+      m_tree->Branch("razor_p_Va1_GG",    &(m_inclVar.at("p_Va1_GG")));
+      m_tree->Branch("razor_p_Va2_GG",    &(m_inclVar.at("p_Va2_GG")));
+      m_tree->Branch("razor_p_Gb_GG",     &(m_inclVar.at("p_Gb_GG")));
+      m_tree->Branch("razor_p_Vb1_GG",    &(m_inclVar.at("p_Vb1_GG")));
+      m_tree->Branch("razor_p_Vb2_GG",    &(m_inclVar.at("p_Vb2_GG")));
+      m_tree->Branch("razor_p_Ia1_GG",    &(m_inclVar.at("p_Ia1_GG")));
+      m_tree->Branch("razor_p_Ib1_GG",    &(m_inclVar.at("p_Ib1_GG")));
+    */
+    
+    /*
+      m_tree->Branch("razor_GG_invGamma", &(m_inclVar.at("GG_invGamma")));
 	    */
-	    m_inclVar["GG_invGamma"] = -99.0;
-	    m_inclVar["GG_visShape"] = -99.0;
-	    m_inclVar["GG_mDeltaR"] = -99.0;
-	    m_inclVar["Va1_n"] = -99.0;
-	    m_inclVar["Vb1_n"] = -99.0;
-	    m_inclVar["Ga_n"] = -99.0;
-	    m_inclVar["Va2_n"] = -99.0;
-	    m_inclVar["Vb2_n"] = -99.0;
-	    m_inclVar["Gb_n"] = -99.0;
-	    /*
-	    m_inclVar["Ia1_depth"] = -99.0;
-	    m_inclVar["Ib1_depth"] = -99.0;
-	    */
-	    m_inclVar["GG_cosTheta"] = -99.0;
-	    m_inclVar["Ga_cosIa1"] = -99.0;
-	    m_inclVar["Gb_cosIb1"] = -99.0;
-	    m_inclVar["Va1_cosTheta"] = -99.0;
-	    m_inclVar["Vb1_cosTheta"] = -99.0;
-	    m_inclVar["Va2_cosTheta"] = -99.0;
-	    m_inclVar["Vb2_cosTheta"] = -99.0;
-	    m_inclVar["GG_dPhiVis"] = -99.0;
-	    m_inclVar["GG_dPhiBetaR"] = -99.0;
-	    m_inclVar["GG_dPhiDecay"] = -99.0;
-	    m_inclVar["dPhi_Ga_Va1"] = -99.0;
-	    m_inclVar["dPhi_Ga_Ca1"] = -99.0;
-	    m_inclVar["dPhi_Gb_Vb1"] = -99.0;
-	    m_inclVar["dPhi_Gb_Cb1"] = -99.0;
-	    m_inclVar["dPhi_Ca1_Va2"] = -99.0;
-	    m_inclVar["dPhi_Cb1_Vb2"] = -99.0;
-	    m_inclVar["pT_GG"] = -99.0;
-	    m_inclVar["pZ_GG"] = -99.0;
-	    m_inclVar["H11GG"] = -99.0;
-	    m_inclVar["H21GG"] = -99.0;
-	    m_inclVar["H22GG"] = -99.0;
-	    m_inclVar["H41GG"] = -99.0;
-	    m_inclVar["H42GG"] = -99.0;
-	    m_inclVar["H11Ga"] = -99.0;
-	    m_inclVar["H11Gb"] = -99.0;
-	    m_inclVar["H21Ga"] = -99.0;
-	    m_inclVar["H21Gb"] = -99.0;
-	    m_inclVar["H11Ca1"] = -99.0;
-	    m_inclVar["H11Cb1"] = -99.0;
-	    m_inclVar["HT21GG"] = -99.0;
-	    m_inclVar["HT22GG"] = -99.0;
-	    m_inclVar["HT41GG"] = -99.0;
-	    m_inclVar["HT42GG"] = -99.0;
-	    m_inclVar["d_dPhiG"] = -99.0;
-	    m_inclVar["s_dPhiG"] = -99.0;
-	    m_inclVar["s_angle"] = -99.0;
-	    m_inclVar["d_angle"] = -99.0;
-	    m_inclVar["ratio_pZGG_HT21GG"] = -99.0;
-	    m_inclVar["ratio_pZGG_HT41GG"] = -99.0;
-	    m_inclVar["ratio_pTGG_HT21GG"] = -99.0;
-	    m_inclVar["ratio_pTGG_HT41GG"] = -99.0;
-	    m_inclVar["ratio_H11GG_H21GG"] = -99.0;
-	    m_inclVar["ratio_HT41GG_H41GG"] = -99.0;
-	    m_inclVar["ratio_H11GG_H41GG"] = -99.0;
-	    m_inclVar["maxRatio_H10PP_H11PP"] = -99.0;
+    m_tree->Branch("razor_GG_invGamma", &(m_inclVar.at("GG_invGamma")));
+    m_tree->Branch("razor_GG_visShape", &(m_inclVar.at("GG_visShape")));
+    m_tree->Branch("razor_GG_mDeltaR",  &(m_inclVar.at("GG_mDeltaR")));
+    
+    // counting
+    m_tree->Branch("razor_Va1_n",       &(m_inclVar.at("Va1_n")));
+    m_tree->Branch("razor_Vb1_n",       &(m_inclVar.at("Vb1_n")));
+    m_tree->Branch("razor_Ga_n",        &(m_inclVar.at("Ga_n")));
+    m_tree->Branch("razor_Va2_n",       &(m_inclVar.at("Va2_n")));
+    m_tree->Branch("razor_Vb2_n",       &(m_inclVar.at("Vb2_n")));
+    m_tree->Branch("razor_Gb_n",        &(m_inclVar.at("Gb_n")));
+    /*
+      m_tree->Branch("razor_Ia1_depth",   &(m_inclVar.at("Ia1_depth")));
+      m_tree->Branch("razor_Ib1_depth",   &(m_inclVar.at("Ib1_depth")));
+    */
+    
+    m_tree->Branch("razor_GG_cosTheta", &(m_inclVar.at("GG_cosTheta")));
+    m_tree->Branch("razor_Ga_cosIa1",   &(m_inclVar.at("Ga_cosIa1")));
+    m_tree->Branch("razor_Gb_cosIb1",   &(m_inclVar.at("Gb_cosIb1")));
+    m_tree->Branch("razor_Va1_cosTheta",&(m_inclVar.at("Va1_cosTheta")));
+    m_tree->Branch("razor_Vb1_cosTheta",&(m_inclVar.at("Vb1_cosTheta")));
+    m_tree->Branch("razor_Va2_cosTheta",&(m_inclVar.at("Va2_cosTheta")));
+    m_tree->Branch("razor_Vb2_cosTheta",&(m_inclVar.at("Vb2_cosTheta")));
+    
+    // delta phi
+    m_tree->Branch("razor_GG_dPhiVis",  &(m_inclVar.at("GG_dPhiVis")));
+    m_tree->Branch("razor_GG_dPhiBetaR",&(m_inclVar.at("GG_dPhiBetaR")));
+    m_tree->Branch("razor_GG_dPhiDecay",&(m_inclVar.at("GG_dPhiDecay")));
+    m_tree->Branch("razor_dPhi_Ga_Va1", &(m_inclVar.at("dPhi_Ga_Va1")));
+    m_tree->Branch("razor_dPhi_Ga_Ca1", &(m_inclVar.at("dPhi_Ga_Ca1")));
+    m_tree->Branch("razor_dPhi_Gb_Vb1", &(m_inclVar.at("dPhi_Gb_Vb1")));
+    m_tree->Branch("razor_dPhi_Gb_Cb1", &(m_inclVar.at("dPhi_Gb_Cb1")));
+    m_tree->Branch("razor_dPhi_Ca1_Va2",&(m_inclVar.at("dPhi_Ca1_Va2")));
+    m_tree->Branch("razor_dPhi_Cb1_Vb2",&(m_inclVar.at("dPhi_Cb1_Vb2")));
+    
+    // CM variables
+    m_tree->Branch("razor_pT_GG",       &(m_inclVar.at("pT_GG")));
+    m_tree->Branch("razor_pZ_GG",       &(m_inclVar.at("pZ_GG")));
+    
+    // H-variables (H_{n,m}^{F
+    m_tree->Branch("razor_H11GG",    &(m_inclVar.at("H11GG")));
+    m_tree->Branch("razor_H21GG",    &(m_inclVar.at("H21GG")));
+    m_tree->Branch("razor_H22GG",    &(m_inclVar.at("H22GG")));
+    m_tree->Branch("razor_H41GG",    &(m_inclVar.at("H41GG")));
+    m_tree->Branch("razor_H42GG",    &(m_inclVar.at("H42GG")));
+    
+    m_tree->Branch("razor_H11Ga",    &(m_inclVar.at("H11Ga")));
+    m_tree->Branch("razor_H11Gb",    &(m_inclVar.at("H11Gb")));
+    m_tree->Branch("razor_H21Ga",    &(m_inclVar.at("H21Ga")));
+    m_tree->Branch("razor_H21Gb",    &(m_inclVar.at("H21Gb")));
+    
+    m_tree->Branch("razor_H11Ca1",   &(m_inclVar.at("H11Ca1")));
+    m_tree->Branch("razor_H11Cb1",   &(m_inclVar.at("H11Cb1")));
+    
+    m_tree->Branch("razor_HT21GG",   &(m_inclVar.at("HT21GG")));
+    m_tree->Branch("razor_HT22GG",   &(m_inclVar.at("HT22GG")));
+    m_tree->Branch("razor_HT41GG",   &(m_inclVar.at("HT41GG")));
+    m_tree->Branch("razor_HT42GG",   &(m_inclVar.at("HT42GG")));
+    
+    // gluino hemishpere varia
+    m_tree->Branch("razor_d_dPhiG",     &(m_inclVar.at("d_dPhiG")));
+    m_tree->Branch("razor_s_dPhiG",     &(m_inclVar.at("s_dPhiG")));
+    
+    // sangle and dangle
+    m_tree->Branch("razor_s_angle",     &(m_inclVar.at("s_angle")));
+    m_tree->Branch("razor_d_angle",     &(m_inclVar.at("d_angle")));
+    
+    // ratios
+    m_tree->Branch("razor_ratio_pZGG_HT21GG",       &(m_inclVar.at("ratio_pZGG_HT21GG")));
+    m_tree->Branch("razor_ratio_pZGG_HT41GG",       &(m_inclVar.at("ratio_pZGG_HT41GG")));
+    m_tree->Branch("razor_ratio_pTGG_HT21GG",       &(m_inclVar.at("ratio_pTGG_HT21GG")));
+    m_tree->Branch("razor_ratio_pTGG_HT41GG",       &(m_inclVar.at("ratio_pTGG_HT41GG")));
+    
+    m_tree->Branch("razor_ratio_H11GG_H21GG",     &(m_inclVar.at("ratio_H11GG_H21GG")));
+    m_tree->Branch("razor_ratio_HT41GG_H41GG",    &(m_inclVar.at("ratio_HT41GG_H41GG")));
+    m_tree->Branch("razor_ratio_H11GG_H41GG",     &(m_inclVar.at("ratio_H11GG_H41GG")));
+    m_tree->Branch("razor_maxRatio_H10PP_H11PP",  &(m_inclVar.at("maxRatio_H10PP_H11PP")));
+    
+    m_tree->Branch("razor_Rsib",     &(m_inclVar.at("Rsib")));
+    m_tree->Branch("razor_cosQCD",   &(m_inclVar.at("cosQCD")));
+    m_tree->Branch("razor_deltaQCD", &(m_inclVar.at("deltaQCD")));
+    std::cout << "here" << std::endl;
+    m_tree->Branch("razor_temp_Rsib", &(m_inclVar.at("temp_Rsib")));
+    std::cout << "and here" << std::endl;
+    m_tree->Branch("razor_Pmet_pT", &(m_inclVar.at("Pmet_pT")));
+    m_tree->Branch("razor_Psib_phi", &(m_inclVar.at("Psib_phi")));
+    m_tree->Branch("razor_Pmet_phi", &(m_inclVar.at("Pmet_phi")));
+    std::cout << "and here too" << std::endl;
+  }
+  
+  return EL::StatusCode::SUCCESS;
+}
 
-	    //QCD Vars
-	    m_inclVar["Rsib"] = -99.0;
-	    m_inclVar["cosQCD"] = -99.0;
-	    m_inclVar["deltaQCD"] = -99.0;
-	    m_inclVar["temp_Rsib"] = -99.0;
-	    m_inclVar["Pmet_pT"] = -99.0;
-	    m_inclVar["Psib_phi"] = -99.0;
-	    m_inclVar["Pmet_phi"] = -99.0;
-
-	    m_tree->Branch("razor_GG_mass",     &(m_inclVar.at("GG_mass")));
-	    m_tree->Branch("razor_Ga_mass",     &(m_inclVar.at("Ga_mass")));
-	    m_tree->Branch("razor_Gb_mass",     &(m_inclVar.at("Gb_mass")));
-	    m_tree->Branch("razor_Ca1_mass",    &(m_inclVar.at("Ca1_mass")));
-	    m_tree->Branch("razor_Cb1_mass",    &(m_inclVar.at("Cb1_mass")));
-	    m_tree->Branch("razor_Va1_mass",    &(m_inclVar.at("Va1_mass")));
-	    m_tree->Branch("razor_Vb1_mass",    &(m_inclVar.at("Vb1_mass")));
-	    m_tree->Branch("razor_Va2_mass",    &(m_inclVar.at("Va2_mass")));
-	    m_tree->Branch("razor_Vb2_mass",    &(m_inclVar.at("Vb2_mass")));
-
-	    /*
-	    m_tree->Branch("razor_pT_GG_Ga",    &(m_inclVar.at("pT_GG_Ga")));
-	    m_tree->Branch("razor_pT_Va1_GG",   &(m_inclVar.at("pT_Va1_GG")));
-	    m_tree->Branch("razor_pT_Va2_GG",   &(m_inclVar.at("pT_Va2_GG")));
-	    m_tree->Branch("razor_pT_GG_Gb",    &(m_inclVar.at("pT_GG_Gb")));
-	    m_tree->Branch("razor_pT_Vb1_GG",   &(m_inclVar.at("pT_Vb1_GG")));
-	    m_tree->Branch("razor_pT_Vb2_GG",   &(m_inclVar.at("pT_Vb2_GG")));
-	    m_tree->Branch("razor_pT_Ia1_GG",   &(m_inclVar.at("pT_Ia1_GG")));
-	    m_tree->Branch("razor_pT_Ib1_GG",   &(m_inclVar.at("pT_Ib1_GG")));
-	    */
-
-	    /*
-	    m_tree->Branch("razor_p_Ga_GG",     &(m_inclVar.at("p_Ga_GG")));
-	    m_tree->Branch("razor_p_Va1_GG",    &(m_inclVar.at("p_Va1_GG")));
-	    m_tree->Branch("razor_p_Va2_GG",    &(m_inclVar.at("p_Va2_GG")));
-	    m_tree->Branch("razor_p_Gb_GG",     &(m_inclVar.at("p_Gb_GG")));
-	    m_tree->Branch("razor_p_Vb1_GG",    &(m_inclVar.at("p_Vb1_GG")));
-	    m_tree->Branch("razor_p_Vb2_GG",    &(m_inclVar.at("p_Vb2_GG")));
-	    m_tree->Branch("razor_p_Ia1_GG",    &(m_inclVar.at("p_Ia1_GG")));
-	    m_tree->Branch("razor_p_Ib1_GG",    &(m_inclVar.at("p_Ib1_GG")));
-	    */
-
-	    /*
-	    m_tree->Branch("razor_GG_invGamma", &(m_inclVar.at("GG_invGamma")));
-	    */
-	    m_tree->Branch("razor_GG_invGamma", &(m_inclVar.at("GG_invGamma")));
-	    m_tree->Branch("razor_GG_visShape", &(m_inclVar.at("GG_visShape")));
-	    m_tree->Branch("razor_GG_mDeltaR",  &(m_inclVar.at("GG_mDeltaR")));
-
-	    // counting
-	    m_tree->Branch("razor_Va1_n",       &(m_inclVar.at("Va1_n")));
-	    m_tree->Branch("razor_Vb1_n",       &(m_inclVar.at("Vb1_n")));
-	    m_tree->Branch("razor_Ga_n",        &(m_inclVar.at("Ga_n")));
-	    m_tree->Branch("razor_Va2_n",       &(m_inclVar.at("Va2_n")));
-	    m_tree->Branch("razor_Vb2_n",       &(m_inclVar.at("Vb2_n")));
-	    m_tree->Branch("razor_Gb_n",        &(m_inclVar.at("Gb_n")));
-	    /*
-	    m_tree->Branch("razor_Ia1_depth",   &(m_inclVar.at("Ia1_depth")));
-	    m_tree->Branch("razor_Ib1_depth",   &(m_inclVar.at("Ib1_depth")));
-	    */
-
-	    m_tree->Branch("razor_GG_cosTheta", &(m_inclVar.at("GG_cosTheta")));
-	    m_tree->Branch("razor_Ga_cosIa1",   &(m_inclVar.at("Ga_cosIa1")));
-	    m_tree->Branch("razor_Gb_cosIb1",   &(m_inclVar.at("Gb_cosIb1")));
-	    m_tree->Branch("razor_Va1_cosTheta",&(m_inclVar.at("Va1_cosTheta")));
-	    m_tree->Branch("razor_Vb1_cosTheta",&(m_inclVar.at("Vb1_cosTheta")));
-	    m_tree->Branch("razor_Va2_cosTheta",&(m_inclVar.at("Va2_cosTheta")));
-	    m_tree->Branch("razor_Vb2_cosTheta",&(m_inclVar.at("Vb2_cosTheta")));
-
-	    // delta phi
-	    m_tree->Branch("razor_GG_dPhiVis",  &(m_inclVar.at("GG_dPhiVis")));
-	    m_tree->Branch("razor_GG_dPhiBetaR",&(m_inclVar.at("GG_dPhiBetaR")));
-	    m_tree->Branch("razor_GG_dPhiDecay",&(m_inclVar.at("GG_dPhiDecay")));
-	    m_tree->Branch("razor_dPhi_Ga_Va1", &(m_inclVar.at("dPhi_Ga_Va1")));
-	    m_tree->Branch("razor_dPhi_Ga_Ca1", &(m_inclVar.at("dPhi_Ga_Ca1")));
-	    m_tree->Branch("razor_dPhi_Gb_Vb1", &(m_inclVar.at("dPhi_Gb_Vb1")));
-	    m_tree->Branch("razor_dPhi_Gb_Cb1", &(m_inclVar.at("dPhi_Gb_Cb1")));
-	    m_tree->Branch("razor_dPhi_Ca1_Va2",&(m_inclVar.at("dPhi_Ca1_Va2")));
-	    m_tree->Branch("razor_dPhi_Cb1_Vb2",&(m_inclVar.at("dPhi_Cb1_Vb2")));
-
-	    // CM variables
-	    m_tree->Branch("razor_pT_GG",       &(m_inclVar.at("pT_GG")));
-	    m_tree->Branch("razor_pZ_GG",       &(m_inclVar.at("pZ_GG")));
-
-	    // H-variables (H_{n,m}^{F
-	    m_tree->Branch("razor_H11GG",    &(m_inclVar.at("H11GG")));
-	    m_tree->Branch("razor_H21GG",    &(m_inclVar.at("H21GG")));
-	    m_tree->Branch("razor_H22GG",    &(m_inclVar.at("H22GG")));
-	    m_tree->Branch("razor_H41GG",    &(m_inclVar.at("H41GG")));
-	    m_tree->Branch("razor_H42GG",    &(m_inclVar.at("H42GG")));
-
-	    m_tree->Branch("razor_H11Ga",    &(m_inclVar.at("H11Ga")));
-	    m_tree->Branch("razor_H11Gb",    &(m_inclVar.at("H11Gb")));
-	    m_tree->Branch("razor_H21Ga",    &(m_inclVar.at("H21Ga")));
-	    m_tree->Branch("razor_H21Gb",    &(m_inclVar.at("H21Gb")));
-
-	    m_tree->Branch("razor_H11Ca1",   &(m_inclVar.at("H11Ca1")));
-	    m_tree->Branch("razor_H11Cb1",   &(m_inclVar.at("H11Cb1")));
-
-	    m_tree->Branch("razor_HT21GG",   &(m_inclVar.at("HT21GG")));
-	    m_tree->Branch("razor_HT22GG",   &(m_inclVar.at("HT22GG")));
-	    m_tree->Branch("razor_HT41GG",   &(m_inclVar.at("HT41GG")));
-	    m_tree->Branch("razor_HT42GG",   &(m_inclVar.at("HT42GG")));
-
-	    // gluino hemishpere varia
-	    m_tree->Branch("razor_d_dPhiG",     &(m_inclVar.at("d_dPhiG")));
-	    m_tree->Branch("razor_s_dPhiG",     &(m_inclVar.at("s_dPhiG")));
-
-	    // sangle and dangle
-	    m_tree->Branch("razor_s_angle",     &(m_inclVar.at("s_angle")));
-	    m_tree->Branch("razor_d_angle",     &(m_inclVar.at("d_angle")));
-
-	    // ratios
-	    m_tree->Branch("razor_ratio_pZGG_HT21GG",       &(m_inclVar.at("ratio_pZGG_HT21GG")));
-	    m_tree->Branch("razor_ratio_pZGG_HT41GG",       &(m_inclVar.at("ratio_pZGG_HT41GG")));
-	    m_tree->Branch("razor_ratio_pTGG_HT21GG",       &(m_inclVar.at("ratio_pTGG_HT21GG")));
-	    m_tree->Branch("razor_ratio_pTGG_HT41GG",       &(m_inclVar.at("ratio_pTGG_HT41GG")));
-
-	    m_tree->Branch("razor_ratio_H11GG_H21GG",     &(m_inclVar.at("ratio_H11GG_H21GG")));
-	    m_tree->Branch("razor_ratio_HT41GG_H41GG",    &(m_inclVar.at("ratio_HT41GG_H41GG")));
-	    m_tree->Branch("razor_ratio_H11GG_H41GG",     &(m_inclVar.at("ratio_H11GG_H41GG")));
-	    m_tree->Branch("razor_maxRatio_H10PP_H11PP",  &(m_inclVar.at("maxRatio_H10PP_H11PP")));
-
-	    m_tree->Branch("razor_Rsib",     &(m_inclVar.at("Rsib")));
-	    m_tree->Branch("razor_cosQCD",   &(m_inclVar.at("cosQCD")));
-	    m_tree->Branch("razor_deltaQCD", &(m_inclVar.at("deltaQCD")));
-	    std::cout << "here" << std::endl;
-	    m_tree->Branch("razor_temp_Rsib", &(m_inclVar.at("temp_Rsib")));
-	    std::cout << "and here" << std::endl;
-	    m_tree->Branch("razor_Pmet_pT", &(m_inclVar.at("Pmet_pT")));
-	    m_tree->Branch("razor_Psib_phi", &(m_inclVar.at("Psib_phi")));
-	    m_tree->Branch("razor_Pmet_phi", &(m_inclVar.at("Pmet_phi")));
-	    std::cout << "and here too" << std::endl;
-	  }
-
-	  return EL::StatusCode::SUCCESS;
-	}
-
-	EL::StatusCode OptimizationDump :: execute ()
-	{
-	  if(m_debug) Info("execute()", "Calling execute...");
-	  const xAOD::EventInfo*                eventInfo     (nullptr);
-	  const xAOD::JetContainer*             in_jetsLargeR (nullptr);
-	  const xAOD::JetContainer*             in_jets       (nullptr);
-	  const xAOD::MissingETContainer*       in_missinget  (nullptr);
-	  const xAOD::ElectronContainer*        in_electrons  (nullptr);
-	  const xAOD::MuonContainer*            in_muons      (nullptr);
-	  const xAOD::TauJetContainer*          in_taus       (nullptr);
-	  const xAOD::PhotonContainer*          in_photons    (nullptr);
-	  const xAOD::TruthParticleContainer*   in_truth      (nullptr);
-
-	  // start grabbing all the containers that we can
-	  RETURN_CHECK("OptimizationDump::execute()", HF::retrieve(eventInfo,    m_eventInfo,        m_event, m_store, m_debug), "Could not get the EventInfo container.");
-	  if(!m_inputJets.empty())
-	    RETURN_CHECK("OptimizationDump::execute()", HF::retrieve(in_jets,     m_inputJets,       m_event, m_store, m_debug), "Could not get the inputJets container.");
-	  if(!m_inputLargeRJets.empty())
-	    RETURN_CHECK("Audit::execute()", HF::retrieve(in_jetsLargeR,      m_inputLargeRJets,        m_event, m_store, m_debug), "Could not get the inputLargeRJets container.");
-	  if(!m_inputMET.empty())
-	    RETURN_CHECK("OptimizationDump::execute()", HF::retrieve(in_missinget, m_inputMET,         m_event, m_store, m_debug), "Could not get the inputMET container.");
-	  if(!m_inputElectrons.empty())
-	    RETURN_CHECK("OptimizationDump::execute()", HF::retrieve(in_electrons, m_inputElectrons,   m_event, m_store, m_debug), "Could not get the inputElectrons container.");
-	  if(!m_inputMuons.empty())
-	    RETURN_CHECK("OptimizationDump::execute()", HF::retrieve(in_muons,     m_inputMuons,       m_event, m_store, m_debug), "Could not get the inputMuons container.");
-	  if(!m_inputTauJets.empty())
+EL::StatusCode OptimizationDump :: execute ()
+{
+  if(m_debug) Info("execute()", "Calling execute...");
+  const xAOD::EventInfo*                eventInfo     (nullptr);
+  const xAOD::JetContainer*             in_jetsLargeR (nullptr);
+  const xAOD::JetContainer*             in_jets       (nullptr);
+  const xAOD::MissingETContainer*       in_missinget  (nullptr);
+  const xAOD::ElectronContainer*        in_electrons  (nullptr);
+  const xAOD::MuonContainer*            in_muons      (nullptr);
+  const xAOD::TauJetContainer*          in_taus       (nullptr);
+  const xAOD::PhotonContainer*          in_photons    (nullptr);
+  const xAOD::TruthParticleContainer*   in_truth      (nullptr);
+  
+  // start grabbing all the containers that we can
+  RETURN_CHECK("OptimizationDump::execute()", HF::retrieve(eventInfo,    m_eventInfo,        m_event, m_store, m_debug), "Could not get the EventInfo container.");
+  if(!m_inputJets.empty())
+    RETURN_CHECK("OptimizationDump::execute()", HF::retrieve(in_jets,     m_inputJets,       m_event, m_store, m_debug), "Could not get the inputJets container.");
+  if(!m_inputLargeRJets.empty())
+    RETURN_CHECK("Audit::execute()", HF::retrieve(in_jetsLargeR,      m_inputLargeRJets,        m_event, m_store, m_debug), "Could not get the inputLargeRJets container.");
+  if(!m_inputMET.empty())
+    RETURN_CHECK("OptimizationDump::execute()", HF::retrieve(in_missinget, m_inputMET,         m_event, m_store, m_debug), "Could not get the inputMET container.");
+  if(!m_inputElectrons.empty())
+    RETURN_CHECK("OptimizationDump::execute()", HF::retrieve(in_electrons, m_inputElectrons,   m_event, m_store, m_debug), "Could not get the inputElectrons container.");
+  if(!m_inputMuons.empty())
+    RETURN_CHECK("OptimizationDump::execute()", HF::retrieve(in_muons,     m_inputMuons,       m_event, m_store, m_debug), "Could not get the inputMuons container.");
+  if(!m_inputTauJets.empty())
     RETURN_CHECK("OptimizationDump::execute()", HF::retrieve(in_taus,      m_inputTauJets,     m_event, m_store, m_debug), "Could not get the inputTauJets container.");
   if(!m_inputPhotons.empty())
     RETURN_CHECK("OptimizationDump::execute()", HF::retrieve(in_photons,   m_inputPhotons,     m_event, m_store, m_debug), "Could not get the inputPhotons container.");
@@ -455,8 +455,11 @@ EL::StatusCode OptimizationDump :: initialize () {
   RETURN_CHECK("OptimizationDump::execute()", HF::retrieve(in_truth, m_truthParticles, m_event, m_store, m_debug), "Could not get the truthParticles container.");
 
   // do all of the razor variables
-  RETURN_CHECK("Report::execute()", HF::retrieve(m_inclVar, "RJigsawInclusiveVariables", nullptr, m_store, m_debug), "Could not get the RJRVars");
+  std::map<std::string, double>* in_inclVar(nullptr);
+  RETURN_CHECK("Report::execute()", HF::retrieve(in_inclVar, "RJigsawInclusiveVariables", nullptr, m_store, m_debug), "Could not get the RJRVars");
   RETURN_CHECK("Report::execute()", HF::retrieve(m_vP, "RJigsawFourVectors", nullptr, m_store, m_debug), "Could not get the RJR 4-Vectors");
+  // fill in the original map with the values
+  for(const auto& item: *in_inclVar) (*m_inclVar)[item.first] = item.second;
 
   // compute variables for optimization
   m_eventWeight = VD::eventWeight(eventInfo, wk()->metaData());
