@@ -123,6 +123,8 @@ EL::StatusCode Preselect :: execute ()
 
   float eventWeight = VD::eventWeight(eventInfo, wk()->metaData());
 
+  std::cout << "In preselect" << std::endl;
+
   const xAOD::MissingET* in_met(nullptr);
   if(!m_inputMET.empty()){
     in_met = (*in_missinget)[m_inputMETName.c_str()];
@@ -190,14 +192,42 @@ EL::StatusCode Preselect :: execute ()
         wk()->skipEvent();
         return EL::StatusCode::SUCCESS;
       }
-      if(jet->pt()/1000. < m_jet_minPt)   continue;
-      if(jet->pt()/1000. > m_jet_maxPt)   continue;
-      if(jet->eta()      < m_jet_minEta)  continue;
-      if(jet->eta()      > m_jet_maxEta)  continue;
-      if(jet->phi()      < m_jet_minPhi)  continue;
-      if(jet->phi()      > m_jet_maxPhi)  continue;
-      if(!VD::isSignal(*jet))             continue;
-      num_passJets++;
+      if(jet->pt()/1000. < m_jet_minPt)
+	{
+	  continue;
+	}
+      if(jet->pt()/1000. > m_jet_maxPt)
+	{
+	  std::cout <<" didn't pass pt cut: too high" << std::endl;
+	  continue;
+	}
+      if(jet->eta()      < m_jet_minEta)
+	{
+	  std::cout <<" didn't pass eta: too low" << std::endl;
+	  continue;
+	}
+      if(jet->eta()      > m_jet_maxEta)
+	{
+	  std::cout <<"didn't pass eta: too high" <<std::endl;
+	  continue;
+	}
+      if(jet->phi()      < m_jet_minPhi) 
+	{
+	  std::cout <<"didn't pass phi cut: too low" << std::endl;
+	  continue;
+	}
+      if(jet->phi()      > m_jet_maxPhi) 
+	{
+	  std::cout <<"didn't pass phi cut: too high" << std::endl;
+	  continue;
+	}
+      if(!VD::isSignal(*jet))          
+	{
+	  std::cout <<"1" <<std::endl;
+	  continue;
+	}
+
+         num_passJets++;
       VD::dec_pass_preSel(*jet) = 1;
     }
 
@@ -223,15 +253,47 @@ EL::StatusCode Preselect :: execute ()
         wk()->skipEvent();
         return EL::StatusCode::SUCCESS;
       }
-      if(jet->pt()/1000. < m_bjet_minPt)   continue;
-      if(jet->pt()/1000. > m_bjet_maxPt)   continue;
-      if(jet->eta()      < m_bjet_minEta)  continue;
-      if(jet->eta()      > m_bjet_maxEta)  continue;
-      if(jet->phi()      < m_bjet_minPhi)  continue;
-      if(jet->phi()      > m_bjet_maxPhi)  continue;
-      if(!VD::isSignal(*jet))              continue;
+      if(jet->pt()/1000. < m_bjet_minPt)
+	{
+	  std::cout <<"2"<<std::endl;
+	  continue;
+	}
+      if(jet->pt()/1000. > m_bjet_maxPt)  
+	{
+	  std::cout<<"3"<<std::endl;
+	  continue;
+	}
+      if(jet->eta()      < m_bjet_minEta)
+	{
+	  std::cout<<"4"<<std::endl;
+	  continue;
+	}
+      if(jet->eta()      > m_bjet_maxEta) 
+	{
+	  std::cout<<"5"<<std::endl;
+	  continue;
+	}
+      if(jet->phi()      < m_bjet_minPhi)
+	{
+	  std::cout<<"6"<<std::endl;
+	  continue;
+	}
+      if(jet->phi()      > m_bjet_maxPhi)
+	{
+	  std::cout<<"7"<<std::endl;
+	  continue;
+	}
+      if(!VD::isSignal(*jet))
+	{
+	  std::cout<<"8"<<std::endl;
+              continue;
+	}
       // bTag the jet -- bjets are only btagged if passing preselection
-      if(!VD::bTag(jet, m_bTag_wp)) continue;
+      if(!VD::bTag(jet, m_bTag_wp))
+	{
+	  std::cout<<"9"<<std::endl;
+        continue;
+	}
       VD::decor_tag_b(*jet) = 1;
       // guess it passed!
       num_passBJets++;
@@ -276,14 +338,46 @@ EL::StatusCode Preselect :: execute ()
   if(!m_inputLargeRJets.empty()){
     for(const auto &jet: *in_jetsLargeR){
       VD::dec_pass_preSel(*jet) = 0;
-      if(jet->pt()/1000.  < m_jetLargeR_minPt)   continue;
-      if(jet->pt()/1000.  > m_jetLargeR_maxPt)   continue;
-      if(jet->m()/1000.   < m_jetLargeR_minMass) continue;
-      if(jet->m()/1000.   > m_jetLargeR_maxMass) continue;
-      if(jet->eta()       < m_jetLargeR_minEta)  continue;
-      if(jet->eta()       > m_jetLargeR_maxEta)  continue;
-      if(jet->phi()       < m_jetLargeR_minPhi)  continue;
-      if(jet->phi()       > m_jetLargeR_maxPhi)  continue;
+      if(jet->pt()/1000.  < m_jetLargeR_minPt)
+	{
+	  std::cout<<"9"<<std::endl;
+	  continue;
+	}
+      if(jet->pt()/1000.  > m_jetLargeR_maxPt)
+	{
+	  std::cout<<"10"<<std::endl;
+	  continue;
+	}
+      if(jet->m()/1000.   < m_jetLargeR_minMass)
+	{
+	  std::cout<<"11"<<std::endl;
+	  continue;
+	}
+      if(jet->m()/1000.   > m_jetLargeR_maxMass)
+	{
+	  std::cout<<"12"<<std::endl;
+	  continue;
+	}
+      if(jet->eta()       < m_jetLargeR_minEta)
+	{
+	  std::cout<<"13"<<std::endl;
+	  continue;
+	}
+      if(jet->eta()       > m_jetLargeR_maxEta)
+	{
+	  std::cout<<"14"<<std::endl;
+	  continue;
+	}
+      if(jet->phi()       < m_jetLargeR_minPhi)
+	{
+	  std::cout<<"15"<<std::endl;
+	  continue;
+	}
+      if(jet->phi()       > m_jetLargeR_maxPhi)
+	{
+	  std::cout<<"16"<<std::endl;
+	  continue;
+	}
       num_passJetsLargeR++;
       VD::dec_pass_preSel(*jet) = 1;
     }

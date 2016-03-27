@@ -55,7 +55,7 @@ EL::StatusCode TruthMatching :: initialize () {
   event_num =0;
   m_event = wk()->xaodEvent();
   m_store = wk()->xaodStore();
-
+  if (m_rc_enable) m_inputLargeRJets = m_RCJetsContainerName;
   return EL::StatusCode::SUCCESS;
 }
 
@@ -187,6 +187,7 @@ EL::StatusCode TruthMatching :: execute ()
 		  std::cout <<"W->nChildren() " << truth_particle->nChildren() << std::endl;
 		  for(unsigned int it = 0; it < truth_particle->nChildren(); ++it){
 		    std::cout<<"inside loop"<<std::endl;
+		    std::cout << "child(it): " << truth_particle->child(it) << std::endl;
 		    int daughter_pdgId = truth_particle->child(it)->pdgId();
 		    std::cout <<"daughter id: " << daughter_pdgId <<std::endl;
 		    if( daughter_pdgId == truth_particle->pdgId() ){

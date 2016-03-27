@@ -122,12 +122,12 @@ if __name__ == "__main__":
 
 
   group_preselect = parser.add_argument_group('preselect', description='all selections are inclusive: x >= min, x =< max')
-  group_preselect.add_argument('--jet_minNum',  type=int,   metavar='', help='min num of small-R jets passing cuts',  default = 4)
-  group_preselect.add_argument('--jet_maxNum',  type=int,   metavar='', help='max num of small-R jets passing cuts',  default = 100)
-  group_preselect.add_argument('--jet_minPt',   type=float, metavar='', help='small-R jet min pt [GeV]',   default = 30.0)
+  group_preselect.add_argument('--jet_minNum',  type=int,   metavar='', help='min num of small-R jets passing cuts',  default = 4) #4
+  group_preselect.add_argument('--jet_maxNum',  type=int,   metavar='', help='max num of small-R jets passing cuts',  default = 100) #100
+  group_preselect.add_argument('--jet_minPt',   type=float, metavar='', help='small-R jet min pt [GeV]',   default = 30.0) #30.0
   group_preselect.add_argument('--jet_maxPt',   type=float, metavar='', help='small-R jet max pt [GeV]',   default = 1.e6)
-  group_preselect.add_argument('--jet_minEta',  type=float, metavar='', help='small-R jet min eta',  default = -2.8)
-  group_preselect.add_argument('--jet_maxEta',  type=float, metavar='', help='small-R jet max eta',  default = 2.8)
+  group_preselect.add_argument('--jet_minEta',  type=float, metavar='', help='small-R jet min eta',  default = -2.8) #-2.8
+  group_preselect.add_argument('--jet_maxEta',  type=float, metavar='', help='small-R jet max eta',  default = 2.8) #2.8
   group_preselect.add_argument('--jet_minPhi',  type=float, metavar='', help='small-R jet min phi',  default = -4.0)
   group_preselect.add_argument('--jet_maxPhi',  type=float, metavar='', help='small-R jet max phi',  default = 4.0)
 
@@ -143,12 +143,12 @@ if __name__ == "__main__":
 
   group_preselect.add_argument('--jetLargeR_minNum',   type=int, metavar='', help='min num of large-R jets passing cuts',  default=0)
   group_preselect.add_argument('--jetLargeR_maxNum',   type=int, metavar='', help='max num of large-R jets passing cuts',  default = 100)
-  group_preselect.add_argument('--jetLargeR_minPt',    type=float, metavar='', help='large-R jet min pt [GeV]',   default = 100.0)
+  group_preselect.add_argument('--jetLargeR_minPt',    type=float, metavar='', help='large-R jet min pt [GeV]',   default = 100.0) #100.0
   group_preselect.add_argument('--jetLargeR_maxPt',    type=float, metavar='', help='large-R jet max pt [GeV]',   default = 1.e6)
   group_preselect.add_argument('--jetLargeR_minMass',  type=float, metavar='', help='large-R jet min mass [GeV]', default = 0.0)
   group_preselect.add_argument('--jetLargeR_maxMass',  type=float, metavar='', help='large-R jet max mass [GeV]', default = 1.e6)
-  group_preselect.add_argument('--jetLargeR_minEta',   type=float, metavar='', help='large-R jet min eta',  default = -2.0)
-  group_preselect.add_argument('--jetLargeR_maxEta',   type=float, metavar='', help='large-R jet max eta',  default = 2.0)
+  group_preselect.add_argument('--jetLargeR_minEta',   type=float, metavar='', help='large-R jet min eta',  default = -2.0) #-2.0
+  group_preselect.add_argument('--jetLargeR_maxEta',   type=float, metavar='', help='large-R jet max eta',  default = 2.0) #2.0
   group_preselect.add_argument('--jetLargeR_minPhi',   type=float, metavar='', help='large-R jet min phi',  default = -4.0)
   group_preselect.add_argument('--jetLargeR_maxPhi',   type=float, metavar='', help='large-R jet max phi',  default = 4.0)
 

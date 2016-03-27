@@ -1,7 +1,7 @@
 #ifndef TheAccountant_TruthMatching_H
 #define TheAccountant_TruthMatching_H
 
-#include <EventLoop/Algorithm.h>
+#include <TheAccountant/Algorithm.h>
 
 // Infrastructure include(s):
 #include "xAODRootAccess/TEvent.h"
@@ -11,29 +11,11 @@
 // c++ includes
 #include <string>
 
-class TruthMatching : public EL::Algorithm
+class TruthMatching : public TA::Algorithm
 {
 
 public:
-  bool m_debug = false;
-  std::string m_eventInfo       = "EventInfo",
-    m_inputLargeRJets       = "",
-    m_inputJets      = "",
-    m_truthParticles  = "",
-    m_inputMET = "",
-    m_inputMETName = "",
-    m_inputElectrons ="",
-    m_inputMuons = "",
-    m_inputTauJets = "",
-    m_inputPhotons = "";
-  std::string m_decor_jetTags_b  = "", // isB,
-    m_decor_jetTags_top = "", // isTop,
-    m_decor_jetTags_w   = ""; // isW;
   int event_num;
-
-private:
-  xAOD::TEvent *m_event; //!
-  xAOD::TStore *m_store; //!
 
 public:
   // this is a standard constructor
