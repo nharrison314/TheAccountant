@@ -240,8 +240,9 @@ EL::StatusCode Audit :: execute ()
     RETURN_CHECK("Audit::execute()", HF::retrieve(in_taus,      m_inputTauJets,     m_event, m_store, m_debug), "Could not get the inputTauJets container.");
   if(!m_inputPhotons.empty())
     RETURN_CHECK("Audit::execute()", HF::retrieve(in_photons,   m_inputPhotons,     m_event, m_store, m_debug), "Could not get the inputPhotons container.");
-  //if(!m_truthParticles.empty())
-  //RETURN_CHECK("Audit::execute()", HF::retrieve(in_truth, m_truthParticles, m_event, m_store, m_debug), "Could not get the truthParticles container.");
+  if(!m_truthParticles.empty())
+    RETURN_CHECK("Audit::execute()", HF::retrieve(in_truth, m_truthParticles, m_event, m_store, m_debug), "Could not get the truthParticles container.");
+
 
   const xAOD::MissingET* in_met(nullptr);
   if(!m_inputMET.empty()){
@@ -318,6 +319,54 @@ EL::StatusCode Audit :: execute ()
   std::map<std::string, double>* inclVar_ptr(new std::map<std::string, double>);
   RETURN_CHECK("Audit::execute()", m_store->record(inclVar_ptr, "RJigsawInclusiveVariables"), "Could not record RJR Inclusive Variables.");
   auto& inclVar = *inclVar_ptr;
+
+
+  static SG::AuxElement::Decorator<bool> VLoose70 ("VLoose70"); // using truth matching criteria
+  static SG::AuxElement::Decorator<bool> VLoose65 ("VLoose65");
+  static SG::AuxElement::Decorator<bool> VLoose75 ("VLoose75");
+  static SG::AuxElement::Decorator<bool> BosonTagL1("BosonTagL1");
+  static SG::AuxElement::Decorator<bool> BosonTagL2("BosonTagL2");
+  static SG::AuxElement::Decorator<bool> BosonTagL3("BosonTagL3");
+
+  for(const auto& jet: *in_jetsLargeR)
+    {
+      VLoose65(*jet) = false;
+      VLoose70(*jet) = false;
+      VLoose75(*jet) = false;
+      BosonTagL1(*jet) = false;
+      BosonTagL2(*jet) = false;
+      BosonTagL3(*jet) = false;
+
+    }
+  std::cout <<"Audit 2"  <<std::endl;
+  //Natalie W tags (aka VERY LOOSE W TAGS)
+  for(const auto& jet: *in_jetsLargeR)
+    {
+      std::cout <<"Audit 3" <<std::endl;
+      if(jet->m()/1.e3 > 65)
+        VLoose65(*jet) =true;
+      if(jet->m()/1.e3 > 70)
+        VLoose70(*jet) =true;
+
+
+      if(jet->m()/1.e3 > 75)
+	VLoose75(*jet) =true;
+    }
+
+  //W tagging W tags
+  static JetSubStructureUtils::BosonTag WTagger("medium", "smooth", "$ROOTCOREBIN/data/JetSubStructureUtils/config_13TeV_Wtagging_MC15_Prerecommendations_20150809.dat", true, true);
+  
+  for(const auto& jet: *in_jetsLargeR)
+    {
+      int result = WTagger.result(*jet,"AK10LCTRIMF5R20");
+      std::cout << "result W tagger: " << result << std::endl;
+      if (result ==1)
+	BosonTagL1(*jet) = true;
+      else if (result == 2)
+	BosonTagL2(*jet) = true;
+      else if (result ==3)
+	BosonTagL3(*jet) = true;
+    }
 
   inclVar["GG_mass"]        = GG.GetMass()/1.e3;
   inclVar["Ga_mass"]        = Ga.GetMass()/1.e3;

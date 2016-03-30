@@ -40,6 +40,14 @@ private:
   float m_totalTransverseMomentum; //!
   float m_totalTransverseMass; //!
 
+  int m_num_VLoose65;
+  int m_num_VLoose70;
+  int m_num_VLoose75;
+  int m_num_BosonTagL1;
+  int m_num_BosonTagL2;
+  int m_num_BosonTagL3;
+
+
   float m_dPhiMETMin; //!
   float m_mTb; //!
 

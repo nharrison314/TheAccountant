@@ -49,6 +49,7 @@ OptimizationDump :: OptimizationDump () :
   m_num_W_inc(-1),
   m_num_W_exc(-1),
   m_num_top_inc(-1),
+
   m_SF_pu(0.0),
   m_SF_btag(0.0),
   m_ttbarHF(0),
@@ -121,6 +122,13 @@ EL::StatusCode OptimizationDump :: initialize () {
   m_tree->Branch ("ttbarHF",  		           &m_ttbarHF, "ttbarHF/I");
   m_tree->Branch ("ttbarHF_ext",               &m_ttbarHF_ext, "ttbarHF_ext/I");
   m_tree->Branch ("event_number",              &m_eventNumber, "event_number/I");
+  m_tree->Branch("num_VLoose65", &m_num_VLoose65, "m_num_VLoose65/I");
+  m_tree->Branch("num_VLoose70", &m_num_VLoose70, "m_num_VLoose70/I");
+  m_tree->Branch("num_VLoose75", &m_num_VLoose75, "m_num_VLoose75/I");
+  m_tree->Branch("num_BosonTagL1",&m_num_BosonTagL1,"m_num_BosonTagL1/I");
+  m_tree->Branch("num_BosonTagL2",&m_num_BosonTagL2,"m_num_BosonTagL2/I");
+  m_tree->Branch("num_BosonTagL3",&m_num_BosonTagL3,"m_num_BosonTagL3/I");
+
   if(!m_inputMET.empty()){
     m_tree->Branch ("m_transverse",              &m_totalTransverseMass, "m_transverse/F");
     m_tree->Branch ("met",                       &m_met, "met/F");
@@ -461,6 +469,8 @@ EL::StatusCode OptimizationDump :: execute ()
   // fill in the original map with the values
   for(const auto& item: *in_inclVar) (*m_inclVar)[item.first] = item.second;
 
+  if(!m_truthParticles.empty())
+    RETURN_CHECK("OptimizationDump::execute()", HF::retrieve(in_truth, m_truthParticles, m_event, m_store, m_debug), "Could not get the truthParticles container.");
   // compute variables for optimization
   m_eventWeight = VD::eventWeight(eventInfo, wk()->metaData());
   // scale factors
@@ -475,6 +485,48 @@ EL::StatusCode OptimizationDump :: execute ()
 
   // event number
   m_eventNumber = eventInfo->eventNumber();
+
+  static SG::AuxElement::Accessor<bool> VLoose65("VLoose65");
+  static SG::AuxElement::Accessor<bool> VLoose70("VLoose70");
+
+  static SG::AuxElement::Accessor<bool> VLoose75("VLoose75");
+
+  static SG::AuxElement::Accessor<bool> BosonTagL1("BosonTagL1");
+  static SG::AuxElement::Accessor<bool> BosonTagL2("BosonTagL2");
+  static SG::AuxElement::Accessor<bool> BosonTagL3("BosonTagL3");
+
+  int n_VLoose65 = 0;
+  int n_VLoose70 = 0;
+  int n_VLoose75 = 0;
+
+  int n_BosonTagL1 = 0;
+  int n_BosonTagL2 = 0;
+  int n_BosonTagL3 = 0;
+  for(const auto jet: *in_jetsLargeR)
+    {
+      if (VLoose65(*jet))
+	n_VLoose65++;
+      if (VLoose70(*jet))
+        n_VLoose70++;
+      if (VLoose75(*jet))
+        n_VLoose75++;
+
+      if (BosonTagL1(*jet))
+	n_BosonTagL1++;
+      if (BosonTagL2(*jet))
+        n_BosonTagL2++;
+      if (BosonTagL3(*jet))
+        n_BosonTagL3++;
+
+    }
+
+  m_num_VLoose65 = n_VLoose65;
+  m_num_VLoose70 = n_VLoose70;
+  m_num_VLoose75 = n_VLoose75;
+  m_num_BosonTagL1 = n_BosonTagL1;
+  m_num_BosonTagL2 = n_BosonTagL2;
+  m_num_BosonTagL3 = n_BosonTagL3;
+
 
   // build signal electrons
   ConstDataVector<xAOD::ElectronContainer> signalElectrons;
