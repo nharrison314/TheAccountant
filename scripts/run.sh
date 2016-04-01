@@ -15,7 +15,7 @@ ttbarIncFiles="${ROOTCOREBIN}/data/TheAccountant/ttbarInc.list"
 >>>>>>> Overide which jet is being used for the WTagger in Audit. Edited CookTheBooks to run the preselect. Added ttbar to run on condor in run.sh
 ttbarExcFiles="${ROOTCOREBIN}/data/TheAccountant/ttbarExc.list"
 
-globalOpts=(-v -f -yyyyyy --optimizationDump --inputGrid --inputList --badJetVeto --rc_enable)
+globalOpts=(-v -f -yyyyyy --optimizationDump --inputGrid --inputList --badJetVeto --rc_enable --debug)
 
 #globalOpts=(-v -f -yyyyyy --optimizationDump --inputGrid --inputList --badJetVeto)       
 
@@ -41,7 +41,7 @@ mkdir -p "${outputDir}"
 #CookTheBooks.py --files="${singletopFiles}" "${globalOpts[@]}" "${run0L[@]}" --submitDir="${outputDir}/singletop_0L" condor > "${outputDir}/singletop_0L.log" 2>&1 &
 #CookTheBooks.py --files="${WsherpaFiles}" "${globalOpts[@]}" "${run0L[@]}" --submitDir="${outputDir}/Wsherpa_0L" condor > "${outputDir}/Wsherpa_0L.log" 2>&1 &
 #CookTheBooks.py --files="${ZsherpaFiles}" "${globalOpts[@]}" "${run0L[@]}" --submitDir="${outputDir}/Zsherpa_0L" condor > "${outputDir}/Zsherpa_0L.log" 2>&1 &
-CookTheBooks.py --files="${ttbarIncFiles}" "${globalOpts[@]}" "${run0L[@]}" --truthMETFilter=" <200" --submitDir="${outputDir}/ttbarInc_0L" condor > "${outputDir}/ttbarInc_0L.log" 2>&1 &
+CookTheBooks.py --files="${ttbarIncFiles}" "${globalOpts[@]}" "${run0L[@]}"  --submitDir="${outputDir}/ttbarInc_0L" condor > "${outputDir}/ttbarInc_0L.log" 2>&1 &
 CookTheBooks.py --files="${ttbarExcFiles}" "${globalOpts[@]}" "${run0L[@]}" --truth="" --submitDir="${outputDir}/ttbarExc_0L" condor > "${outputDir}/ttbarExc_0L.log" 2>&1 &
 
 #1L

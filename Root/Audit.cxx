@@ -240,8 +240,8 @@ EL::StatusCode Audit :: execute ()
     RETURN_CHECK("Audit::execute()", HF::retrieve(in_taus,      m_inputTauJets,     m_event, m_store, m_debug), "Could not get the inputTauJets container.");
   if(!m_inputPhotons.empty())
     RETURN_CHECK("Audit::execute()", HF::retrieve(in_photons,   m_inputPhotons,     m_event, m_store, m_debug), "Could not get the inputPhotons container.");
-  //if(!m_truthParticles.empty())
-  //RETURN_CHECK("Audit::execute()", HF::retrieve(in_truth, m_truthParticles, m_event, m_store, m_debug), "Could not get the truthParticles container.");
+  if(!m_truthParticles.empty())
+    RETURN_CHECK("Audit::execute()", HF::retrieve(in_truth, m_truthParticles, m_event, m_store, m_debug), "Could not get the truthParticles container.");
 
 
   const xAOD::MissingET* in_met(nullptr);

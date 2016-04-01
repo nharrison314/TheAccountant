@@ -221,6 +221,9 @@ EL::StatusCode Report :: execute ()
   const std::map<std::string, TLorentzVector>* vP_ptr (nullptr);
   const xAOD::TruthParticleContainer*   in_truth    (nullptr);
   // start grabbing all the containers that we can
+
+
+  std::cout << "Inside Report" << std::endl;
   RETURN_CHECK("Report::execute()", HF::retrieve(eventInfo,    m_eventInfo,        m_event, m_store, m_debug), "Could not get the EventInfo container.");
   if(!m_inputJets.empty())
     RETURN_CHECK("Report::execute()", HF::retrieve(in_jets,     m_inputJets,       m_event, m_store, m_debug), "Could not get the inputJets container.");

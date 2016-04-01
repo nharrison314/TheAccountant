@@ -18,4 +18,5 @@
 #pragma link C++ class Report+;
 #pragma link C++ class TruthMatching+;
 #pragma link C++ class Report+;
+#pragma link C++ class ROC+;
 #endif
