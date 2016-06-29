@@ -2,17 +2,13 @@
 
 #dataFiles="${ROOTCOREBIN}/data/TheAccountant/data.list"
 gttFiles="${ROOTCOREBIN}/data/TheAccountant/Gtt.list"
-#dijetFiles="${ROOTCOREBIN}/data/TheAccountant/dijet.list"
-#topEWFiles="${ROOTCOREBIN}/data/TheAccountant/topEW.list"
-#dibosonFiles="${ROOTCOREBIN}/data/TheAccountant/diboson.list"
-#singletopFiles="${ROOTCOREBIN}/data/TheAccountant/singletop.list"
-#WsherpaFiles="${ROOTCOREBIN}/data/TheAccountant/Wsherpa.list"
-#ZsherpaFiles="${ROOTCOREBIN}/data/TheAccountant/Zsherpa.list"
-<<<<<<< HEAD
+dijetFiles="${ROOTCOREBIN}/data/TheAccountant/dijet.list"
+topEWFiles="${ROOTCOREBIN}/data/TheAccountant/topEW.list"
+dibosonFiles="${ROOTCOREBIN}/data/TheAccountant/diboson.list"
+singletopFiles="${ROOTCOREBIN}/data/TheAccountant/singletop.list"
+WsherpaFiles="${ROOTCOREBIN}/data/TheAccountant/Wsherpa.list"
+ZsherpaFiles="${ROOTCOREBIN}/data/TheAccountant/Zsherpa.list"
 ttbarIncFiles="${ROOTCOREBIN}/data/TheAccountant/ttbarInc.list"
-=======
-#ttbarIncFiles="${ROOTCOREBIN}/data/TheAccountant/ttbarInc.list"
->>>>>>> Overide which jet is being used for the WTagger in Audit. Edited CookTheBooks to run the preselect. Added ttbar to run on condor in run.sh
 ttbarExcFiles="${ROOTCOREBIN}/data/TheAccountant/ttbarExc.list"
 
 globalOpts=(-v -f -yyyyyy --optimizationDump --inputGrid --inputList --badJetVeto --rc_enable --debug)
@@ -35,13 +31,20 @@ mkdir -p "${outputDir}"
 
 
 
-#CookTheBooks.py --files="${dijetFiles}" "${globalOpts[@]}" "${run0L[@]}" --submitDir="${outputDir}/dijet_0L" condor > "${outputDir}/dijet_0L.log" 2>&1 &
-#CookTheBooks.py --files="${topEWFiles}" "${globalOpts[@]}" "${run0L[@]}" --submitDir="${outputDir}/topEW_0L" condor > "${outputDir}/topEW_0L.log" 2>&1 &
-#CookTheBooks.py --files="${dibosonFiles}" "${globalOpts[@]}" "${run0L[@]}" --submitDir="${outputDir}/diboson_0L" condor > "${outputDir}/diboson_0L.log" 2>&1 &
-#CookTheBooks.py --files="${singletopFiles}" "${globalOpts[@]}" "${run0L[@]}" --submitDir="${outputDir}/singletop_0L" condor > "${outputDir}/singletop_0L.log" 2>&1 &
-#CookTheBooks.py --files="${WsherpaFiles}" "${globalOpts[@]}" "${run0L[@]}" --submitDir="${outputDir}/Wsherpa_0L" condor > "${outputDir}/Wsherpa_0L.log" 2>&1 &
-#CookTheBooks.py --files="${ZsherpaFiles}" "${globalOpts[@]}" "${run0L[@]}" --submitDir="${outputDir}/Zsherpa_0L" condor > "${outputDir}/Zsherpa_0L.log" 2>&1 &
-CookTheBooks.py --files="${ttbarIncFiles}" "${globalOpts[@]}" "${run0L[@]}"  --submitDir="${outputDir}/ttbarInc_0L" condor > "${outputDir}/ttbarInc_0L.log" 2>&1 &
+
+#CookTheBooks.py --files="${topEWFiles}" "${globalOpts[@]}" "${run0L[@]}" --truth="" --submitDir="${outputDir}/topEW_0L" condor > "${outputDir}/topEW_0L.log" 2>&1 &
+
+#CookTheBooks.py --files="${dibosonFiles}" "${globalOpts[@]}" "${run0L[@]}" --truth="" --submitDir="${outputDir}/diboson_0L" condor > "${outputDir}/diboson_0L.log" 2>&1 &
+
+#CookTheBooks.py --files="${singletopFiles}" "${globalOpts[@]}" "${run0L[@]}" --truth="" --submitDir="${outputDir}/singletop_0L" condor > "${outputDir}/singletop_0L.log" 2>&1 &
+
+#CookTheBooks.py --files="${WsherpaFiles}" "${globalOpts[@]}" "${run0L[@]}" --truth="" --submitDir="${outputDir}/Wsherpa_0L" condor > "${outputDir}/Wsherpa_0L.log" 2>&1 &
+
+#CookTheBooks.py --files="${ZsherpaFiles}" "${globalOpts[@]}" "${run0L[@]}" --truth="" --submitDir="${outputDir}/Zsherpa_0L" condor > "${outputDir}/Zsherpa_0L.log" 2>&1 &
+
+CookTheBooks.py --files="${ttbarIncFiles}" "${globalOpts[@]}" "${run0L[@]}" --truth="" --truthMETFilter=" <200" --submitDir="${outputDir}/ttbarInc_0L" condor > "${outputDir}/ttbarInc_0L.log" 2>&1 &
+
+>>>>>>> first commit in a long time
 CookTheBooks.py --files="${ttbarExcFiles}" "${globalOpts[@]}" "${run0L[@]}" --truth="" --submitDir="${outputDir}/ttbarExc_0L" condor > "${outputDir}/ttbarExc_0L.log" 2>&1 &
 
 #1L

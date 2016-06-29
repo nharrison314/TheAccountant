@@ -321,7 +321,6 @@ EL::StatusCode Audit :: execute ()
   auto& inclVar = *inclVar_ptr;
 
 
-
   inclVar["GG_mass"]        = GG.GetMass()/1.e3;
   inclVar["Ga_mass"]        = Ga.GetMass()/1.e3;
   inclVar["Gb_mass"]        = Gb.GetMass()/1.e3;

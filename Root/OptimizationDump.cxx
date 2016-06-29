@@ -124,6 +124,7 @@ EL::StatusCode OptimizationDump :: initialize () {
   m_tree->Branch("num_VLoose65", &m_num_VLoose65, "m_num_VLoose65/I");
   m_tree->Branch("num_VLoose70", &m_num_VLoose70, "m_num_VLoose70/I");
   m_tree->Branch("num_VLoose75", &m_num_VLoose75, "m_num_VLoose75/I");
+  m_tree->Branch("num_W_exc",&m_num_W_exc,"m_num_W_exc/I");
   m_tree->Branch("num_BosonTagL1",&m_num_BosonTagL1,"m_num_BosonTagL1/I");
   m_tree->Branch("num_BosonTagL2",&m_num_BosonTagL2,"m_num_BosonTagL2/I");
   m_tree->Branch("num_BosonTagL3",&m_num_BosonTagL3,"m_num_BosonTagL3/I");
@@ -388,7 +389,6 @@ EL::StatusCode OptimizationDump :: initialize () {
     m_tree->Branch("razor_HT22GG",   &(m_inclVar.at("HT22GG")));
     m_tree->Branch("razor_HT41GG",   &(m_inclVar.at("HT41GG")));
     m_tree->Branch("razor_HT42GG",   &(m_inclVar.at("HT42GG")));
-    
     // gluino hemishpere varia
     m_tree->Branch("razor_d_dPhiG",     &(m_inclVar.at("d_dPhiG")));
     m_tree->Branch("razor_s_dPhiG",     &(m_inclVar.at("s_dPhiG")));
@@ -487,6 +487,7 @@ EL::StatusCode OptimizationDump :: execute ()
   m_eventNumber = eventInfo->eventNumber();
 
 
+  m_num_W_exc = n_W_exc;
   // build signal electrons
   ConstDataVector<xAOD::ElectronContainer> signalElectrons;
   if(!m_inputElectrons.empty()){

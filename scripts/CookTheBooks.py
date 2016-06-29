@@ -498,7 +498,7 @@ if __name__ == "__main__":
     job.algsAdd(truthmatching)
     if args.optimization_dump:
       job.algsAdd(optimization_dump)
-    #job.algsAdd(report)
+    job.algsAdd(report)
 
     # make the driver we want to use:
     # this one works by running the algorithm directly
