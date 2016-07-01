@@ -39,11 +39,11 @@ namespace VariableDefinitions {
   static accessor_t<char> acc_tag_top("isTop");
 
   // loose tagging
-  static decor_t<char> decor_tag_w_inc("isWinc");
-  static decor_t<char> decor_tag_w_exc("isWexc");
-  static decor_t<char> decor_tag_top_inc("isTopInc");
-  static accessor_t< int > acc_tag_w_inc("isWinc");
-  static accessor_t< int > acc_tag_w_exc("isWexc");
+  static decor_t< int > decor_tag_W_inc("isWinc");
+  static decor_t< int > decor_tag_W_exc("isWexc");
+  static decor_t< int > decor_tag_top_inc("isTopInc");
+  static accessor_t< int > acc_tag_W_inc("isWinc");
+  static accessor_t< int > acc_tag_W_exc("isWexc");
   static accessor_t< int > acc_tag_top_inc("isTopInc");
 
 

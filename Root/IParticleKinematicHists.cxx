@@ -9,7 +9,9 @@ TheAccountant::IParticleKinematicHists::IParticleKinematicHists (std::string nam
 TheAccountant::IParticleKinematicHists::~IParticleKinematicHists () {}
 
 StatusCode TheAccountant::IParticleKinematicHists::initialize() {
-  m_pt           = book(m_name, "pt",       m_particleType + " p_{T} [GeV]", 120, 0, 3000.);
+  m_pt           = book(m_name, "pt",       m_particleType + " p_{T} [GeV]", 100, 0, 300.);
+  //temp changes bounds from 120, 0, 3000 to 100, 0 , 300
+
   m_eta          = book(m_name, "eta",      m_particleType + " #eta",         80, -4, 4);
   m_phi          = book(m_name, "phi",      m_particleType + " #phi",120, -TMath::Pi(), TMath::Pi() );
   m_mass         = book(m_name, "mass",     m_particleType + " mass [GeV]",120, 0, 400);

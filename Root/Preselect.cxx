@@ -392,6 +392,22 @@ EL::StatusCode Preselect :: execute ()
     m_cutflow["jets_largeR"].second += eventWeight;
 
     for(const auto &jet: *in_jetsLargeR){
+      VD::decor_tag_W_inc(*jet) = 0;
+      VD::decor_tag_W_exc(*jet) = 0;
+      VD::decor_tag_top_inc(*jet) = 0;
+
+      //inclusive tagging                                                                    
+      if(jet->m()/1000.0 > 70)
+	VD::decor_tag_W_inc(*jet) = 1;
+
+      //exclusive W tagging                                                                  
+      if(jet->m()/1000.0 > 100)
+	VD::decor_tag_top_inc(*jet) = 1;
+      else if(jet->m()/1000.0 > 70)
+	VD::decor_tag_W_exc(*jet) = 1;
+
+
+
       VD::decor_tag_top(*jet) = 0;
       VD::dec_pass_preSel_top(*jet) = 0;
       if(jet->pt()/1000.  < m_topTag_minPt)   continue;
@@ -408,16 +424,19 @@ EL::StatusCode Preselect :: execute ()
       VD::dec_pass_preSel_top(*jet) = 1;
       num_passTopTags++;
 
-      VD::decor_tag_W_inc(*jet) = 0;
-      VD::decor_tag_W_exc(*jet) = 0;
-      VD::decor_tag_top_inc(*jet) = 0;
+      //VD::decor_tag_W_inc(*jet) = 0;
+      //VD::decor_tag_W_exc(*jet) = 0;
+      //VD::decor_tag_top_inc(*jet) = 0;
 
-      if(jet->m()/1000.0 > 70)
-	VD::decor_tag_W_inc(*jet) = 1;
-      if(jet->m()/1000.0 > 100)
-	VD::decor_tag_top_inc(*jet) = 1;
-      if(jet->m()/1000.0 > 70 && jet->m()/1000.0 < 100)
-	VD::decor_tag_W_exc(*jet) = 1;
+      //inclusive tagging
+      //if(jet->m()/1000.0 > 70)
+      //	VD::decor_tag_W_inc(*jet) = 1;
+
+      //exclusive W tagging
+      //if(jet->m()/1000.0 > 100)
+      //	VD::decor_tag_top_inc(*jet) = 1;
+      //else if(jet->m()/1000.0 > 70)
+      //	VD::decor_tag_W_exc(*jet) = 1;
 
     }
 

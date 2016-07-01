@@ -45,9 +45,11 @@ ClassImp(OptimizationDump)
 OptimizationDump :: OptimizationDump () :
   m_tree(new TTree("oTree", "optimization tree")),
   m_eventWeight(0.0),
-  m_num_W_inc(-1),
-  m_num_W_exc(-1),
-  m_num_top_inc(-1),
+  m_num_W_inc(-1.0),
+  m_num_W_exc(-1.0),
+  m_num_top_inc(-1.0),
+  m_num_signal_electrons(-1.0),
+  m_num_signal_muons(-1.0),
 
   m_SF_pu(0.0),
   m_SF_btag(0.0),
@@ -121,13 +123,6 @@ EL::StatusCode OptimizationDump :: initialize () {
   m_tree->Branch ("ttbarHF",  		           &m_ttbarHF, "ttbarHF/I");
   m_tree->Branch ("ttbarHF_ext",               &m_ttbarHF_ext, "ttbarHF_ext/I");
   m_tree->Branch ("event_number",              &m_eventNumber, "event_number/I");
-  m_tree->Branch("num_VLoose65", &m_num_VLoose65, "m_num_VLoose65/I");
-  m_tree->Branch("num_VLoose70", &m_num_VLoose70, "m_num_VLoose70/I");
-  m_tree->Branch("num_VLoose75", &m_num_VLoose75, "m_num_VLoose75/I");
-  m_tree->Branch("num_W_exc",&m_num_W_exc,"m_num_W_exc/I");
-  m_tree->Branch("num_BosonTagL1",&m_num_BosonTagL1,"m_num_BosonTagL1/I");
-  m_tree->Branch("num_BosonTagL2",&m_num_BosonTagL2,"m_num_BosonTagL2/I");
-  m_tree->Branch("num_BosonTagL3",&m_num_BosonTagL3,"m_num_BosonTagL3/I");
 
   if(!m_inputMET.empty()){
     m_tree->Branch ("m_transverse",              &m_totalTransverseMass, "m_transverse/F");
@@ -147,6 +142,15 @@ EL::StatusCode OptimizationDump :: initialize () {
     m_tree->Branch("m_Num_W_Exc", &m_num_W_exc,"m_Num_W_Exc/I");
     m_tree->Branch("m_Num_top_Inc", &m_num_top_inc,"m_Num_top_Inc/I"); 
   }
+
+  if(!m_inputElectrons.empty()){
+    m_tree->Branch("m_Num_signal_electrons", &m_num_signal_electrons, "m_Num_signal_electrons/I");
+  }
+
+  if(!m_inputElectrons.empty()){
+    m_tree->Branch("m_Num_signal_muons", &m_num_signal_muons, "m_Num_signal_muons/I");
+  }
+
   if(!m_inputJets.empty()){
     m_tree->Branch ("pt_total",                  &m_totalTransverseMomentum, "pt_total/F");
     m_tree->Branch ("multiplicity_jet",          &m_numJets, "multiplicity_jet/I");
@@ -487,7 +491,7 @@ EL::StatusCode OptimizationDump :: execute ()
   m_eventNumber = eventInfo->eventNumber();
 
 
-  m_num_W_exc = n_W_exc;
+  //m_num_W_exc = n_W_exc;
   // build signal electrons
   ConstDataVector<xAOD::ElectronContainer> signalElectrons;
   if(!m_inputElectrons.empty()){
@@ -501,6 +505,11 @@ EL::StatusCode OptimizationDump :: execute ()
     signalMuons = VD::filterLeptons(in_muons, true, true);
     in_muons = signalMuons.asDataVector();
   }
+
+  m_num_signal_electrons = signalElectrons.size();
+  m_num_signal_muons = signalMuons.size();
+
+
 
   const xAOD::MissingET* in_met(nullptr);
   if(!m_inputMET.empty()){
@@ -536,18 +545,18 @@ EL::StatusCode OptimizationDump :: execute ()
   ConstDataVector<xAOD::JetContainer> w_exc_jets;
   ConstDataVector<xAOD::JetContainer> top_inc_jets;
 
-  if(!m_inputLargeRJets.empty()){
-    w_inc_jets = VD::subset_using_decor(in_jets_largeR, VD::acc_tag_W_inc, 1);
-    w_exc_jets = VD::subset_using_decor(in_jets_largeR, VD::acc_tag_W_exc, 1);
-    top_inc_jets = VD::subset_using_decor(in_jets_largeR, VD::acc_tag_top_inc, 1);
-  }
+  //  if(!m_inputLargeRJets.empty()){
+  // w_inc_jets = VD::subset_using_decor(in_jetsLargeR, VD::acc_tag_W_inc, 1);
+  // w_exc_jets = VD::subset_using_decor(in_jetsLargeR, VD::acc_tag_W_exc, 1);
+  // top_inc_jets = VD::subset_using_decor(in_jetsLargeR, VD::acc_tag_top_inc, 1);
+  // }
 
 
-  if(!m_inputLargeRJets.empty()){
-    m_num_W_inc = w_inc_jets.size();
-    m_num_W_exc = w_exc_jets.size();
-    m_num_top_inc = top_inc_jets.size();
-  }
+  //if(!m_inputLargeRJets.empty()){
+  // m_num_W_inc = w_inc_jets.size();
+  // m_num_W_exc = w_exc_jets.size();
+  // m_num_top_inc = top_inc_jets.size();
+    //  }
 
 
   if(!m_inputJets.empty()){
@@ -584,7 +593,23 @@ EL::StatusCode OptimizationDump :: execute ()
     m_n_topTag_Tight = 0;
 
     int jetIndex = 0;
+
+    if(!presel_jetsLargeR.empty()){
+      w_inc_jets = VD::subset_using_decor(in_jetsLargeR, VD::acc_tag_W_inc, 1);
+      w_exc_jets = VD::subset_using_decor(in_jetsLargeR, VD::acc_tag_W_exc, 1);
+      top_inc_jets = VD::subset_using_decor(in_jetsLargeR, VD::acc_tag_top_inc, 1);
+    }
+
+
+    if(!presel_jetsLargeR.empty()){
+      m_num_W_inc = w_inc_jets.size();
+      m_num_W_exc = w_exc_jets.size();
+      m_num_top_inc = top_inc_jets.size();
+    }
+
     for(const auto &jet: presel_jetsLargeR){
+
+
       m_n_topTag_VeryLoose += VD::topTag(jet, "VeryLoose", 2.0, 300);
       m_n_topTag_Loose += VD::topTag(jet, "Loose", 2.0, 300);
       m_n_topTag_SmoothLoose += VD::topTag(jet, "SmoothLoose", 2.0, 300);

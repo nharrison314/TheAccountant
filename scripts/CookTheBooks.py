@@ -184,7 +184,7 @@ if __name__ == "__main__":
   group_audit.add_argument('--no-hemiJigsaw', dest='disable_hemiJigsaw', action='store_true', help='Disable the hemi Jigsaw')
   group_audit.add_argument('--drawDecayTreePlots', dest='drawDecayTreePlots', action='store_true', help='Enable to draw the decay tree plots and save the canvas in the output ROOT file. Please only enable this if running locally.')
 
-  group_truthmatching = parser.add_argument_group('truthmatching')
+  #group_truthmatching = parser.add_argument_group('truthmatching')
 
   group_optimizationDump = parser.add_argument_group('optimization')
   group_optimizationDump.add_argument('--optimizationDump', dest='optimization_dump', action='store_true', help='Enable to dump optimization ttree of values to cut against')
@@ -443,15 +443,15 @@ if __name__ == "__main__":
 
     user_confirm(args, 1)
 
-    truthmatching = ROOT.TruthMatching()
-    cookBooks_logger.info("\tcreating truth matching algorithm")
-    algorithmConfiguration_string.append("truth matching algorithm options")
-    for opt in map(lambda x: x.dest, group_truthmatching._group_actions):
-        cookBooks_logger.info("\t%s", printStr.format('TruthMatching', opt, getattr(args, opt)))
-        algorithmConfiguration_string.append(printStr.format('TruthMatching', opt, getattr(args, opt)))
-        setattr(truthmatching, 'm_{0}'.format(opt), getattr(args, opt))
-        time.sleep(sleepTime)
-    user_confirm(args, 2)
+    #truthmatching = ROOT.TruthMatching()
+    #cookBooks_logger.info("\tcreating truth matching algorithm")
+    #algorithmConfiguration_string.append("truth matching algorithm options")
+    #for opt in map(lambda x: x.dest, group_truthmatching._group_actions):
+     #   cookBooks_logger.info("\t%s", printStr.format('TruthMatching', opt, getattr(args, opt)))
+     #   algorithmConfiguration_string.append(printStr.format('TruthMatching', opt, getattr(args, opt)))
+      #  setattr(truthmatching, 'm_{0}'.format(opt), getattr(args, opt))
+       # time.sleep(sleepTime)
+    #user_confirm(args, 2)
 
 
     optimization_dump = None
@@ -467,7 +467,7 @@ if __name__ == "__main__":
         time.sleep(sleepTime)
      # time.sleep(sleepTime)
 
-      user_confirm(args, 3)
+      user_confirm(args, 2)
 
     report = ROOT.Report()
     cookBooks_logger.info("\tcreating report algorithm")
@@ -478,11 +478,11 @@ if __name__ == "__main__":
       setattr(report, 'm_{0}'.format(opt), getattr(args, opt))
       time.sleep(sleepTime)
 
-    user_confirm(args, 3+args.optimization_dump)
+    user_confirm(args, 2+args.optimization_dump)
 
     cookBooks_logger.info("\tsetting global algorithm variables")
     algorithmConfiguration_string.append("global algorithm options")
-    for alg in [preselect, audit, truthmatching, optimization_dump, report]:
+    for alg in [preselect, audit, optimization_dump, report]:
       if alg is None: continue  # skip optimization_dump if not defined
       for opt in map(lambda x: x.dest, group_algorithms._group_actions):
         cookBooks_logger.info("\t%s", printStr.format(alg.ClassName(), opt, getattr(args, opt)))
@@ -495,7 +495,7 @@ if __name__ == "__main__":
     cookBooks_logger.info("adding algorithms")
     job.algsAdd(preselect)
     job.algsAdd(audit)
-    job.algsAdd(truthmatching)
+    #job.algsAdd(truthmatching)
     if args.optimization_dump:
       job.algsAdd(optimization_dump)
     job.algsAdd(report)

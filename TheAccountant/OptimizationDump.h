@@ -34,6 +34,10 @@ private:
   float m_totalTransverseMomentum; //!
   float m_totalTransverseMass; //!
 
+
+  int m_num_signal_electrons;
+  int m_num_signal_muons;
+
   int m_num_W_inc;
   int m_num_W_exc;
   int m_num_top_inc;
