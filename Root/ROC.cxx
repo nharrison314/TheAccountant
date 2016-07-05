@@ -32,6 +32,8 @@
 using namespace std;
 
 namespace HF = HelperFunctions;
+namespace VD = VariableDefinitions;
+
 
 TheAccountant::ROC::ROC (std::string name) :
   HistogramManager(name,"")
@@ -123,20 +125,25 @@ StatusCode TheAccountant::ROC::execute (const xAOD::EventInfo* eventInfo, const 
   float jetmass_4=0;
   int i=0;
 
-  static SG::AuxElement::Accessor<bool> containsTruthW_acc("containsTruthW");
-  static SG::AuxElement::Accessor<bool> containsTruthTop_acc("containsTruthTop");
-  static SG::AuxElement::Accessor<bool> notContainedB_acc("notContainedB");
-  static SG::AuxElement::Accessor<float> deltaR_W_jet("deltaR_W_jet");
-  static SG::AuxElement::Accessor<float> deltaR_W_top("deltaR_W_top");
-  static SG::AuxElement::Accessor<float> deltaR_W_top_semiboosted("deltaR_W_top_semiboosted");  
-  static SG::AuxElement::Accessor<float> deltaR_W_b("deltaR_W_b");
-  static SG::AuxElement::Accessor<const xAOD::TruthParticle*> top ("top_particle");
-  static SG::AuxElement::Accessor<const xAOD::TruthParticle*> W_quark1 ("W_quark1");
-  static SG::AuxElement::Accessor<const xAOD::TruthParticle*> W_quark2 ("W_quark2");
+
+  std::cout << "size of in_jetsLargeR: " << in_jetsLargeR->size() << std::endl;
+
+
+  //  static SG::AuxElement::Accessor<bool> containsTruthW_acc("containsTruthW");
+  //static SG::AuxElement::Accessor<bool> containsTruthTop_acc("containsTruthTop");
+  //static SG::AuxElement::Accessor<bool> notContainedB_acc("notContainedB");
+  //static SG::AuxElement::Accessor<float> deltaR_W_jet("deltaR_W_jet");
+  //static SG::AuxElement::Accessor<float> deltaR_W_top("deltaR_W_top");
+  //static SG::AuxElement::Accessor<float> deltaR_W_top_semiboosted("deltaR_W_top_semiboosted");  
+  //static SG::AuxElement::Accessor<float> deltaR_W_b("deltaR_W_b");
+  //static SG::AuxElement::Accessor<const xAOD::TruthParticle*> top ("top_particle");
+  //static SG::AuxElement::Accessor<const xAOD::TruthParticle*> W_quark1 ("W_quark1");
+  //static SG::AuxElement::Accessor<const xAOD::TruthParticle*> W_quark2 ("W_quark2");
   
   std::cout <<"ROC 1" <<std::endl;
   for(const auto jet: *in_jetsLargeR)
     {
+      std::cout << "inside loop ROC 1" <<std::endl;
       // if (jet->pt()/1000.<200 || jet->pt()/1000.>300)
       //	continue;
       //fill histograms for all largeR jets
@@ -144,8 +151,12 @@ StatusCode TheAccountant::ROC::execute (const xAOD::EventInfo* eventInfo, const 
       if (i==1)
 	{
 	  jetmass_1= jet->m()/1.e3;
+	  std::cout<<" Inside loop ROC 2" <<std::endl;
+	  std::cout<<"Jet mass: " << jetmass_1 << "\tJet pt: " << jet->pt()/1000. << std::endl; 
 	  if (jetmass_1 > 0  && jet->pt()/1000.>=200 && jet->pt()/1000.<=300)
 	    {
+	      std::cout << "passed pT requirements" << std::endl;
+	      std::cout << "eventWeight: " << eventWeight << std::endl;
 	      jetmass1->Fill(jetmass_1, eventWeight);
 	    }
 	}
@@ -172,141 +183,143 @@ StatusCode TheAccountant::ROC::execute (const xAOD::EventInfo* eventInfo, const 
       //float deltaR = xAOD::P4Helpers::deltaR(jet, truth_particle	\
 	// );
 
+      std::cout<< "inside loop ROC 2" <<std::endl;
 
-      if (i==1 && containsTruthW_acc(*jet) && notContainedB_acc(*jet)  && jet->pt()/1000.>=200 && jet->pt()/1000.<=300)
+      if (i==1 && VD::acc_containsTruthW(*jet) && VD::acc_notContainedB(*jet)  && jet->pt()/1000.>=200 && jet->pt()/1000.<=300)
 	jetmass1_Wlabel->Fill(jetmass_1, eventWeight);
-      else if (i==2 && containsTruthW_acc(*jet) && notContainedB_acc(*jet)  && jet->pt()/1000.>=200 && jet->pt()/1000.<=300)
+      else if (i==2 && VD::acc_containsTruthW(*jet) && VD::acc_notContainedB(*jet)  && jet->pt()/1000.>=200 && jet->pt()/1000.<=300)
 	jetmass2_Wlabel->Fill(jetmass_2, eventWeight);
-      else if (i==3 && containsTruthW_acc(*jet) && notContainedB_acc(*jet)  && jet->pt()/1000.>=200 && jet->pt()/1000.<=300)
+      else if (i==3 && VD::acc_containsTruthW(*jet) && VD::acc_notContainedB(*jet)  && jet->pt()/1000.>=200 && jet->pt()/1000.<=300)
 	jetmass3_Wlabel->Fill(jetmass_3, eventWeight);
-      else if (i==4 && containsTruthW_acc(*jet) && notContainedB_acc(*jet)  && jet->pt()/1000.>=200 && jet->pt()/1000.<=300)
+      else if (i==4 && VD::acc_containsTruthW(*jet) && VD::acc_notContainedB(*jet)  && jet->pt()/1000.>=200 && jet->pt()/1000.<=300)
 	jetmass4_Wlabel->Fill(jetmass_4, eventWeight);
 
-      if (deltaR_W_jet(*jet) != -1.0 && i==1)
-	deltaR_W_jet_jet1->Fill(deltaR_W_jet(*jet),eventWeight);
-      if (deltaR_W_b(*jet) != -1.0 && i==1)
-	deltaR_W_b_jet1->Fill(deltaR_W_b(*jet),eventWeight);
+      if (VD::acc_deltaR_W_jet(*jet) != -1.0 && i==1)
+	deltaR_W_jet_jet1->Fill(VD::acc_deltaR_W_jet(*jet),eventWeight);
+      if (VD::acc_deltaR_W_b(*jet) != -1.0 && i==1)
+	deltaR_W_b_jet1->Fill(VD::acc_deltaR_W_b(*jet),eventWeight);
      
 
-      if (deltaR_W_jet(*jet) != -1.0 && i==2)
-        deltaR_W_jet_jet2->Fill(deltaR_W_jet(*jet),eventWeight);
-      if (deltaR_W_b(*jet) != -1.0 && i==2)
-        deltaR_W_b_jet2->Fill(deltaR_W_b(*jet),eventWeight);
+      if (VD::acc_deltaR_W_jet(*jet) != -1.0 && i==2)
+        deltaR_W_jet_jet2->Fill(VD::acc_deltaR_W_jet(*jet),eventWeight);
+      if (VD::acc_deltaR_W_b(*jet) != -1.0 && i==2)
+        deltaR_W_b_jet2->Fill(VD::acc_deltaR_W_b(*jet),eventWeight);
 
-      if (deltaR_W_jet(*jet) != -1.0 && i==3)
-        deltaR_W_jet_jet3->Fill(deltaR_W_jet(*jet),eventWeight);
-      if (deltaR_W_b(*jet) != -1.0 && i==3)
-        deltaR_W_b_jet3->Fill(deltaR_W_b(*jet),eventWeight);
+      if (VD::acc_deltaR_W_jet(*jet) != -1.0 && i==3)
+        deltaR_W_jet_jet3->Fill(VD::acc_deltaR_W_jet(*jet),eventWeight);
+      if (VD::acc_deltaR_W_b(*jet) != -1.0 && i==3)
+        deltaR_W_b_jet3->Fill(VD::acc_deltaR_W_b(*jet),eventWeight);
 
-      if (deltaR_W_jet(*jet) != -1.0 && i==4)
-        deltaR_W_jet_jet4->Fill(deltaR_W_jet(*jet),eventWeight);
-      if (deltaR_W_b(*jet) != -1.0 && i==4)
-        deltaR_W_b_jet4->Fill(deltaR_W_b(*jet),eventWeight);
+      if (VD::acc_deltaR_W_jet(*jet) != -1.0 && i==4)
+        deltaR_W_jet_jet4->Fill(VD::acc_deltaR_W_jet(*jet),eventWeight);
+      if (VD::acc_deltaR_W_b(*jet) != -1.0 && i==4)
+        deltaR_W_b_jet4->Fill(VD::acc_deltaR_W_b(*jet),eventWeight);
 
-      if (containsTruthW_acc(*jet) && notContainedB_acc(*jet) && i==1)
+      if (VD::acc_containsTruthW(*jet) && VD::acc_notContainedB(*jet) && i==1)
 	{
-	  deltaR_W_jet_semiboosted_jet1->Fill(deltaR_W_jet(*jet),eventWeight);
-	  deltaR_W_b_semiboosted_jet1->Fill(deltaR_W_b(*jet),eventWeight);
+	  deltaR_W_jet_semiboosted_jet1->Fill(VD::acc_deltaR_W_jet(*jet),eventWeight);
+	  deltaR_W_b_semiboosted_jet1->Fill(VD::acc_deltaR_W_b(*jet),eventWeight);
 	}
 
-      if (containsTruthW_acc(*jet) && notContainedB_acc(*jet) && i==2)
+      if (VD::acc_containsTruthW(*jet) && VD::acc_notContainedB(*jet) && i==2)
 	{
-	  deltaR_W_jet_semiboosted_jet2->Fill(deltaR_W_jet(*jet),eventWeight);
-	  deltaR_W_b_semiboosted_jet2->Fill(deltaR_W_b(*jet),eventWeight);
-	}
-
-
-      if (containsTruthW_acc(*jet) && notContainedB_acc(*jet) && i==3)
-	{
-	  deltaR_W_jet_semiboosted_jet3->Fill(deltaR_W_jet(*jet),eventWeight);
-	  deltaR_W_b_semiboosted_jet3->Fill(deltaR_W_b(*jet),eventWeight);
+	  deltaR_W_jet_semiboosted_jet2->Fill(VD::acc_deltaR_W_jet(*jet),eventWeight);
+	  deltaR_W_b_semiboosted_jet2->Fill(VD::acc_deltaR_W_b(*jet),eventWeight);
 	}
 
 
-      if (containsTruthW_acc(*jet) && notContainedB_acc(*jet) && i==4)
+      if (VD::acc_containsTruthW(*jet) && VD::acc_notContainedB(*jet) && i==3)
 	{
-	  deltaR_W_jet_semiboosted_jet4->Fill(deltaR_W_jet(*jet),eventWeight);
-	  deltaR_W_b_semiboosted_jet4->Fill(deltaR_W_b(*jet),eventWeight);
+	  deltaR_W_jet_semiboosted_jet3->Fill(VD::acc_deltaR_W_jet(*jet),eventWeight);
+	  deltaR_W_b_semiboosted_jet3->Fill(VD::acc_deltaR_W_b(*jet),eventWeight);
+	}
+
+
+      if (VD::acc_containsTruthW(*jet) && VD::acc_notContainedB(*jet) && i==4)
+	{
+	  deltaR_W_jet_semiboosted_jet4->Fill(VD::acc_deltaR_W_jet(*jet),eventWeight);
+	  deltaR_W_b_semiboosted_jet4->Fill(VD::acc_deltaR_W_b(*jet),eventWeight);
 	}
 
      
-      if (containsTruthW_acc(*jet) && containsTruthTop_acc(*jet) && notContainedB_acc(*jet) && i==1)
+      if (VD::acc_containsTruthW(*jet) && VD::acc_containsTruthTop(*jet) && VD::acc_notContainedB(*jet) && i==1)
 	{
-	  deltaR_W_top_semiboosted_jet1->Fill(deltaR_W_top(*jet),eventWeight);
+	  deltaR_W_top_semiboosted_jet1->Fill(VD::acc_deltaR_W_top(*jet),eventWeight);
 	}
-      if (containsTruthW_acc(*jet) && containsTruthTop_acc(*jet) && notContainedB_acc(*jet) && i==2)
+      if (VD::acc_containsTruthW(*jet) && VD::acc_containsTruthTop(*jet) && VD::acc_notContainedB(*jet) && i==2)
 	{
-	  deltaR_W_top_semiboosted_jet2->Fill(deltaR_W_top(*jet),eventWeight);
-	}
-
-      if (containsTruthW_acc(*jet) && containsTruthTop_acc(*jet) && notContainedB_acc(*jet) && i==3)
-	{
-	  deltaR_W_top_semiboosted_jet3->Fill(deltaR_W_top(*jet),eventWeight);
+	  deltaR_W_top_semiboosted_jet2->Fill(VD::acc_deltaR_W_top(*jet),eventWeight);
 	}
 
-      if (containsTruthW_acc(*jet) && containsTruthTop_acc(*jet) && notContainedB_acc(*jet) && i==4)
+      if (VD::acc_containsTruthW(*jet) && VD::acc_containsTruthTop(*jet) && VD::acc_notContainedB(*jet) && i==3)
 	{
-	  deltaR_W_top_semiboosted_jet4->Fill(deltaR_W_top_semiboosted(*jet),eventWeight);
+	  deltaR_W_top_semiboosted_jet3->Fill(VD::acc_deltaR_W_top(*jet),eventWeight);
 	}
 
-      if (containsTruthW_acc(*jet) && containsTruthTop_acc(*jet) && i==1)
+      if (VD::acc_containsTruthW(*jet) && VD::acc_containsTruthTop(*jet) && VD::acc_notContainedB(*jet) && i==4)
 	{
-	  deltaR_W_top_jet1->Fill(deltaR_W_top(*jet), eventWeight);
-	  deltaR_W_jet1_fn_top_pt->Fill(top(*jet)->pt()/1000.,deltaR_W_jet(*jet), eventWeight);
+	  deltaR_W_top_semiboosted_jet4->Fill(VD::acc_deltaR_W_top_semiboosted(*jet),eventWeight);
+	}
+
+      if (VD::acc_containsTruthW(*jet) && VD::acc_containsTruthTop(*jet) && i==1)
+	{
+	  deltaR_W_top_jet1->Fill(VD::acc_deltaR_W_top(*jet), eventWeight);
+	  deltaR_W_jet1_fn_top_pt->Fill(VD::acc_top_quark(*jet)->pt()/1000.,VD::acc_deltaR_W_jet(*jet), eventWeight);
 
 	}
-      if (containsTruthW_acc(*jet) && containsTruthTop_acc(*jet) && i==2)
+      if (VD::acc_containsTruthW(*jet) && VD::acc_containsTruthTop(*jet) && i==2)
 	{
-	  deltaR_W_top_jet2->Fill(deltaR_W_top(*jet), eventWeight);
-	  deltaR_W_jet2_fn_top_pt->Fill(top(*jet)->pt()/1000.,deltaR_W_jet(*jet), eventWeight);
+	  deltaR_W_top_jet2->Fill(VD::acc_deltaR_W_top(*jet), eventWeight);
+	  deltaR_W_jet2_fn_top_pt->Fill(VD::acc_top_quark(*jet)->pt()/1000.,VD::acc_deltaR_W_jet(*jet), eventWeight);
 	}
       
-      if (containsTruthW_acc(*jet) && containsTruthTop_acc(*jet) && i==3)
+      if (VD::acc_containsTruthW(*jet) && VD::acc_containsTruthTop(*jet) && i==3)
 	{
-	  deltaR_W_top_jet3->Fill(deltaR_W_top(*jet), eventWeight);
-	  deltaR_W_jet3_fn_top_pt->Fill(top(*jet)->pt()/1000.,deltaR_W_jet(*jet), eventWeight);
+	  deltaR_W_top_jet3->Fill(VD::acc_deltaR_W_top(*jet), eventWeight);
+	  deltaR_W_jet3_fn_top_pt->Fill(VD::acc_top_quark(*jet)->pt()/1000.,VD::acc_deltaR_W_jet(*jet), eventWeight);
 	}
       
-      if (containsTruthW_acc(*jet) && containsTruthTop_acc(*jet) && i==4)
+      if (VD::acc_containsTruthW(*jet) && VD::acc_containsTruthTop(*jet) && i==4)
 	{
-	  deltaR_W_top_jet4->Fill(deltaR_W_top(*jet), eventWeight);
-	  deltaR_W_jet4_fn_top_pt->Fill(top(*jet)->pt()/1000.,deltaR_W_jet(*jet), eventWeight);
+	  deltaR_W_top_jet4->Fill(VD::acc_deltaR_W_top(*jet), eventWeight);
+	  deltaR_W_jet4_fn_top_pt->Fill(VD::acc_top_quark(*jet)->pt()/1000.,VD::acc_deltaR_W_jet(*jet), eventWeight);
 	}
       
 
       std::cout <<"ROC 2" <<std::endl;
-      if (W_quark1(*jet)==NULL)
+      if (VD::acc_W_quark1(*jet)==NULL)
 	std::cout <<"W quark NULL" << std::endl;
 
-      if (containsTruthW_acc(*jet) && containsTruthTop_acc(*jet) && i==1 && W_quark1(*jet)!=NULL)
+      std::cout <<"ROC 3" <<std::endl;
+      if (VD::acc_containsTruthW(*jet) && VD::acc_containsTruthTop(*jet) && i==1 && VD::acc_W_quark1(*jet)!=NULL)
 	{
-	  float deltaEta = xAOD::P4Helpers::deltaPhi(top(*jet),W_quark1(*jet));
-	  float deltaPhi = xAOD::P4Helpers::deltaEta(top(*jet),W_quark1(*jet));
+	  float deltaEta = xAOD::P4Helpers::deltaPhi(VD::acc_top_quark(*jet),VD::acc_W_quark1(*jet));
+	  float deltaPhi = xAOD::P4Helpers::deltaEta(VD::acc_top_quark(*jet),VD::acc_W_quark1(*jet));
 
 	  deltaEta_W_quark1_jet1->Fill(deltaEta, eventWeight);
 	  deltaPhi_W_quark1_jet1->Fill(deltaPhi, eventWeight);
 	}
 
-      if (containsTruthW_acc(*jet) && containsTruthTop_acc(*jet) && i==2 && W_quark1(*jet)!=NULL)
+      if (VD::acc_containsTruthW(*jet) && VD::acc_containsTruthTop(*jet) && i==2 && VD::acc_W_quark1(*jet)!=NULL)
 	{
-	  float deltaEta = xAOD::P4Helpers::deltaPhi(top(*jet),W_quark1(*jet));
-	  float deltaPhi = xAOD::P4Helpers::deltaEta(top(*jet),W_quark1(*jet));
+	  float deltaEta = xAOD::P4Helpers::deltaPhi(VD::acc_top_quark(*jet),VD::acc_W_quark1(*jet));
+	  float deltaPhi = xAOD::P4Helpers::deltaEta(VD::acc_top_quark(*jet),VD::acc_W_quark1(*jet));
 
 	  deltaEta_W_quark1_jet2->Fill(deltaEta, eventWeight);
 	  deltaPhi_W_quark1_jet2->Fill(deltaPhi, eventWeight);
 	}
-      if (containsTruthW_acc(*jet) && containsTruthTop_acc(*jet) && i==3 && W_quark1(*jet)!=NULL)
+      if (VD::acc_containsTruthW(*jet) && VD::acc_containsTruthTop(*jet) && i==3 && VD::acc_W_quark1(*jet)!=NULL)
 	{
-	  float deltaEta = xAOD::P4Helpers::deltaPhi(top(*jet),W_quark1(*jet));
-	  float deltaPhi = xAOD::P4Helpers::deltaEta(top(*jet),W_quark1(*jet));
+	  float deltaEta = xAOD::P4Helpers::deltaPhi(VD::acc_top_quark(*jet),VD::acc_W_quark1(*jet));
+	  float deltaPhi = xAOD::P4Helpers::deltaEta(VD::acc_top_quark(*jet),VD::acc_W_quark1(*jet));
 
 	  deltaEta_W_quark1_jet3->Fill(deltaEta, eventWeight);
 	  deltaPhi_W_quark1_jet3->Fill(deltaPhi, eventWeight);
 	}
-      if (containsTruthW_acc(*jet) && containsTruthTop_acc(*jet) && i==4 && W_quark1(*jet)!=NULL)
+      if (VD::acc_containsTruthW(*jet) && VD::acc_containsTruthTop(*jet) && i==4 && VD::acc_W_quark1(*jet)!=NULL)
 	{
-	  float deltaEta = xAOD::P4Helpers::deltaPhi(top(*jet),W_quark1(*jet));
-	  float deltaPhi = xAOD::P4Helpers::deltaEta(top(*jet),W_quark1(*jet));
+	  float deltaEta = xAOD::P4Helpers::deltaPhi(VD::acc_top_quark(*jet),VD::acc_W_quark1(*jet));
+	  float deltaPhi = xAOD::P4Helpers::deltaEta(VD::acc_top_quark(*jet),VD::acc_W_quark1(*jet));
 
 	  deltaEta_W_quark1_jet4->Fill(deltaEta, eventWeight);
 	  deltaPhi_W_quark1_jet4->Fill(deltaPhi, eventWeight);

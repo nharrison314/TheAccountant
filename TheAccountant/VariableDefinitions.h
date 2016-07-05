@@ -8,6 +8,7 @@
 #include "xAODMuon/MuonContainer.h"
 #include "xAODEgamma/ElectronContainer.h"
 #include "xAODMissingET/MissingETContainer.h"
+#include "xAODTruth/TruthParticleContainer.h"
 
 // we want to use the metadata if we can
 #include "SampleHandler/MetaObject.h"
@@ -56,6 +57,47 @@ namespace VariableDefinitions {
   static accessor_t< int > acc_pass_preSel_b("pass_preSel_b");
   static accessor_t< int > acc_pass_preSel_w("pass_preSel_w");
   static accessor_t< int > acc_pass_preSel_top("pass_preSel_top");
+
+
+  // Truth matching
+
+  static accessor_t<bool> acc_containsTruthW("containsTruthW"); // true if the W associated with the jet is within a certain radius
+  static accessor_t<bool> acc_notContainedB("notContainedB"); // true if the b associated with the jet is within a certain radius
+  static accessor_t<bool> acc_semiBoostedW("semiBoostedW"); // containsTruthW = true and notContainedB=true
+  static accessor_t<bool> acc_containsTruthTop("containsTruthTop"); // there is a top with deltaR < 1 from the jet
+  static accessor_t<bool> acc_hasB("hasB"); //there is a truth B within a certain radius of this jet. Finds that b with min distance from jet
+  static accessor_t<bool> acc_hasW("hasW"); //there is a truth W within a certain radius of this jet. Finds that W with min distance from jet
+  static accessor_t<bool> acc_deltaR_W_jet("deltaR_W_jet");
+  static accessor_t<bool> acc_deltaR_W_b("deltaR_W_b");
+  static accessor_t<bool> acc_deltaR_W_top("deltaR_W_top");
+  static accessor_t<bool> acc_deltaR_W_top_semiboosted("deltaR_W_top_semiboosted");
+
+  static accessor_t<const xAOD::TruthParticle*> acc_b_particle("b_particle");
+  static accessor_t<const xAOD::TruthParticle*> acc_W_particle("W_particle");
+  static accessor_t<const xAOD::TruthParticle*> acc_top_particle("top_particle");
+  static accessor_t<const xAOD::TruthParticle*> acc_W_quark1("W_quark1"); //
+  static accessor_t<const xAOD::TruthParticle*> acc_W_quark2("W_quark2");
+  static accessor_t<const xAOD::TruthParticle*> acc_top_quark("top_quark");
+
+  static decor_t<bool> decor_containsTruthW("containsTruthW");
+  static decor_t<bool> decor_notContainedB("notContainedB");
+  static decor_t<bool> decor_semiBoostedW("semiBoostedW");
+  static decor_t<bool> decor_containsTruthTop("containsTruthTop");
+  static decor_t<bool> decor_hasB("hasB");
+  static decor_t<bool> decor_hasW("hasW");
+  static decor_t<bool> decor_deltaR_W_jet("deltaR_W_jet");
+  static decor_t<bool> decor_deltaR_W_b("deltaR_W_b");
+  static decor_t<bool> decor_deltaR_W_top("deltaR_W_top");
+  static decor_t<bool> decor_deltaR_W_top_semiboosted("deltaR_W_top_semiboosted");
+
+  static decor_t<const xAOD::TruthParticle*> decor_b_particle("b_particle");
+  static decor_t<const xAOD::TruthParticle*> decor_W_particle("W_particle");
+  static decor_t<const xAOD::TruthParticle*> decor_top_particle("top_particle");
+  static decor_t<const xAOD::TruthParticle*> decor_W_quark1("W_quark1");
+  static decor_t<const xAOD::TruthParticle*> decor_W_quark2("W_quark2");
+  static decor_t<const xAOD::TruthParticle*> decor_top_quark("top_quark");
+
+
 
   // define isXXXX functions
   //    - note that when using a <char> decoration, you often compare to an int

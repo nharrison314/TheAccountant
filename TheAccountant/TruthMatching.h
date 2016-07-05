@@ -2,11 +2,16 @@
 #define TheAccountant_TruthMatching_H
 
 #include <TheAccountant/Algorithm.h>
+#include "xAODTruth/TruthParticleContainer.h"
 
 // Infrastructure include(s):
 #include "xAODRootAccess/TEvent.h"
 #include "xAODRootAccess/TStore.h"
 
+#include <TheAccountant/VariableDefinitions.h>
+
+
+namespace VD = VariableDefinitions;
 
 // c++ includes
 #include <string>
@@ -34,6 +39,7 @@ public:
 
   // this is needed to distribute the algorithm to the workers
   ClassDef(TruthMatching, 1);
+
 };
 
 #endif

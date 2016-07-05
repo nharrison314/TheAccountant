@@ -43,6 +43,7 @@ EL::StatusCode Report :: setupJob (EL::Job& job)
 EL::StatusCode Report :: histInitialize () {
   // if doing rc jets, use rc jets container instead
   if(m_rc_enable) m_inputLargeRJets = m_RCJetsContainerName;
+  std::cout << "Report 1" << std::endl;
 
   // initialize all histograms here
 
@@ -53,6 +54,7 @@ EL::StatusCode Report :: histInitialize () {
   if(!m_inputMET.empty() && !m_inputJets.empty() && !m_inputLargeRJets.empty() && !m_inputMuons.empty() && !m_inputElectrons.empty())
     m_rocPlots["all/roc"] = new TheAccountant::ROC("all/roc/");
 
+  std::cout << "Report 2" << std::endl;
 
   if(!m_inputJets.empty()){
     m_jetKinematicPlots["all/jets"] = new TheAccountant::IParticleKinematicHists( "all/jets/" );
@@ -69,6 +71,8 @@ EL::StatusCode Report :: histInitialize () {
     }
   }
 
+
+  std::cout << "Report 3" <<std::endl;
   if(!m_inputLargeRJets.empty()){
     m_jetKinematicPlots["all/jetsLargeR"]          = new TheAccountant::IParticleKinematicHists( "all/jetsLargeR/" );
     m_jetPlots["all/jetsLargeR"]       = new TheAccountant::JetHists( "all/jetsLargeR/" );
@@ -96,7 +100,7 @@ EL::StatusCode Report :: histInitialize () {
 	m_jetMETPlots["all/jetsLargeR/wTag"]        = new TheAccountant::JetMETHists("all/jetsLargeR/wTag/");
     }
   }
-
+  std::cout << "Report 4" << std::endl;
   if(!m_inputMET.empty())
     m_METPlots["all/MET"]               = new TheAccountant::METHists( "all/MET/" );
 

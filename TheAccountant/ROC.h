@@ -12,7 +12,7 @@
 #include "xAODMuon/MuonContainer.h"
 #include "xAODEgamma/ElectronContainer.h"
 #include <string>
-
+#include "TheAccountant/VariableDefinitions.h"
 //P4Helper includes
 #include "FourMomUtils/xAODP4Helpers.h"
 

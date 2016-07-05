@@ -34,6 +34,8 @@
 #include <set>
 
 namespace HF = HelperFunctions;
+namespace VD = VariableDefinitions;
+
 
 // this is needed to distribute the algorithm to the workers
 ClassImp(TruthMatching)
@@ -62,6 +64,7 @@ EL::StatusCode TruthMatching :: initialize () {
 EL::StatusCode TruthMatching :: execute ()
 {
   std::cout <<"TruthMatching" << std::endl;
+  std::cout <<"TruthMatching 2" << std::endl;
   if(m_debug) Info("execute()", "Calling execute...");
   const xAOD::EventInfo*                eventInfo     (nullptr);
   const xAOD::JetContainer*             in_jetsLargeR (nullptr);
@@ -71,29 +74,61 @@ EL::StatusCode TruthMatching :: execute ()
   const xAOD::MuonContainer*            in_muons      (nullptr);
   const xAOD::TauJetContainer*          in_taus       (nullptr);
   const xAOD::PhotonContainer*          in_photons    (nullptr);
-  const xAOD::TruthParticleContainer*   in_truth    (nullptr);
+  //before truth container
+  std::cout << "before Truth Container" << std::endl;
+const xAOD::TruthParticleContainer*   in_truth    (nullptr);
 
   event_num++;
 
-  RETURN_CHECK("Audit::execute()", HF::retrieve(eventInfo,    m_eventInfo,        m_event, m_store, m_debug), "Could not get the EventInfo container.");
+  std::cout << "before accessor" << std::endl;
+
+  for (const auto& jet: *in_jetsLargeR)
+    {
+      VD::decor_containsTruthW(*jet) = false;
+      VD::decor_semiBoostedW(*jet) = false;
+      VD::decor_containsTruthTop(*jet) = false;
+      VD::decor_notContainedB(*jet) = false;
+      VD::decor_b_particle(*jet) = NULL;
+      VD::decor_W_particle(*jet) = NULL;
+      VD::decor_top_particle(*jet) = NULL;
+      VD::decor_deltaR_W_jet(*jet) = -1;
+      VD::decor_deltaR_W_b(*jet) = -1;
+      VD::decor_deltaR_W_top(*jet) = -1;
+      VD::decor_deltaR_W_top_semiboosted(*jet)=-1;
+      VD::decor_hasB(*jet) = false;
+      VD::decor_hasW(*jet) = false;
+      VD::decor_b_particle(*jet) = NULL;
+      VD::decor_W_particle(*jet) = NULL;
+      VD::decor_top_particle(*jet) = NULL;
+      VD::decor_W_quark1(*jet) = NULL;
+      VD::decor_W_quark2(*jet) = NULL;
+      VD::decor_top_quark(*jet) = NULL;
+
+    }
+
+  std::cout << "after accessor" << std::endl;
+
+  RETURN_CHECK("TruthMatching::execute()", HF::retrieve(eventInfo,    m_eventInfo,        m_event, m_store, m_debug), "Could not get the EventInfo container.");
   if(!m_inputLargeRJets.empty())
-    RETURN_CHECK("Audit::execute()", HF::retrieve(in_jetsLargeR,      m_inputLargeRJets,        m_event, m_store, m_debug), "Could not get the inputLargeRJets container.");
+    RETURN_CHECK("TruthMatching::execute()", HF::retrieve(in_jetsLargeR,      m_inputLargeRJets,        m_event, m_store, m_debug), "Could not get the inputLargeRJets container.");
   if(!m_inputJets.empty())
-    RETURN_CHECK("Audit::execute()", HF::retrieve(in_jets,     m_inputJets,       m_event, m_store, m_debug), "Could not get the inputJets container.");
+    RETURN_CHECK("TruthMatching::execute()", HF::retrieve(in_jets,     m_inputJets,       m_event, m_store, m_debug), "Could not get the inputJets container.");
   if(!m_inputMET.empty())
-    RETURN_CHECK("Audit::execute()", HF::retrieve(in_missinget, m_inputMET,         m_event, m_store, m_debug), "Could not get the inputMET container.");
+    RETURN_CHECK("TruthMatching::execute()", HF::retrieve(in_missinget, m_inputMET,         m_event, m_store, m_debug), "Could not get the inputMET container.");
   if(!m_inputElectrons.empty())
-    RETURN_CHECK("Audit::execute()", HF::retrieve(in_electrons, m_inputElectrons,   m_event, m_store, m_debug), "Could not get the inputElectrons container.");
+    RETURN_CHECK("TruthMatching::execute()", HF::retrieve(in_electrons, m_inputElectrons,   m_event, m_store, m_debug), "Could not get the inputElectrons container.");
   if(!m_inputMuons.empty())
-    RETURN_CHECK("Audit::execute()", HF::retrieve(in_muons,     m_inputMuons,       m_event, m_store, m_debug), "Could not get the inputMuons container.");
+    RETURN_CHECK("TruthMatching::execute()", HF::retrieve(in_muons,     m_inputMuons,       m_event, m_store, m_debug), "Could not get the inputMuons container.");
   if(!m_inputTauJets.empty())
-    RETURN_CHECK("Audit::execute()", HF::retrieve(in_taus,      m_inputTauJets,     m_event, m_store, m_debug), "Could not get the inputTauJets container.");
+    RETURN_CHECK("TruthMatching::execute()", HF::retrieve(in_taus,      m_inputTauJets,     m_event, m_store, m_debug), "Could not get the inputTauJets container.");
   if(!m_inputPhotons.empty())
-    RETURN_CHECK("Audit::execute()", HF::retrieve(in_photons,   m_inputPhotons,     m_event, m_store, m_debug), "Could not get the inputPhotons container.");
+    RETURN_CHECK("TruthMatching::execute()", HF::retrieve(in_photons,   m_inputPhotons,     m_event, m_store, m_debug), "Could not get the inputPhotons container.");
 
   if(!m_truthParticles.empty())
-    RETURN_CHECK("Audit::execute()", HF::retrieve(in_truth, m_truthParticles, m_event, m_store, m_debug), "Could not get the truthParticles container.");
+    RETURN_CHECK("TruthMatching::execute()", HF::retrieve(in_truth, m_truthParticles, m_event, m_store, m_debug), "Could not get the truthParticles container.");
 
+
+  std::cout <<"Inside TruthMatching 1 " <<std::endl;
 
   const xAOD::MissingET* in_met(nullptr);
   if(!m_inputMET.empty()){
@@ -119,22 +154,22 @@ EL::StatusCode TruthMatching :: execute ()
     }
   }
 
-  static SG::AuxElement::Decorator<bool> containsTruthW         ("containsTruthW");
-  static SG::AuxElement::Decorator<bool> notContainedB         ("notContainedB");
-  static SG::AuxElement::Decorator<bool> WTAG ("WTAG");
-  static SG::AuxElement::Decorator<bool> containsTruthTop ("containsTruthTop");
-  static SG::AuxElement::Decorator<bool> hasB ("hasB");
-  static SG::AuxElement::Decorator<bool> hasW("hasW");
-  static SG::AuxElement::Decorator<float> deltaR_W_jet ("deltaR_W_jet");
-  static SG::AuxElement::Decorator<float> deltaR_W_b ("deltaR_W_b");
-  static SG::AuxElement::Decorator<float> deltaR_W_top ("deltaR_W_top");
-  static SG::AuxElement::Decorator<float> deltaR_W_top_semiboosted("deltaR_W_top_semiboosted");
+  //static SG::AuxElement::Decorator<bool> containsTruthW         ("containsTruthW");
+  //static SG::AuxElement::Decorator<bool> notContainedB         ("notContainedB");
+  //static SG::AuxElement::Decorator<bool> WTAG ("WTAG");
+  //static SG::AuxElement::Decorator<bool> containsTruthTop ("containsTruthTop");
+  //static SG::AuxElement::Decorator<bool> hasB ("hasB");
+  //static SG::AuxElement::Decorator<bool> hasW("hasW");
+  //static SG::AuxElement::Decorator<float> deltaR_W_jet ("deltaR_W_jet");
+  //static SG::AuxElement::Decorator<float> deltaR_W_b ("deltaR_W_b");
+  //static SG::AuxElement::Decorator<float> deltaR_W_top ("deltaR_W_top");
+  //static SG::AuxElement::Decorator<float> deltaR_W_top_semiboosted("deltaR_W_top_semiboosted");
 
-  static SG::AuxElement::Decorator<const xAOD::TruthParticle*> b_particle ("b_particle");
-  static SG::AuxElement::Decorator<const xAOD::TruthParticle*> W_particle ("W_particle");
-  static SG::AuxElement::Decorator<const xAOD::TruthParticle*> top_particle("top_particle");
-  static SG::AuxElement::Decorator<const xAOD::TruthParticle*> W_quark1("W_quark1");
-  static SG::AuxElement::Decorator<const xAOD::TruthParticle*> W_quark2("W_quark2");
+  //static SG::AuxElement::Decorator<const xAOD::TruthParticle*> b_particle ("b_particle");
+  //static SG::AuxElement::Decorator<const xAOD::TruthParticle*> W_particle ("W_particle");
+  //static SG::AuxElement::Decorator<const xAOD::TruthParticle*> top_particle("top_particle");
+  //static SG::AuxElement::Decorator<const xAOD::TruthParticle*> W_quark1("W_quark1");
+  //static SG::AuxElement::Decorator<const xAOD::TruthParticle*> W_quark2("W_quark2");
 
   std::list<const xAOD::TruthParticle*> b_particles_in_event;
   std::list<const xAOD::TruthParticle*> W_particles_in_event;
@@ -144,20 +179,29 @@ EL::StatusCode TruthMatching :: execute ()
   std::list<const xAOD::TruthParticle*> daughter_W_particles;
  
 
-  for (const auto& jet: *in_jetsLargeR)
-    {
-      containsTruthW(*jet) = false;
-      WTAG(*jet) = false;
-      containsTruthTop(*jet) = false;
-      notContainedB(*jet) = false;
-      b_particle(*jet) = NULL;
-      W_particle(*jet) = NULL;
-      top_particle(*jet) = NULL;
-      deltaR_W_jet(*jet) = -1;
-      deltaR_W_b(*jet) = -1;
-      deltaR_W_top(*jet) = -1;
-      deltaR_W_top_semiboosted(*jet)=-1;
-    }
+  //  for (const auto& jet: *in_jetsLargeR)
+  // {
+  //   VD::decor_containsTruthW(*jet) = false;
+  //   VD::decor_semiBoostedW(*jet) = false;
+  //   VD::decor_containsTruthTop(*jet) = false;
+  //   VD::decor_notContainedB(*jet) = false;
+  //   VD::decor_b_particle(*jet) = NULL;
+  //   VD::decor_W_particle(*jet) = NULL;
+  //   VD::decor_top_particle(*jet) = NULL;
+  //   VD::decor_deltaR_W_jet(*jet) = -1;
+  //   VD::decor_deltaR_W_b(*jet) = -1;
+  //   VD::decor_deltaR_W_top(*jet) = -1;
+  //   VD::decor_deltaR_W_top_semiboosted(*jet)=-1;
+  //   VD::decor_hasB(*jet) = false;
+  //   VD::decor_hasW(*jet) = false;
+  //   VD::decor_b_particle(*jet) = NULL;
+  //   VD::decor_W_particle(*jet) = NULL;
+  //   VD::decor_top_particle(*jet) = NULL;
+  //   VD::decor_W_quark1(*jet) = NULL;
+  //   VD::decor_W_quark2(*jet) = NULL;
+  //   VD::decor_top_quark(*jet) = NULL;
+
+  // }
 
  
   if (!m_truthParticles.empty())
@@ -237,8 +281,8 @@ EL::StatusCode TruthMatching :: execute ()
 			  Min_deltaR_jet_top = deltaR;
 			  if (deltaR<1)
 			    {
-			      containsTruthTop(*jet) = true;
-			      top_particle(*jet) = *k;
+			      VD::decor_containsTruthTop(*jet) = true;
+			      VD::decor_top_particle(*jet) = *k;
 			      //      if (event_num<10)
 			      //{
 				  //std::cout <<"Event #" << event_num << "\tJet in event #" << num_jet << "\tphi: "<<jet->phi() <<"\trapidity: " << jet->rapidity() << std::endl;
@@ -248,7 +292,7 @@ EL::StatusCode TruthMatching :: execute ()
 			}
 		    }
 		  //std::cout <<"#6" <<std::endl;
-		  tops_in_event.remove(top_particle(*jet));
+		  tops_in_event.remove(VD::decor_top_particle(*jet));
 
 		  float Min_deltaR_for_this_jet = 1000.;
 		  std::list<const xAOD::TruthParticle*>::iterator i;
@@ -264,16 +308,16 @@ EL::StatusCode TruthMatching :: execute ()
 		      if (deltaR < Min_deltaR_for_this_jet)
 			{
 			  Min_deltaR_for_this_jet = deltaR;
-			  W_particle(*jet) = *i;
-			  hasW(*jet) = true;
+			  VD::decor_W_particle(*jet) = *i;
+			  VD::decor_hasW(*jet) = true;
 			}
 		    }
 		  //std::cout <<"#7" <<std::endl;
-		  if (W_particle(*jet)!=NULL)
-		    deltaR_W_jet(*jet) = xAOD::P4Helpers::deltaR(jet,W_particle(*jet));
+		  if (VD::acc_W_particle(*jet)!=NULL)
+		    VD::decor_deltaR_W_jet(*jet) = xAOD::P4Helpers::deltaR(jet,VD::decor_W_particle(*jet));
 		  else
-		    deltaR_W_jet(*jet) = 1000;
-		  W_particles_in_event.remove(W_particle(*jet));
+		    VD::decor_deltaR_W_jet(*jet) = 1000;
+		  W_particles_in_event.remove(VD::acc_W_particle(*jet));
 		 
 
 		  std::list<const xAOD::TruthParticle*>::iterator j;
@@ -290,43 +334,43 @@ EL::StatusCode TruthMatching :: execute ()
 		      if (deltaR < deltaR_W_b_min)
 			{
 			  deltaR_W_b_min = deltaR;
-			  b_particle(*jet) = *j;
-			  hasB(*jet) = true;
+			  VD::decor_b_particle(*jet) = *j;
+			  VD::decor_hasB(*jet) = true;
 			}
 		      //	   }
 		      // }	
 		    }
 		  //std::cout <<"#8" <<std::endl;
-		  if (b_particle(*jet)!=NULL)
-		    deltaR_W_b(*jet) = xAOD::P4Helpers::deltaR(jet,b_particle(*jet));
+		  if (VD::acc_b_particle(*jet)!=NULL)
+		    VD::decor_deltaR_W_b(*jet) = xAOD::P4Helpers::deltaR(jet,VD::acc_b_particle(*jet));
 		  else
-		    deltaR_W_b(*jet) = 1000;
-		  b_particles_in_event.remove(b_particle(*jet));
+		    VD::decor_deltaR_W_b(*jet) = 1000;
+		  b_particles_in_event.remove(VD::acc_b_particle(*jet));
 		  
 		  //std::cout <<"#10"<<std::endl;
-		  if (W_particle(*jet)!=NULL)
+		  if (VD::acc_W_particle(*jet)!=NULL)
 		    {
 		      std::list<const xAOD::TruthParticle*>::iterator l;
 		      std::list<const xAOD::TruthParticle*>::iterator m;
-		      float min_quark_pt = 13000;
+		      float max_quark_pt = 13000;
 		      //std::cout <<"BEFORE " << std::endl;
 		      for(l=daughter_W_particles_cand.begin(); l != daughter_W_particles_cand.end(); ++l)
 			{
 			  //std::cout <<"(*l)->pt()/1000. = " << (*l)->pt()/1000. << std::endl;
-			  if ((*l)->pt()/1000. < min_quark_pt)
+			  if ((*l)->pt()/1000. < max_quark_pt)
 			    {
-			      min_quark_pt = (*l)->pt()/1000.;
-			      W_quark1(*jet) = *l;
+			      max_quark_pt = (*l)->pt()/1000.;
+			      VD::decor_W_quark1(*jet) = *l;
 			    }
 			}
 
-		      daughter_W_particles_cand.remove(W_quark1(*jet));
+		      daughter_W_particles_cand.remove(VD::acc_W_quark1(*jet));
 		      for(m=daughter_W_particles_cand.begin(); m != daughter_W_particles_cand.end(); ++m)
 			{
-			  if ((*m)->pt()/1000. < min_quark_pt)
+			  if ((*m)->pt()/1000. < max_quark_pt)
 			    {
-			      min_quark_pt = (*m)->pt()/1000.;
-			      W_quark2(*jet) = *m;
+			      max_quark_pt = (*m)->pt()/1000.;
+			      VD::decor_W_quark2(*jet) = *m;
 			    }
 			}
 		     
@@ -343,37 +387,37 @@ EL::StatusCode TruthMatching :: execute ()
 	      //if (event_num<10)
 		//std::cout <<"deltaR_W_jet = " << deltaR_W_jet(*jet) << std::endl;
 		//std::cout <<"a" << std::endl;
-	      if (deltaR_W_jet(*jet) <= 0.3 && hasW(*jet))
+	      if (VD::acc_deltaR_W_jet(*jet) <= 0.3 && VD::acc_hasW(*jet))
 		{
 		 
 		  //std::cout <<"ContainsWjet" << std::endl;
-		  containsTruthW(*jet) = true;
+		  VD::decor_containsTruthW(*jet) = true;
 		}
 	      //std::cout <<"b" << std::endl;
-	      if(hasB(*jet))
+	      if(VD::acc_hasB(*jet))
 		{
-		  float deltaR = xAOD::P4Helpers::deltaR(jet, b_particle(*jet));
+		  float deltaR = xAOD::P4Helpers::deltaR(jet, VD::acc_b_particle(*jet));
 		  if (deltaR >= 1.0)
-		    notContainedB(*jet) = true;
+		    VD::decor_notContainedB(*jet) = true;
 		}
 	      //std::cout << "c" <<std::endl;
-	      if (containsTruthW(*jet) && containsTruthTop(*jet))
+	      if (VD::acc_containsTruthW(*jet) && VD::acc_containsTruthTop(*jet))
 		{
-		  deltaR_W_top(*jet) = xAOD::P4Helpers::deltaR(W_particle(*jet),top_particle(*jet));
+		  VD::decor_deltaR_W_top(*jet) = xAOD::P4Helpers::deltaR(VD::acc_W_particle(*jet),VD::acc_top_particle(*jet));
 		}
 	      //std::cout<< "d" <<std::endl;
 	     
-	      if (containsTruthW(*jet) && notContainedB(*jet) && containsTruthTop(*jet))
+	      if (VD::acc_containsTruthW(*jet) && VD::acc_notContainedB(*jet) && VD::acc_containsTruthTop(*jet))
 		{
-		  deltaR_W_top_semiboosted(*jet) = xAOD::P4Helpers::deltaR(W_particle(*jet),top_particle(*jet));
+		  VD::decor_deltaR_W_top_semiboosted(*jet) = xAOD::P4Helpers::deltaR(VD::acc_W_particle(*jet),VD::acc_top_particle(*jet));
 		}
 	      //std::cout <<"e" <<std::endl;
 	    }
 
           for(const auto& jet: *in_jetsLargeR)
             {
-	      if (containsTruthW(*jet) && notContainedB(*jet))
-		WTAG(*jet) = true;
+	      if (VD::acc_containsTruthW(*jet) && VD::acc_notContainedB(*jet))
+		VD::decor_semiBoostedW(*jet) = true;
 	    }
 	  
 	}
