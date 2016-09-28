@@ -115,6 +115,11 @@ namespace TheAccountant
 
     TH2F* gg_mdeltaR_vs_METsig;
 
+
+    TH2F* TJM_vs_HT41GG;
+    TH2F* TJM_vs_MET;
+    TH2F* Ga_n_vs_Gb_n;
+
   };
 }
 #endif

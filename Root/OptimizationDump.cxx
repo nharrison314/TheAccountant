@@ -51,6 +51,8 @@ OptimizationDump :: OptimizationDump () :
   m_num_signal_electrons(-1.0),
   m_num_signal_muons(-1.0),
 
+  m_totalJetMass(0.0),
+
   m_SF_pu(0.0),
   m_SF_btag(0.0),
   m_ttbarHF(0),
@@ -137,10 +139,12 @@ EL::StatusCode OptimizationDump :: initialize () {
     m_tree->Branch ("mTb",                       &m_mTb, "mTb/F");
   }
 
+
   if(!m_inputLargeRJets.empty()){
     m_tree->Branch("m_Num_W_Inc", &m_num_W_inc, "m_Num_W_Inc/I");
     m_tree->Branch("m_Num_W_Exc", &m_num_W_exc,"m_Num_W_Exc/I");
     m_tree->Branch("m_Num_top_Inc", &m_num_top_inc,"m_Num_top_Inc/I"); 
+    m_tree->Branch("m_totalJetMass", &m_totalJetMass,"m_totalJetMass/F");
   }
 
   if(!m_inputElectrons.empty()){
@@ -605,8 +609,10 @@ EL::StatusCode OptimizationDump :: execute ()
       m_num_W_inc = w_inc_jets.size();
       m_num_W_exc = w_exc_jets.size();
       m_num_top_inc = top_inc_jets.size();
-    }
+      
 
+    }
+    float totalJetMass=0.0;
     for(const auto &jet: presel_jetsLargeR){
 
 
@@ -617,6 +623,7 @@ EL::StatusCode OptimizationDump :: execute ()
       m_n_topTag_SmoothTight += VD::topTag(jet, "SmoothTight", 2.0, 300);
 
       if(jetIndex < 4){
+	totalJetMass += jet->m()/1000.;
         m_largeR_pt[jetIndex] = jet->pt()/1000.;
         m_largeR_m[jetIndex] = jet->m()/1000.;
         // retrieve attributes from jet -- if it fails, it'll be set to -99
@@ -634,6 +641,7 @@ EL::StatusCode OptimizationDump :: execute ()
       }
       jetIndex++;
     }
+    m_totalJetMass=totalJetMass;
   }
 
   // fill in all variables

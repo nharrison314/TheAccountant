@@ -16,7 +16,7 @@
 #include <TheAccountant/JetTagHists.h>
 
 #include <TheAccountant/RazorVariableHists.h>
-#include <TheAccountant/ROC.h>
+#include <TheAccountant/TruthMatching.h>
 class Report : public TA::Algorithm
 {
   // put your configuration variables here as public variables.
@@ -37,7 +37,7 @@ private:
   std::map< std::string, TheAccountant::JetTagHists* > m_jetTagPlots; //!
   std::map< std::string, TheAccountant::METHists* > m_METPlots; //!
   std::map< std::string, TheAccountant::RazorVariableHists* > m_razorPlots; //!
-  std::map< std::string, TheAccountant::ROC* > m_rocPlots; //!
+  std::map< std::string, TheAccountant::TruthMatching* > m_truthPlots; //!
 
   std::vector<std::string> m_topTagDecorationNames; //!
 

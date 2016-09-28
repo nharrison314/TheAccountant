@@ -51,8 +51,8 @@ EL::StatusCode Report :: histInitialize () {
     m_razorPlots["all/razor"] = new TheAccountant::RazorVariableHists("all/razor/");
 
   // if(!m_inputJets.empty() && !m_inputLargeRJets.empty())
-  if(!m_inputMET.empty() && !m_inputJets.empty() && !m_inputLargeRJets.empty() && !m_inputMuons.empty() && !m_inputElectrons.empty())
-    m_rocPlots["all/roc"] = new TheAccountant::ROC("all/roc/");
+  if(!m_inputMET.empty() && !m_inputJets.empty() && !m_inputLargeRJets.empty() && !m_inputMuons.empty() && !m_inputElectrons.empty() && !m_truthParticles.empty())
+    m_truthPlots["all/truth"] = new TheAccountant::TruthMatching("all/truth/");
 
   std::cout << "Report 2" << std::endl;
 
@@ -161,9 +161,9 @@ EL::StatusCode Report :: histInitialize () {
     razorPlot.second->record( wk() );
   }
 
-  for(auto &rocPlot: m_rocPlots){
-    RETURN_CHECK("Report::initialize()", rocPlot.second->initialize(),"");
-    rocPlot.second->record( wk() );
+  for(auto &truthPlot: m_truthPlots){
+    RETURN_CHECK("Report::initialize()", truthPlot.second->initialize(),"");
+    truthPlot.second->record( wk() );
   }
 
   for(auto &jetKinematicPlot: m_jetKinematicPlots){
@@ -246,13 +246,12 @@ EL::StatusCode Report :: execute ()
   RETURN_CHECK("Report::execute()", HF::retrieve(inclVar_ptr, "RJigsawInclusiveVariables", nullptr, m_store, m_debug), "Could not get the RJRVars");
   RETURN_CHECK("Report::execute()", HF::retrieve(vP_ptr, "RJigsawFourVectors", nullptr, m_store, m_debug), "Could not get the RJR 4-Vectors");
 
+
   if(!m_truthParticles.empty())
     RETURN_CHECK("Report::execute()", HF::retrieve(in_truth, m_truthParticles, m_event, m_store, m_debug), "Could not get the truthParticles container.");
 
   RETURN_CHECK("Report::execute()", HF::retrieve(inclVar_ptr, "RJigsawInclusiveVariables", nullptr, m_store, m_debug), "Could not get the RJRVars");
   RETURN_CHECK("Report::execute()", HF::retrieve(vP_ptr, "RJigsawFourVectors", nullptr, m_store, m_debug), "Could not get the RJR 4-Vectors");
-  if(!m_truthParticles.empty())
-    RETURN_CHECK("Report::execute()", HF::retrieve(in_truth, m_truthParticles, m_event, m_store, m_debug), "Could not get the truthParticles container.");
   // prepare the jets by creating a view container to look at them
   ConstDataVector<xAOD::JetContainer> in_jetsCDV(SG::VIEW_ELEMENTS);
 
@@ -294,8 +293,8 @@ EL::StatusCode Report :: execute ()
   if(!m_inputMET.empty() && !m_inputJets.empty() && !m_inputLargeRJets.empty() && !m_inputMuons.empty() && !m_inputElectrons.empty())
     RETURN_CHECK("Report::execute()", m_razorPlots["all/razor"]->execute(*inclVar_ptr, *vP_ptr, in_met,in_jets, in_jetsLargeR, in_muons, in_electrons,eventWeight),"");
   
-  if(!m_inputMET.empty() && !m_inputJets.empty() && !m_inputLargeRJets.empty() && !m_inputMuons.empty() && !m_inputElectrons.empty())
-    RETURN_CHECK("Report::execute()", m_rocPlots["all/roc"]->execute(eventInfo, in_met,in_jets, in_jetsLargeR,eventWeight),"");
+  if(!m_inputMET.empty() && !m_inputJets.empty() && !m_inputLargeRJets.empty() && !m_inputMuons.empty() && !m_inputElectrons.empty() && !m_truthParticles.empty())
+    RETURN_CHECK("Report::execute()", m_truthPlots["all/truth"]->execute(eventInfo, in_met,in_jets, in_jetsLargeR, in_truth, eventWeight),"");
 
     std::cout << "Check A in Report" << std::endl;
 

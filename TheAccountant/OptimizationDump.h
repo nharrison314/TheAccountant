@@ -42,6 +42,8 @@ private:
   int m_num_W_exc;
   int m_num_top_inc;
 
+  float m_totalJetMass;
+
   float m_dPhiMETMin; //!
   float m_mTb; //!
 
