@@ -23,7 +23,7 @@ globalOpts=(-v -f -yyyyyy --optimizationDump --inputGrid --inputList --badJetVet
 
 run0L=(--signalLeptonSelection="==0" --numLeadingJets=4 --jetLargeR_minPtView=300 --minMET=200 --dPhiMin=0.0)
 run1L=(--signalLeptonSelection="==1" --numLeadingJets=4 --jetLargeR_minPtView=300 --minMET=200 --dPhiMin=0.0)
-outputDir="2.4.18-0-0"
+outputDir="/share/t3data2/nmh/output_new"
 mkdir -p "${outputDir}"
 
 #0L

@@ -214,13 +214,6 @@ EL::StatusCode Report :: execute ()
   const xAOD::MuonContainer*            in_muons      (nullptr);
   const xAOD::TauJetContainer*          in_taus       (nullptr);
   const xAOD::PhotonContainer*          in_photons    (nullptr);
-  //const xAOD::TruthParticleContainer*   in_truth    (nullptr);
-  const std::map<std::string, double>* inclVar_ptr    (nullptr);
-  const std::map<std::string, TLorentzVector>* vP_ptr (nullptr);
-  const xAOD::TruthParticleContainer*   in_truth    (nullptr);
-
-  const xAOD::TruthParticleContainer*   in_truth    (nullptr);
-  //const xAOD::TruthParticleContainer*   in_truth    (nullptr);
   const std::map<std::string, double>* inclVar_ptr    (nullptr);
   const std::map<std::string, TLorentzVector>* vP_ptr (nullptr);
   const xAOD::TruthParticleContainer*   in_truth    (nullptr);
